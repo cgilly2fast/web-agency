@@ -1,5 +1,5 @@
 {
-  "name": "website-agency",
+  "name": "web-agency",
   "private": true,
   "scripts": {
     "build": "turbo build",
