@@ -5,9 +5,17 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { stripePlugin } from '@payloadcms/plugin-stripe'
+import { gcsStorage } from '@payloadcms/storage-gcs'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Pages } from './collections/Pages'
+import { Tenants } from './collections/Tenants'
+import { serviceAccount } from './config'
+import { MainMenu } from './collections/MainMenu'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,8 +27,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  cors: '*',
+  collections: [Users, Media, Pages, Tenants],
   editor: lexicalEditor(),
+  globals: [MainMenu],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -30,6 +40,26 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    // storage-adapter-placeholder
+    gcsStorage({
+      collections: {
+        media: {
+          prefix: 'media',
+        },
+      },
+      bucket: process.env.NEXT_PUBLIC_SB!,
+      options: {
+        projectId: serviceAccount.projectId,
+        credentials: {
+          client_email: serviceAccount.client_email,
+          private_key: serviceAccount.private_key,
+        },
+      },
+    }),
+    formBuilderPlugin({}),
+    stripePlugin({
+      stripeSecretKey: process.env.STRIPE_SECRET!,
+      rest: true,
+    }),
+    // seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
   ],
 })

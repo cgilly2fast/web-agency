@@ -9,17 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@payloadcms/live-preview-react": "^0.2.0",
     "@web-agency/ui": "*",
     "next": "14.2.6",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@web-agency/eslint-config": "*",
-    "@web-agency/typescript-config": "*",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@web-agency/eslint-config": "*",
+    "@web-agency/types": "*",
+    "@web-agency/typescript-config": "*",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
     "typescript": "^5"
