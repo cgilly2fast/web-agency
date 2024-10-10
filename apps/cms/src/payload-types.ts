@@ -15,6 +15,7 @@ export interface Config {
     media: Media;
     pages: Page;
     tenants: Tenant;
+    domains: Domain;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-locked-documents': PayloadLockedDocument;
@@ -125,9 +126,31 @@ export interface Page {
   slug?: string | null;
   tenant?: (string | null) | Tenant;
   richText?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "domains".
+ */
+export interface Domain {
+  id: string;
+  name: string;
+  title: string;
+  logo?: (string | null) | Media;
+  logoDarkMode?: (string | null) | Media;
+  icon?: (string | null) | Media;
+  iconDarkMode?: (string | null) | Media;
+  favicon?: (string | null) | Media;
+  ogImage?: (string | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -332,6 +355,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tenants';
         value: string | Tenant;
+      } | null)
+    | ({
+        relationTo: 'domains';
+        value: string | Domain;
       } | null)
     | ({
         relationTo: 'forms';

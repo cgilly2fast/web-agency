@@ -1,15 +1,15 @@
 import type { Access } from 'payload'
 
-import { checkUserRoles } from '../../utilities/checkUserRoles'
+import { isSuperAdmin } from '../utilities/isSuperAdmin'
 
-// the user must be an admin of the document's tenant
+// the user must be an admin of the tenant being accessed
 export const tenantAdmins: Access = ({ req: { user } }) => {
-  if (checkUserRoles(['super-admin'], user)) {
+  if (isSuperAdmin(user)) {
     return true
   }
 
   return {
-    tenant: {
+    id: {
       in:
         user?.tenants
           ?.map(({ tenant, roles }) =>

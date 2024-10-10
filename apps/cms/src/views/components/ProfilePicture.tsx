@@ -1,8 +1,9 @@
+'use client'
 import React from 'react'
 import { useAuth } from '@payloadcms/ui'
-import { Media, User } from '@web-agency/types'
+import { Media, User } from '../../payload-types'
 
-const ProfilePicture: React.FC = () => {
+const ProfilePicture = () => {
   const { user } = useAuth<User>()
   return (
     <img
@@ -13,7 +14,7 @@ const ProfilePicture: React.FC = () => {
         objectFit: 'cover',
       }}
       src={
-        (user?.avatar as Media).url ||
+        (user?.avatar as Media)?.url ||
         'https://www.gravatar.com/avatar/218644472ede33e83ae2002c4f4336d3?default=mp&r=g&s=50'
       }
       alt="yas"

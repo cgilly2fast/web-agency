@@ -2,7 +2,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, MetaConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
@@ -16,19 +16,23 @@ import { Pages } from './collections/Pages'
 import { Tenants } from './collections/Tenants'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
+import { Domains } from './collections/Domains'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    avatar: {
+      Component: '@/views/components/ProfilePicture',
+    },
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
   cors: '*',
-  collections: [Users, Media, Pages, Tenants],
+  collections: [Users, Media, Pages, Tenants, Domains],
   editor: lexicalEditor(),
   globals: [MainMenu],
   secret: process.env.PAYLOAD_SECRET || '',
@@ -60,6 +64,6 @@ export default buildConfig({
       stripeSecretKey: process.env.STRIPE_SECRET!,
       rest: true,
     }),
-    // seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
+    seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
   ],
 })

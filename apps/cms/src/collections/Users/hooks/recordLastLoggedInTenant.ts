@@ -6,13 +6,13 @@ export const recordLastLoggedInTenant: CollectionAfterLoginHook = async ({ req, 
       collection: 'tenants',
       where: {
         'domains.domain': {
-          in: [req.host],
+          in: [req.headers.get('host')],
         },
       },
       depth: 0,
       limit: 1,
     })
-
+    console.log('relatedOrg', relatedOrg)
     if (relatedOrg.docs && relatedOrg.docs.length > 0 && relatedOrg.docs[0]) {
       await req.payload.update({
         id: user.id,

@@ -3,8 +3,6 @@ import type { Access } from 'payload'
 import { isSuperAdmin } from '../../utilities/isSuperAdmin'
 
 export const tenants: Access = ({ req: { user }, data }) => {
-  console.log('tenats user', user)
-  console.log('tenats data', data)
   let lastTenantId = ''
   if (typeof user?.lastLoggedInTenant === 'string') {
     lastTenantId = user.lastLoggedInTenant

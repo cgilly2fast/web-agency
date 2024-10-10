@@ -12,6 +12,7 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: {
     tokenExpiration: 82800,
+    useAPIKey: true,
   },
   admin: {
     useAsTitle: 'email',
@@ -47,6 +48,7 @@ export const Users: CollectionConfig = {
       type: 'select',
       hasMany: true,
       required: true,
+      defaultValue: 'user',
       access: {
         create: superAdminFieldAccess,
         update: superAdminFieldAccess,
@@ -60,6 +62,10 @@ export const Users: CollectionConfig = {
         {
           label: 'User',
           value: 'user',
+        },
+        {
+          label: 'Domains API Access',
+          value: 'domains-api',
         },
       ],
     },

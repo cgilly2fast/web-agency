@@ -1,6 +1,6 @@
-import type { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 
-import { superAdmins } from '../access/superAdmins'
+import { superAdmins } from './access/superAdmins'
 import { tenantAdmins } from './access/tenantAdmins'
 
 export const Tenants: CollectionConfig = {
@@ -32,5 +32,11 @@ export const Tenants: CollectionConfig = {
         },
       ],
     },
+    // {
+    //   name: 'domains',
+    //   type: 'relationship',
+    //   relationTo: 'domains',
+    //   index: true,
+    // },
   ],
 }

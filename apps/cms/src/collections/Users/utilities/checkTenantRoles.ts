@@ -9,16 +9,16 @@ export const checkTenantRoles = (
 
   const id = typeof tenant === 'string' ? tenant : tenant?.id
 
-  if (tenant) {
-    if (
-      tenantRoles.some((role) => {
-        return user?.tenants?.some(({ tenant: userTenant, roles }) => {
-          const tenantID = typeof userTenant === 'string' ? userTenant : userTenant?.id
-          return tenantID === id && roles?.includes(role)
-        })
-      })
-    )
-      return true
+  if (!user.tenants) return false
+
+  for (let i = 0; i < tenantRoles.length; i++) {
+    const role = tenantRoles[i]!
+
+    for (let j = 0; j < user.tenants.length; i++) {
+      const { tenant: userTenant, roles } = user.tenants[i]!
+      const tenantID = typeof userTenant === 'string' ? userTenant : userTenant?.id
+      return tenantID === id && roles?.includes(role)
+    }
   }
 
   return false
