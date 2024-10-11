@@ -1,0 +1,62 @@
+# Settings for Backend (on Cloud Run).
+# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
+runConfig:
+  minInstances: 0
+  # maxInstances: 100
+  # concurrency: 80
+  # cpu: 1
+  # memoryMiB: 512
+
+  # Environment variables and secrets.
+  # env:
+  # Configure environment variables.
+  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
+  # - variable: MESSAGE
+  #   value: Hello world!
+  #   availability:
+  #     - BUILD
+  #     - RUNTIME
+
+  # Grant access to secrets in Cloud Secret Manager.
+  # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
+  # - variable: MY_SECRET
+  #   secret: mySecretRef
+env:
+  - variable: PAYLOAD_SECRET
+    secret: PAYLOAD_SECRET
+  - variable: REVALIDATION_SECRET
+    secret: REVALIDATION_SECRET
+  - variable: SERVICE_ACCOUNT_TYPE
+    secret: SERVICE_ACCOUNT_TYPE
+  - variable: PAYLOAD_PUBLIC_SERVER_URL
+    secret: PAYLOAD_PUBLIC_SERVER_URL
+  - variable: PAYLOAD_PUBLIC_SITE_URL
+    secret: PAYLOAD_PUBLIC_SITE_URL
+  - variable: NEXT_PUBLIC_SERVER_URL
+    secret: NEXT_PUBLIC_SERVER_URL
+  - variable: SERVICE_ACCOUNT_PROJECT_ID
+    secret: SERVICE_ACCOUNT_PROJECT_ID
+  - variable: SERVICE_ACCOUNT_PRIVATE_KEY_ID
+    secret: SERVICE_ACCOUNT_PRIVATE_KEY_ID
+  - variable: SERVICE_ACCOUNT_CLIENT_EMAIL
+    secret: SERVICE_ACCOUNT_CLIENT_EMAIL
+  - variable: SERVICE_ACCOUNT_CLIENT_ID
+    secret: SERVICE_ACCOUNT_CLIENT_ID
+  - variable: SERVICE_ACCOUNT_AUTH_URL
+    secret: SERVICE_ACCOUNT_AUTH_URL
+  - variable: SERVICE_ACCOUNT_TOKEN_URL
+    secret: SERVICE_ACCOUNT_TOKEN_URL
+  - variable: SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
+    secret: SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL
+  - variable: SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
+    secret: SERVICE_ACCOUNT_CLIENT_X509_CERT_URL
+  - variable: SERVICE_ACCOUNT_UNIVERSE_DOMAIN
+    secret: SERVICE_ACCOUNT_UNIVERSE_DOMAIN
+  - variable: GOOGLE_OAUTH_CLIENT_ID
+    secret: GOOGLE_OAUTH_CLIENT_ID
+  - variable: GOOGLE_OAUTH_CLIENT_SECRET
+    secret: GOOGLE_OAUTH_CLIENT_SECRET
+  - variable: NEXT_PUBLIC_SB
+    secret: NEXT_PUBLIC_SB
+  - variable: STRIPE_SECRET
+    secret: STRIPE_SECRET

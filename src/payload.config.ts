@@ -9,6 +9,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { gcsStorage } from '@payloadcms/storage-gcs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { OAuth2Plugin } from 'payload-oauth2'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -35,6 +36,7 @@ export default buildConfig({
         Logo: '@/graphics/Logo/index',
         Icon: '@/graphics/Icon/index',
       },
+      afterLogin: ['@/components/GoogleOAuthButton'],
     },
     // meta: {
     //   icons
@@ -74,5 +76,29 @@ export default buildConfig({
       rest: true,
     }),
     seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
+    OAuth2Plugin({
+      enabled: true,
+      serverURL: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+      authCollection: 'users',
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
+      tokenEndpoint: 'https://oauth2.googleapis.com/token',
+      scopes: [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'openid',
+      ],
+      providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      getUserInfo: async (accessToken: string) => {
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        const user = await response.json()
+        return { email: user.email, sub: user.sub }
+      },
+      successRedirect: () => '/admin',
+      failureRedirect: () => '/login',
+      strategyName: 'google',
+    }),
   ],
 })

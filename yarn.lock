@@ -1747,6 +1747,18 @@
     ts-essentials "10.0.2"
     tsx "4.19.1"
 
+"@payloadcms/live-preview-react@beta":
+  version "3.0.0-beta.113"
+  resolved "https://registry.yarnpkg.com/@payloadcms/live-preview-react/-/live-preview-react-3.0.0-beta.113.tgz#201aae15968ce52428f9b56d84df80d1e2d3b2d4"
+  integrity sha512-kI9/a069aGS1vMnDiCa/+7ffxVwCIlcO3WcgC098dNjIIMqftOJ87gaoXDzJ2yhoyIE6573k18Ds1lCt7r1c+A==
+  dependencies:
+    "@payloadcms/live-preview" "3.0.0-beta.113"
+
+"@payloadcms/live-preview@3.0.0-beta.113":
+  version "3.0.0-beta.113"
+  resolved "https://registry.yarnpkg.com/@payloadcms/live-preview/-/live-preview-3.0.0-beta.113.tgz#b559bb632357c499b433ad4805373390f5c20ef4"
+  integrity sha512-6FE3OG09pMAYINNTWzCjHV4Jdqnf1d3V9J+FOeRhWCDqCxYx3+yb2vmIpnMKzCfdkezmIzunHofVmsfUqvIZkQ==
+
 "@payloadcms/next@beta":
   version "3.0.0-beta.113"
   resolved "https://registry.yarnpkg.com/@payloadcms/next/-/next-3.0.0-beta.113.tgz#cd9bad42bb1da028813b80a5f1fa0dadd2f65e60"
@@ -5563,6 +5575,11 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+
+payload-oauth2@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/payload-oauth2/-/payload-oauth2-1.0.3.tgz#5d605eccc92a34cdc2c1365a6c31c2755742e289"
+  integrity sha512-yy2kytNrExwsfnYUmNz9Tp+LbgB6r7BGeyiiLYGTizndeujgKFqOwt6g+DzFFm91zgQ3hxReDmujIAgm4N0mtA==
 
 payload@beta:
   version "3.0.0-beta.113"
