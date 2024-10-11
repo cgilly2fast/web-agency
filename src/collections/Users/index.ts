@@ -7,9 +7,19 @@ import { tenantAdmins } from './access/tenantAdmins'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
 import { recordLastLoggedInTenant } from './hooks/recordLastLoggedInTenant'
 import { isSuperOrTenantAdmin } from './utilities/isSuperOrTenantAdmin'
+import { meToo } from '@/lib/meToo'
 
 export const Users: CollectionConfig = {
   slug: 'users',
+  endpoints: [
+    {
+      handler: meToo,
+
+      method: 'get',
+
+      path: '/me-too',
+    },
+  ],
   auth: {
     tokenExpiration: 82800,
     useAPIKey: true,
