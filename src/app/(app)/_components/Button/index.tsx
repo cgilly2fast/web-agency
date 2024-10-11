@@ -6,13 +6,13 @@ import React from 'react'
 import classes from './index.module.scss'
 
 export type Props = {
-  appearance?: 'default' | 'primary' | 'secondary'
+  appearance?: 'default' | 'primary' | 'secondary' | null
   className?: string
   disabled?: boolean
   el?: 'a' | 'button' | 'link'
-  href?: string
+  href?: string | null
   label?: string
-  newTab?: boolean
+  newTab?: boolean | null
   onClick?: () => void
   type?: 'button' | 'submit'
 }
@@ -61,7 +61,7 @@ export const Button: React.FC<Props> = ({
   return (
     <Element
       className={className}
-      href={href}
+      href={href || ''}
       type={type}
       {...newTabProps}
       disabled={disabled}

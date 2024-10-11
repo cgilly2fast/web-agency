@@ -1,22 +1,22 @@
 import Link from 'next/link'
 import React from 'react'
 
-import type { Page } from '../../../payload-types'
+import type { Page } from '@/payload-types'
 
 import { Button } from '../Button'
 
 export type CMSLinkType = {
-  appearance?: 'default' | 'primary' | 'secondary'
-  children?: React.ReactNode
+  appearance?: 'default' | 'primary' | 'secondary' | null
+  children?: React.ReactNode | null
   className?: string
   label?: string
-  newTab?: boolean
+  newTab?: boolean | null
   reference?: {
     relationTo: 'pages'
     value: Page | string
-  }
-  type?: 'custom' | 'reference'
-  url?: string
+  } | null
+  type?: 'custom' | 'reference' | null
+  url?: string | null
 }
 
 export const CMSLink: React.FC<CMSLinkType> = ({
@@ -39,7 +39,7 @@ export const CMSLink: React.FC<CMSLinkType> = ({
 
     if (type === 'custom') {
       return (
-        <a href={url} {...newTabProps} className={className}>
+        <a href={url || ''} {...newTabProps} className={className}>
           {label && label}
           {children && children}
         </a>

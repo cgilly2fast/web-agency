@@ -13,10 +13,11 @@ import { RefreshRouteOnSave } from './RefreshRouteOnSave'
 import classes from './index.module.scss'
 
 interface PageParams {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export default async function Page({ params: { slug = 'home' } }: PageParams) {
+export default async function Page({ params }: PageParams) {
+  const { slug } = await params
   const payload = await getPayloadHMR({ config })
 
   const pageRes = await payload.find({
