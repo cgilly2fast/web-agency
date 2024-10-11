@@ -52,6 +52,11 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  - variable: SERVICE_ACCOUNT_PRIVATE_KEY
+    secret: SERVICE_ACCOUNT_PRIVATE_KEY
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: SERVICE_ACCOUNT_CLIENT_EMAIL
     secret: SERVICE_ACCOUNT_CLIENT_EMAIL
     availability:
