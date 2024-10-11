@@ -36,12 +36,13 @@ export default buildConfig({
         Logo: '@/graphics/Logo/index',
         Icon: '@/graphics/Icon/index',
       },
-      afterLogin: ['@/components/GoogleOAuthButton'],
+      // afterLogin: ['@/components/GoogleOAuthButton'],
     },
     // meta: {
     //   icons
     // }
   },
+  serverURL: 'https://web.firmleads.io',
   cors: '*',
   collections: [Users, Media, Pages, Tenants, Domains],
   editor: lexicalEditor(),

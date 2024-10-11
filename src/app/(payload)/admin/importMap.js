@@ -29,7 +29,6 @@ import { ItalicFeatureClient as ItalicFeatureClient_27 } from '@payloadcms/richt
 import { default as default_28 } from '@/views/components/ProfilePicture'
 import { default as default_29 } from '@/graphics/Icon/index'
 import { default as default_30 } from '@/graphics/Logo/index'
-import { default as default_31 } from '@/components/GoogleOAuthButton'
 
 export const importMap = {
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_0,
@@ -62,6 +61,5 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_27,
   "@/views/components/ProfilePicture#default": default_28,
   "@/graphics/Icon/index#default": default_29,
-  "@/graphics/Logo/index#default": default_30,
-  "@/components/GoogleOAuthButton#default": default_31
+  "@/graphics/Logo/index#default": default_30
 }
