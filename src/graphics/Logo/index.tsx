@@ -9,7 +9,8 @@ const LogoClient = dynamic(() => import('./Logo.client'), {
 
 async function getData() {
   const res = await fetch(
-    'http://localhost:3000/api/domains?depth=1&draft=false&locale=undefined&limit=333',
+    process.env.PAYLOAD_PUBLIC_SERVER_URL +
+      '/api/domains?depth=1&draft=false&locale=undefined&limit=333',
     {
       headers: {
         Authorization: `users API-Key 476165bd-d304-4e5c-b1cb-cde748c5ff7b`,

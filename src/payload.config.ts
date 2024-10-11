@@ -22,8 +22,6 @@ import { Domains } from './collections/Domains'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-console.log('DATABASE URI', process.env.DATABASE_URI)
-
 export default buildConfig({
   admin: {
     avatar: {
@@ -80,7 +78,7 @@ export default buildConfig({
     seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
     OAuth2Plugin({
       enabled: true,
-      serverURL: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+      serverURL: process.env.NEXT_PUBLIC_URL || '',
       authCollection: 'users',
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',

@@ -29,7 +29,7 @@ const IconClient: React.FC<IconProps> = ({ iconMap, darkModeIconMap }) => {
         margin: 'auto',
         objectFit: 'cover',
       }}
-      src={'http://localhost:3000' + currentIcon}
+      src={process.env.PAYLOAD_PUBLIC_SERVER_URL + currentIcon}
       alt="icon"
       width={19}
       height={19}
