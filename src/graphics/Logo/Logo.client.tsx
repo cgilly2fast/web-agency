@@ -29,7 +29,7 @@ const LogoClient: React.FC<LogoProps> = ({ logoMap, darkModeLogoMap }) => {
         margin: 'auto',
         objectFit: 'cover',
       }}
-      src={process.env.PAYLOAD_PUBLIC_SERVER_URL + currentLogo}
+      src={process.env.NEXT_PUBLIC_SERVER_URL + currentLogo}
       alt="logo"
       width={125}
       height={125}
