@@ -42,7 +42,7 @@ export default buildConfig({
     //   icons
     // }
   },
-  serverURL: 'https://web.firmleads.io',
+  // serverURL: 'https://web.firmleads.io',
   cors: '*',
   collections: [Users, Media, Pages, Tenants, Domains],
   editor: lexicalEditor(),
