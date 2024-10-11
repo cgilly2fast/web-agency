@@ -7,6 +7,11 @@ runConfig:
   # cpu: 1
   # memoryMiB: 512
 env:
+  - variable: DATABASE_URI
+    secret: DATABASE_URI
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: PAYLOAD_SECRET
     secret: PAYLOAD_SECRET
     availability:
