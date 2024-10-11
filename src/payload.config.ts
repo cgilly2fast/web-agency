@@ -96,6 +96,28 @@ export default buildConfig({
       successRedirect: () => '/admin',
       failureRedirect: () => '/login',
       strategyName: 'google',
+      subFieldName: 'google',
+    }),
+    OAuth2Plugin({
+      enabled: true,
+      serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+      authCollection: 'users',
+      clientId: process.env.MS_OAUTH_CLIENT_ID || '',
+      clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
+      tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+      scopes: ['https://graph.microsoft.com/User.Read', 'openid', 'email', 'profile'],
+      providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+      getUserInfo: async (accessToken: string) => {
+        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        const user = await response.json()
+        return { email: user.mail || user.userPrincipalName, sub: user.id }
+      },
+      successRedirect: () => '/admin',
+      failureRedirect: () => '/login',
+      strategyName: 'microsoft',
+      subFieldName: 'microsoft',
     }),
   ],
 })
