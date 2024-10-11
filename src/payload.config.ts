@@ -22,6 +22,8 @@ import { Domains } from './collections/Domains'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+console.log('DATABASE URI', process.env.DATABASE_URI)
+
 export default buildConfig({
   admin: {
     avatar: {
