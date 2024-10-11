@@ -20,3 +20,5 @@ export const serviceAccount = {
   client_x509_cert_url: process.env.SERVICE_ACCOUNT_CLIENT_X509_CERT_URL,
   universe_domain: process.env.SERVICE_ACCOUNT_UNIVERSE_DOMAIN,
 }
+
+console.log('SERVICE_ACCOUNT', serviceAccount)
