@@ -36,13 +36,9 @@ export default buildConfig({
         Logo: '@/graphics/Logo/index',
         Icon: '@/graphics/Icon/index',
       },
-      // afterLogin: ['@/components/GoogleOAuthButton'],
+      afterLogin: ['@/components/GoogleOAuthButton'],
     },
-    // meta: {
-    //   icons
-    // }
   },
-  // serverURL: 'https://web.firmleads.io',
   cors: '*',
   collections: [Users, Media, Pages, Tenants, Domains],
   editor: lexicalEditor(),
@@ -77,29 +73,29 @@ export default buildConfig({
       rest: true,
     }),
     seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
-    // OAuth2Plugin({
-    //   enabled: true,
-    //   serverURL: process.env.NEXT_PUBLIC_URL || '',
-    //   authCollection: 'users',
-    //   clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
-    //   clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
-    //   tokenEndpoint: 'https://oauth2.googleapis.com/token',
-    //   scopes: [
-    //     'https://www.googleapis.com/auth/userinfo.email',
-    //     'https://www.googleapis.com/auth/userinfo.profile',
-    //     'openid',
-    //   ],
-    //   providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-    //   getUserInfo: async (accessToken: string) => {
-    //     const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-    //       headers: { Authorization: `Bearer ${accessToken}` },
-    //     })
-    //     const user = await response.json()
-    //     return { email: user.email, sub: user.sub }
-    //   },
-    //   successRedirect: () => '/admin',
-    //   failureRedirect: () => '/login',
-    //   strategyName: 'google',
-    // }),
+    OAuth2Plugin({
+      enabled: true,
+      serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+      authCollection: 'users',
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
+      tokenEndpoint: 'https://oauth2.googleapis.com/token',
+      scopes: [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'openid',
+      ],
+      providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      getUserInfo: async (accessToken: string) => {
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        const user = await response.json()
+        return { email: user.email, sub: user.sub }
+      },
+      successRedirect: () => '/admin',
+      failureRedirect: () => '/login',
+      strategyName: 'google',
+    }),
   ],
 })
