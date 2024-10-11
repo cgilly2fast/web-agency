@@ -33,8 +33,12 @@ export default buildConfig({
     components: {
       graphics: {
         Logo: '@/graphics/Logo/index',
+        Icon: '@/graphics/Icon/index',
       },
     },
+    // meta: {
+    //   icons
+    // }
   },
   cors: '*',
   collections: [Users, Media, Pages, Tenants, Domains],
