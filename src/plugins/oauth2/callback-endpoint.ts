@@ -90,13 +90,18 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
           showHiddenFields: true,
         })
       } else {
-        user = await req.payload.update({
-          req,
-          collection: authCollection,
-          id: existingUser.docs[0].id,
-          data: userInfo,
-          showHiddenFields: true,
-        })
+        try {
+          user = await req.payload.update({
+            req,
+            collection: authCollection,
+            id: existingUser.docs[0].id,
+            data: userInfo,
+            showHiddenFields: true,
+          })
+        } catch (error) {
+          console.log('User Update Error:', error)
+          throw error
+        }
       }
 
       // /////////////////////////////////////
@@ -118,15 +123,23 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       // /////////////////////////////////////
       // login - OAuth2
       // /////////////////////////////////////
-      const fieldsToSign = getFieldsToSign({
-        collectionConfig,
-        email: user.email,
-        user,
-      })
+      let fieldsToSign
+      try {
+        console.log('fields to sign', { collectionConfig, email: user.email, user })
+        fieldsToSign = getFieldsToSign({
+          collectionConfig,
+          email: user.email,
+          user,
+        })
+      } catch (error) {
+        console.log('getFieldsToSign', error)
+        throw error
+      }
 
       const token = jwt.sign(fieldsToSign, req.payload.secret, {
         expiresIn: collectionConfig.auth.tokenExpiration,
       })
+      console.log('token', token)
       req.user = user
 
       // /////////////////////////////////////
@@ -154,11 +167,18 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       // /////////////////////////////////////
       // generate and set cookie
       // /////////////////////////////////////
-      const cookie = generatePayloadCookie({
-        collectionAuthConfig: collectionConfig.auth,
-        cookiePrefix: req.payload.config.cookiePrefix,
-        token,
-      })
+      let cookie
+      try {
+        cookie = generatePayloadCookie({
+          collectionAuthConfig: collectionConfig.auth,
+          cookiePrefix: req.payload.config.cookiePrefix,
+          token,
+        })
+      } catch (error) {
+        console.log('generatePayloadCookie', error)
+        throw error
+      }
+      console.log('cookie', cookie)
 
       // /////////////////////////////////////
       // success redirect

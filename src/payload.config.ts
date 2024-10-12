@@ -107,9 +107,12 @@ export default buildConfig({
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
+        console.log('GOOGLE OAUTH RESPONSE', response)
         const user = await response.json()
+        console.log('GOOGLE OAUTH USER', user)
         return { email: user.email, sub: user.sub }
       },
+      useEmailAsIdentity: true,
       successRedirect: () => '/admin',
       failureRedirect: () => '/admin/login',
       strategyName: 'google',
@@ -133,6 +136,7 @@ export default buildConfig({
         const user = await response.json()
         return { email: user.mail || user.userPrincipalName, sub: user.id }
       },
+      useEmailAsIdentity: true,
       successRedirect: () => '/admin',
       failureRedirect: () => '/admin/login',
       strategyName: 'microsoft',
