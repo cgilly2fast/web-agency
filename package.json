@@ -26,6 +26,7 @@
     "@payloadcms/richtext-lexical": "beta",
     "@payloadcms/storage-gcs": "beta",
     "@payloadcms/ui": "beta",
+    "@types/jsonwebtoken": "^9.0.7",
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
     "firebase": "^10.14.1",

@@ -9,7 +9,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { gcsStorage } from '@payloadcms/storage-gcs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { OAuth2Plugin } from 'payload-oauth2'
+import { OAuth2Plugin } from './plugins/oauth2'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -18,7 +18,6 @@ import { Tenants } from './collections/Tenants'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
 import { Domains } from './collections/Domains'
-import ChatNavLink from './views/Chat/components/ChatNavLink'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -112,7 +111,7 @@ export default buildConfig({
         return { email: user.email, sub: user.sub }
       },
       successRedirect: () => '/admin',
-      failureRedirect: () => '/login',
+      failureRedirect: () => '/admin/login',
       strategyName: 'google',
       subFieldName: 'google',
     }),
@@ -135,7 +134,7 @@ export default buildConfig({
         return { email: user.mail || user.userPrincipalName, sub: user.id }
       },
       successRedirect: () => '/admin',
-      failureRedirect: () => '/login',
+      failureRedirect: () => '/admin/login',
       strategyName: 'microsoft',
       subFieldName: 'microsoft',
     }),
