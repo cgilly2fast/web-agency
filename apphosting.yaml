@@ -102,6 +102,16 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  - variable: MS_OAUTH_CLIENT_ID
+    secret: MS_OAUTH_CLIENT_ID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: MS_OAUTH_CLIENT_SECRET
+    secret: MS_OAUTH_CLIENT_SECRET
+    availability:
+      - BUILD
+      - RUNTIME
   - variable: NEXT_PUBLIC_SB
     secret: NEXT_PUBLIC_SB
     availability:
@@ -109,6 +119,66 @@ env:
       - RUNTIME
   - variable: STRIPE_SECRET
     secret: STRIPE_SECRET
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_APIKEY
+    secret: PAYLOAD_PUBLIC_APIKEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_FUNCTION_URL
+    secret: PAYLOAD_PUBLIC_FUNCTION_URL
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_AUTHDOMAIN
+    secret: PAYLOAD_PUBLIC_AUTHDOMAIN
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_DB
+    secret: PAYLOAD_PUBLIC_DB
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_PID
+    secret: PAYLOAD_PUBLIC_PID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_SB
+    secret: PAYLOAD_PUBLIC_SB
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_SID
+    secret: PAYLOAD_PUBLIC_SID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_APPID
+    secret: PAYLOAD_PUBLIC_APPID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYLOAD_PUBLIC_MID
+    secret: PAYLOAD_PUBLIC_MID
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: ANTHROPIC_SECRET
+    secret: ANTHROPIC_SECRET
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEVER_BOUNCE_APIKEY
+    secret: NEVER_BOUNCE_APIKEY
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: TELYNX_APIKEY
+    secret: TELYNX_APIKEY
     availability:
       - BUILD
       - RUNTIME

@@ -18,6 +18,7 @@ import { Tenants } from './collections/Tenants'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
 import { Domains } from './collections/Domains'
+import ChatNavLink from './views/Chat/components/ChatNavLink'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,7 +26,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     avatar: {
-      Component: '@/views/components/ProfilePicture',
+      Component: '@/views/ProfilePicture',
     },
     user: Users.slug,
     importMap: {
@@ -36,7 +37,17 @@ export default buildConfig({
         Logo: '@/graphics/Logo/index',
         Icon: '@/graphics/Icon/index',
       },
-      afterLogin: ['@/components/GoogleOAuthButton'],
+      afterLogin: ['@/components/GoogleOAuthButton', '@/components/MicrosoftOAuthButton'],
+      afterNavLinks: ['@/views/Chat/components/ChatNavLink'],
+      views: {
+        chat: {
+          Component: '@/views/Chat/index',
+          path: '/chat',
+        },
+      },
+    },
+    meta: {
+      icons: [{ url: process.env.PAYLOAD_PUBLIC_SERVER_URL + '/favicon' }],
     },
   },
   cors: '*',
@@ -51,6 +62,11 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   sharp,
+  upload: {
+    limits: {
+      fileSize: 15000000,
+    },
+  },
   plugins: [
     gcsStorage({
       collections: {
@@ -77,8 +93,10 @@ export default buildConfig({
       enabled: true,
       serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
       authCollection: 'users',
+      authorizePath: '/g/oauth/authorize',
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
+      callbackPath: '/g/oauth/callback',
       tokenEndpoint: 'https://oauth2.googleapis.com/token',
       scopes: [
         'https://www.googleapis.com/auth/userinfo.email',
@@ -102,8 +120,10 @@ export default buildConfig({
       enabled: true,
       serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
       authCollection: 'users',
+      authorizePath: '/ms/oauth/authorize',
       clientId: process.env.MS_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
+      callbackPath: '/ms/oauth/callback',
       tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
       scopes: ['https://graph.microsoft.com/User.Read', 'openid', 'email', 'profile'],
       providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',

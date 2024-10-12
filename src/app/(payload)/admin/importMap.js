@@ -26,9 +26,13 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_24 } from '@pa
 import { UnderlineFeatureClient as UnderlineFeatureClient_25 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_26 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_27 } from '@payloadcms/richtext-lexical/client'
-import { default as default_28 } from '@/views/components/ProfilePicture'
+import { default as default_28 } from '@/views/ProfilePicture'
 import { default as default_29 } from '@/graphics/Icon/index'
 import { default as default_30 } from '@/graphics/Logo/index'
+import { default as default_31 } from '@/components/GoogleOAuthButton'
+import { default as default_32 } from '@/components/MicrosoftOAuthButton'
+import { default as default_33 } from '@/views/Chat/components/ChatNavLink'
+import { default as default_34 } from '@/views/Chat/index'
 
 export const importMap = {
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_0,
@@ -59,7 +63,11 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_25,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_26,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_27,
-  "@/views/components/ProfilePicture#default": default_28,
+  "@/views/ProfilePicture#default": default_28,
   "@/graphics/Icon/index#default": default_29,
-  "@/graphics/Logo/index#default": default_30
+  "@/graphics/Logo/index#default": default_30,
+  "@/components/GoogleOAuthButton#default": default_31,
+  "@/components/MicrosoftOAuthButton#default": default_32,
+  "@/views/Chat/components/ChatNavLink#default": default_33,
+  "@/views/Chat/index#default": default_34
 }

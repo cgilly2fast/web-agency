@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { useAuth } from '@payloadcms/ui'
-import { Media, User } from '../../payload-types'
+import { Media, User } from '../payload-types'
 
 const ProfilePicture = () => {
   const { user } = useAuth<User>()

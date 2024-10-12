@@ -15,6 +15,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.29.0",
     "@payloadcms/db-mongodb": "beta",
     "@payloadcms/live-preview-react": "beta",
     "@payloadcms/next": "beta",
@@ -27,15 +28,22 @@
     "@payloadcms/ui": "beta",
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
+    "firebase": "^10.14.1",
+    "google-libphonenumber": "^3.2.38",
     "graphql": "^16.8.1",
+    "neverbounce": "^4.4.1",
     "next": "next@15.0.0-canary.173",
     "payload": "beta",
     "payload-oauth2": "^1.0.3",
     "react": "19.0.0-rc-3edc000d-20240926",
     "react-dom": "19.0.0-rc-3edc000d-20240926",
-    "sharp": "0.32.6"
+    "sharp": "0.32.6",
+    "telnyx": "^2.0.0-beta.2",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
+    "@types/google-libphonenumber": "^7.4.30",
+    "@types/neverbounce": "^4.2.4",
     "@types/node": "^22.5.4",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
