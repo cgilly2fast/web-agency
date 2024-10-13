@@ -1,22 +1,20 @@
-import { Endpoint } from "payload";
-import { PluginTypes } from "./types";
+import { Endpoint } from 'payload'
+import { PluginTypes } from './types'
 
-export const createAuthorizeEndpoint = (
-  pluginOptions: PluginTypes,
-): Endpoint => ({
-  method: "get",
-  path: pluginOptions.authorizePath || "/oauth/authorize",
+export const createAuthorizeEndpoint = (pluginOptions: PluginTypes): Endpoint => ({
+  method: 'get',
+  path: pluginOptions.authorizePath || '/oauth/authorize',
   handler: async () => {
-    const clientId = pluginOptions.clientId;
-    const authCollection = pluginOptions.authCollection || "users";
-    const callbackPath = pluginOptions.callbackPath || "/oauth/callback";
+    const clientId = pluginOptions.clientId
+    const authCollection = pluginOptions.authCollection || 'users'
+    const callbackPath = pluginOptions.callbackPath || '/oauth/callback'
     const redirectUri = encodeURIComponent(
-      `${pluginOptions.serverURL}/api/${authCollection}${callbackPath}`,
-    );
-    const scope = encodeURIComponent(pluginOptions.scopes.join(" "));
-    const responseType = "code";
-    const accessType = "offline";
-    const authorizeUrl = `${pluginOptions.providerAuthorizationUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&access_type=${accessType}`;
-    return Response.redirect(authorizeUrl);
+      `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/${authCollection}${callbackPath}`,
+    )
+    const scope = encodeURIComponent(pluginOptions.scopes.join(' '))
+    const responseType = 'code'
+    const accessType = 'offline'
+    const authorizeUrl = `${pluginOptions.providerAuthorizationUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&access_type=${accessType}`
+    return Response.redirect(authorizeUrl)
   },
-});
+})

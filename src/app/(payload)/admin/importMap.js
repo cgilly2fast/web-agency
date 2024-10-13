@@ -31,9 +31,8 @@ import { default as default_29 } from '@/views/ProfilePicture'
 import { default as default_30 } from '@/graphics/Icon/index'
 import { default as default_31 } from '@/graphics/Logo/index'
 import { default as default_32 } from '@/components/GoogleOAuthButton'
-import { default as default_33 } from '@/components/MicrosoftOAuthButton'
-import { default as default_34 } from '@/views/Chat/components/ChatNavLink'
-import { default as default_35 } from '@/views/Chat/index'
+import { default as default_33 } from '@/views/Chat/components/ChatNavLink'
+import { default as default_34 } from '@/views/Chat/index'
 
 export const importMap = {
   "@/collections/fields/TenantField/components/index#default": default_0,
@@ -69,7 +68,6 @@ export const importMap = {
   "@/graphics/Icon/index#default": default_30,
   "@/graphics/Logo/index#default": default_31,
   "@/components/GoogleOAuthButton#default": default_32,
-  "@/components/MicrosoftOAuthButton#default": default_33,
-  "@/views/Chat/components/ChatNavLink#default": default_34,
-  "@/views/Chat/index#default": default_35
+  "@/views/Chat/components/ChatNavLink#default": default_33,
+  "@/views/Chat/index#default": default_34
 }

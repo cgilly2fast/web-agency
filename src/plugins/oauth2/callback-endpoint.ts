@@ -21,7 +21,7 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       const authCollection = (pluginOptions.authCollection as CollectionSlug) || 'users'
       const collectionConfig = req.payload.collections[authCollection].config
       const callbackPath = pluginOptions.callbackPath || '/oauth/callback'
-      const redirectUri = `${pluginOptions.serverURL}/api/${authCollection}${callbackPath}`
+      const redirectUri = `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/${authCollection}${callbackPath}`
       const useEmailAsIdentity = pluginOptions.useEmailAsIdentity ?? false
 
       // /////////////////////////////////////

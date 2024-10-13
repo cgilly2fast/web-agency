@@ -17,6 +17,7 @@ import { Pages } from './collections/Pages'
 import { Tenants } from './collections/Tenants/index'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
+import { abrVideos } from './plugins/abrVideos'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,7 +36,7 @@ export default buildConfig({
         Logo: '@/graphics/Logo/index',
         Icon: '@/graphics/Icon/index',
       },
-      afterLogin: ['@/components/GoogleOAuthButton', '@/components/MicrosoftOAuthButton'],
+      afterLogin: ['@/components/GoogleOAuthButton'],
       afterNavLinks: ['@/views/Chat/components/ChatNavLink'],
       views: {
         chat: {
@@ -60,12 +61,27 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   sharp,
-  upload: {
-    limits: {
-      fileSize: 15000000,
-    },
-  },
   plugins: [
+    abrVideos({
+      collections: {
+        media: {
+          keepOriginal: true,
+          segmentDuration: 1,
+          resolutions: [
+            { size: 480, bitrate: 1000 },
+            { size: 720, bitrate: 1500 },
+            { size: 1080, bitrate: 4000 },
+            { size: 1440, bitrate: 6000 },
+            { size: 2160, bitrate: 10000 },
+          ],
+        },
+      },
+      segmentsOverrides: {
+        admin: {
+          hidden: false,
+        },
+      },
+    }),
     gcsStorage({
       collections: {
         media: {
@@ -141,4 +157,9 @@ export default buildConfig({
       subFieldName: 'microsoft',
     }),
   ],
+  upload: {
+    limits: {
+      fileSize: 25000000,
+    },
+  },
 })
