@@ -1,11 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
 import { TenantField } from '../fields/TenantField'
-import { loggedIn } from './access/loggedIn'
 import { tenantAdmins } from '../access/tenantAdmins'
 import formatSlug from './hooks/formatSlug'
-import { ensureUniqueSlug } from './hooks/enureUniqueSlug'
+import ensureUniqueSlug from './hooks/enureUniqueSlug'
 import { readByDomain } from './access/readByDomain'
+import { tenantUser } from '../access/tenantUser'
+import { Tenant } from '@/payload-types'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -13,16 +14,23 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
-      url: ({ data }) => {
+      url: async ({ data, payload }) => {
+        let tenant: Tenant | string = data.tenant
+        if (typeof tenant === 'string') {
+          tenant = await payload.findByID({
+            collection: 'tenants',
+            id: data.tenant,
+          })
+        }
         const isHomePage = data.slug === 'home'
-        return `${process.env.PAYLOAD_PUBLIC_SITE_URL}${!isHomePage ? `/${data.slug}` : ''}`
+        return `https://${tenant.domain}${!isHomePage ? `/${data.slug}` : ''}`
       },
     },
   },
   access: {
     read: readByDomain,
-    create: loggedIn,
-    update: tenantAdmins,
+    create: tenantUser,
+    update: tenantUser,
     delete: tenantAdmins,
   },
   fields: [

@@ -12,6 +12,30 @@ export const Media: CollectionConfig = {
     update: tenantAdmins,
     delete: tenantAdmins,
   },
+  upload: {
+    imageSizes: [
+      {
+        name: 'main',
+        width: 760,
+        height: 420,
+        position: 'centre',
+      },
+      {
+        name: 'preview',
+        width: 670,
+        height: 420,
+        position: 'centre',
+      },
+      {
+        name: 'thumbnail',
+        width: 370,
+        height: 270,
+        position: 'centre',
+      },
+    ],
+    adminThumbnail: 'thumbnail',
+    mimeTypes: ['image/*'],
+  },
   fields: [
     {
       name: 'alt',
@@ -20,5 +44,4 @@ export const Media: CollectionConfig = {
     },
     TenantField,
   ],
-  upload: true,
 }

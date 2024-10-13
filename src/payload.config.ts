@@ -18,6 +18,7 @@ import { Tenants } from './collections/Tenants/index'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
 import { abrVideos } from './plugins/abrVideos'
+import Blogs from './collections/Blog/Blogs'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,7 +26,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     avatar: {
-      Component: '@/views/ProfilePicture',
+      Component: '@/components/ProfilePicture',
     },
     user: Users.slug,
     importMap: {
@@ -50,7 +51,7 @@ export default buildConfig({
     },
   },
   cors: '*',
-  collections: [Users, Media, Pages, Tenants],
+  collections: [Users, Media, Pages, Tenants, Blogs],
   editor: lexicalEditor(),
   globals: [MainMenu],
   secret: process.env.PAYLOAD_SECRET || '',
@@ -102,7 +103,7 @@ export default buildConfig({
       stripeSecretKey: process.env.STRIPE_SECRET!,
       rest: true,
     }),
-    seoPlugin({ collections: ['pages'], uploadsCollection: 'media' }),
+    seoPlugin({ collections: ['pages', 'blogs'], uploadsCollection: 'media' }),
     OAuth2Plugin({
       enabled: true,
       serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
@@ -139,10 +140,9 @@ export default buildConfig({
       clientId: process.env.MS_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
       callbackPath: '/ms/oauth/callback',
-      tokenEndpoint: 'https://login.microsoftonline.com/organizations/oauth2/v2.0/token',
+      tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
       scopes: ['https://graph.microsoft.com/User.Read', 'openid', 'email', 'profile'],
-      providerAuthorizationUrl:
-        'https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize',
+      providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
           headers: { Authorization: `Bearer ${accessToken}` },

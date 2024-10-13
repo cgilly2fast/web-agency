@@ -3,7 +3,7 @@ import type { FieldHook } from 'payload'
 
 import { ValidationError } from 'payload'
 
-export const ensureUniqueSlug: FieldHook = async ({ data, originalDoc, req, value }) => {
+const ensureUniqueSlug: FieldHook = async ({ data, originalDoc, req, value }) => {
   // if value is unchanged, skip validation
   if (originalDoc.slug === value) {
     return value
@@ -64,3 +64,5 @@ export const ensureUniqueSlug: FieldHook = async ({ data, originalDoc, req, valu
 
   return value
 }
+
+export default ensureUniqueSlug

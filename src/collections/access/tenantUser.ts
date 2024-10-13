@@ -1,0 +1,25 @@
+import type { Access } from 'payload'
+
+import { isSuperAdmin } from '../utilities/isSuperAdmin'
+
+// the user must be an admin of the tenant being accessed
+export const tenantUser: Access = ({ req: { user } }) => {
+  if (isSuperAdmin(user)) {
+    return true
+  }
+
+  return {
+    id: {
+      in:
+        user?.tenants
+          ?.map(({ tenant, roles }) =>
+            roles.includes('admin') || roles.includes('user')
+              ? typeof tenant === 'string'
+                ? tenant
+                : tenant.id
+              : null,
+          ) // eslint-disable-line function-paren-newline
+          .filter(Boolean) || [],
+    },
+  }
+}

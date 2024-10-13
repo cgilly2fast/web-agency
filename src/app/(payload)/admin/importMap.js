@@ -27,7 +27,7 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_25 } from '@pa
 import { UnderlineFeatureClient as UnderlineFeatureClient_26 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_27 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_28 } from '@payloadcms/richtext-lexical/client'
-import { default as default_29 } from '@/views/ProfilePicture'
+import { default as default_29 } from '@/components/ProfilePicture'
 import { default as default_30 } from '@/graphics/Icon/index'
 import { default as default_31 } from '@/graphics/Logo/index'
 import { default as default_32 } from '@/components/GoogleOAuthButton'
@@ -64,7 +64,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_26,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_27,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_28,
-  "@/views/ProfilePicture#default": default_29,
+  "@/components/ProfilePicture#default": default_29,
   "@/graphics/Icon/index#default": default_30,
   "@/graphics/Logo/index#default": default_31,
   "@/components/GoogleOAuthButton#default": default_32,
