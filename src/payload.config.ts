@@ -14,10 +14,9 @@ import { OAuth2Plugin } from './plugins/oauth2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
-import { Tenants } from './collections/Tenants'
+import { Tenants } from './collections/Tenants/index'
 import { serviceAccount } from './config'
 import { MainMenu } from './collections/MainMenu'
-import { Domains } from './collections/Domains'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -50,7 +49,7 @@ export default buildConfig({
     },
   },
   cors: '*',
-  collections: [Users, Media, Pages, Tenants, Domains],
+  collections: [Users, Media, Pages, Tenants],
   editor: lexicalEditor(),
   globals: [MainMenu],
   secret: process.env.PAYLOAD_SECRET || '',

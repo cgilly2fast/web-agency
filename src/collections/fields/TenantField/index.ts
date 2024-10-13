@@ -4,19 +4,19 @@ import { superAdminFieldAccess } from '../../access/superAdmins'
 import { isSuperAdmin } from '../../utilities/isSuperAdmin'
 import { tenantAdminFieldAccess } from './access/tenantAdmins'
 
-export const tenant: Field = {
+export const TenantField: Field = {
   name: 'tenant',
   type: 'relationship',
   relationTo: 'tenants',
-  // don't require this field because we need to auto-populate it, see below
   // required: true,
-  // we also don't want to hide this field because super-admins may need to manage it
-  // to achieve this, create a custom component that conditionally renders the field based on the user's role
-  // hidden: true,
   index: true,
   admin: {
     position: 'sidebar',
+    components: {
+      Field: '@/collections/fields/TenantField/components/index',
+    },
   },
+  hasMany: false,
   access: {
     create: superAdminFieldAccess,
     read: tenantAdminFieldAccess,

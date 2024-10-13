@@ -5,11 +5,11 @@ import { tenantAdmins } from '../access/tenantAdmins'
 import { anyone } from '../access/anyone'
 import { validateDomain } from './validation/validateDomain'
 
-export const Domains: CollectionConfig = {
-  slug: 'domains',
+export const Tenants: CollectionConfig = {
+  slug: 'tenants',
   access: {
-    create: anyone, //superAdmins,
-    read: anyone,
+    create: superAdmins,
+    read: anyone, //tenantAdmins, // add domains api access
     update: tenantAdmins,
     delete: superAdmins,
   },
@@ -18,30 +18,26 @@ export const Domains: CollectionConfig = {
   },
   fields: [
     {
-      type: 'row',
-      fields: [
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-          label: 'Domain Name',
-          validate: validateDomain,
-          admin: {
-            description:
-              'The domain name where your site is deployed. Example: hawaiilegalhelp.com. Do not include https://',
-          },
-        },
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-          label: 'Firm Name',
-          maxLength: 50,
-          admin: {
-            description: 'Firm name. Example: Okoye Law Group LP ',
-          },
-        },
-      ],
+      name: 'name',
+      type: 'text',
+      required: true,
+      label: 'Firm Name',
+      maxLength: 50,
+      admin: {
+        description: 'Firm name. Example: Okoye Law Group LP ',
+      },
+    },
+
+    {
+      name: 'domain',
+      type: 'text',
+      required: true,
+      label: 'Domain Name',
+      // validate: validateDomain,
+      admin: {
+        description:
+          'The domain name where your site is deployed. Example: hawaiilegalhelp.com. Do not include https://',
+      },
     },
     {
       type: 'row',

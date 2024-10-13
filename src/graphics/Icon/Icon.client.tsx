@@ -7,6 +7,7 @@ interface IconProps {
 }
 
 const IconClient: React.FC<IconProps> = ({ iconMap, darkModeIconMap }) => {
+  console.log({ iconMap, darkModeIconMap })
   const [currentIcon, setCurrentIcon] = useState('')
 
   useEffect(() => {

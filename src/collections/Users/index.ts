@@ -8,6 +8,8 @@ import { loginAfterCreate } from './hooks/loginAfterCreate'
 import { recordLastLoggedInTenant } from './hooks/recordLastLoggedInTenant'
 import { isSuperOrTenantAdmin } from './utilities/isSuperOrTenantAdmin'
 import { meToo } from '@/lib/meToo'
+import { isSuperAdmin } from '../utilities/isSuperAdmin'
+import { validateTenant } from './validation/tenantValidation'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -29,7 +31,7 @@ export const Users: CollectionConfig = {
   },
   access: {
     read: adminsAndSelf,
-    create: anyone,
+    create: isSuperOrTenantAdmin,
     update: adminsAndSelf,
     delete: adminsAndSelf,
     admin: isSuperOrTenantAdmin,
@@ -93,7 +95,19 @@ export const Users: CollectionConfig = {
           name: 'tenant',
           type: 'relationship',
           relationTo: 'tenants',
+          hasMany: false,
           required: true,
+          validate: validateTenant,
+          hooks: {
+            beforeValidate: [
+              ({ req, originalDoc, value }) => {
+                if (isSuperAdmin(req.user)) {
+                  return value
+                }
+                return originalDoc.tenant
+              },
+            ],
+          },
         },
         {
           name: 'roles',

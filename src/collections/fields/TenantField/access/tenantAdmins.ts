@@ -1,11 +1,10 @@
 import type { FieldAccess } from 'payload'
 
-import { checkUserRoles } from '../../../utilities/checkUserRoles'
+import { isSuperAdmin } from '@/collections/utilities/isSuperAdmin'
 
 export const tenantAdminFieldAccess: FieldAccess = ({ req: { user }, doc }) => {
   return (
-    checkUserRoles(['super-admin'], user) ||
-    !doc?.tenant ||
+    isSuperAdmin(user) ||
     (doc?.tenant &&
       user?.tenants?.some(
         ({ tenant: userTenant, roles }) =>

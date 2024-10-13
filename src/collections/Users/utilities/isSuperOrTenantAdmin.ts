@@ -24,8 +24,8 @@ export const isSuperOrTenantAdmin = async (args: { req: PayloadRequest }): Promi
   const foundTenants = await payload.find({
     collection: 'tenants',
     where: {
-      'domains.domain': {
-        in: [req.host],
+      domain: {
+        equals: req.host,
       },
     },
     depth: 0,
@@ -53,7 +53,11 @@ export const isSuperOrTenantAdmin = async (args: { req: PayloadRequest }): Promi
       (typeof userTenant === 'string' ? userTenant : userTenant?.id) === foundTenants.docs[0]!.id,
   )
 
-  if (tenantWithUser?.roles?.some((role) => role === 'admin')) {
+  if (
+    tenantWithUser?.roles?.some((role) => {
+      return role === 'admin' || role === 'user'
+    })
+  ) {
     if (logs) {
       const msg = `User is an admin of ${foundTenants.docs[0]!.name}, allowing access`
       payload.logger.info({ msg })

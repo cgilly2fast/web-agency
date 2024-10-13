@@ -1,6 +1,5 @@
 import { Media } from '@/payload-types'
 import configPromise from '@payload-config'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { getPayload } from 'payload'
 
 export const GET = async (req: Request) => {
@@ -9,7 +8,7 @@ export const GET = async (req: Request) => {
   })
 
   const data = await payload.find({
-    collection: 'domains',
+    collection: 'tenants',
     where: {
       name: {
         equals: req.headers.get('host'),

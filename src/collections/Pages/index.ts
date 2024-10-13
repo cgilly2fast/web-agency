@@ -1,10 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
-import { tenant } from '../fields/tenant'
+import { TenantField } from '../fields/TenantField'
 import { loggedIn } from './access/loggedIn'
 import { tenantAdmins } from '../access/tenantAdmins'
-import { tenants } from './access/tenants'
 import formatSlug from './hooks/formatSlug'
+import { ensureUniqueSlug } from './hooks/enureUniqueSlug'
+import { readByDomain } from './access/readByDomain'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -19,7 +20,7 @@ export const Pages: CollectionConfig = {
     },
   },
   access: {
-    read: () => true,
+    read: readByDomain,
     create: loggedIn,
     update: tenantAdmins,
     delete: tenantAdmins,
@@ -39,10 +40,10 @@ export const Pages: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [formatSlug('title')],
+        beforeValidate: [formatSlug('title'), ensureUniqueSlug],
       },
     },
-    tenant,
+    TenantField,
     {
       name: 'richText',
       type: 'textarea',
