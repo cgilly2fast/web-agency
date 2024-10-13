@@ -5,12 +5,16 @@ import path from 'path'
 export async function GET() {
   try {
     // Read the JSON file
-    const filePath = path.join(process.cwd(), 'microsoft-identity-association.json')
-    const fileContents = await fs.promises.readFile(filePath, 'utf8')
-    const jsonData = JSON.parse(fileContents)
+    const associationContent = {
+      associatedApplications: [
+        {
+          applicationId: '40b43764-0a35-4819-96ec-6bead581d758',
+        },
+      ],
+    }
 
     // Return the JSON data
-    return NextResponse.json(jsonData, {
+    return NextResponse.json(associationContent, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
