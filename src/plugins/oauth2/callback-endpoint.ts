@@ -2,6 +2,8 @@ import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import { CollectionSlug, Endpoint, generatePayloadCookie, getFieldsToSign } from 'payload'
 import { PluginTypes } from './types'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 
 export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => ({
   method: 'get',
@@ -90,6 +92,23 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
           showHiddenFields: true,
         })
       } else {
+        const payload = await getPayload({
+          config: configPromise,
+        })
+
+        const data = await payload.find({
+          collection: 'tenants',
+          where: {
+            domain: {
+              equals: userInfo.email.split('@')[1],
+            },
+          },
+        })
+
+        if (!data.docs || data.docs.length === 0) {
+          throw Error('The domain of the email you are trying to login with is not a tenant.')
+        }
+
         try {
           user = await req.payload.update({
             req,

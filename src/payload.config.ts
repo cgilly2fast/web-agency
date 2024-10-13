@@ -106,9 +106,7 @@ export default buildConfig({
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
-        console.log('GOOGLE OAUTH RESPONSE', response)
         const user = await response.json()
-        console.log('GOOGLE OAUTH USER', user)
         return { email: user.email, sub: user.sub }
       },
       useEmailAsIdentity: true,
@@ -125,9 +123,10 @@ export default buildConfig({
       clientId: process.env.MS_OAUTH_CLIENT_ID || '',
       clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
       callbackPath: '/ms/oauth/callback',
-      tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+      tokenEndpoint: 'https://login.microsoftonline.com/organizations/oauth2/v2.0/token',
       scopes: ['https://graph.microsoft.com/User.Read', 'openid', 'email', 'profile'],
-      providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+      providerAuthorizationUrl:
+        'https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize',
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
           headers: { Authorization: `Bearer ${accessToken}` },

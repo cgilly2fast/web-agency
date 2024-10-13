@@ -32,12 +32,10 @@ async function getData() {
       darkModeIconMap[doc.domain] = doc.iconDarkMode.url!
     }
   }
-  console.log({ iconMap, darkModeIconMap })
   return { iconMap, darkModeIconMap }
 }
 
 export default async function Icon() {
   const { iconMap, darkModeIconMap } = await getData()
-  console.log({ iconMap, darkModeIconMap })
   return <IconClient iconMap={iconMap} darkModeIconMap={darkModeIconMap} />
 }
