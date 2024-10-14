@@ -4,27 +4,16 @@ export const getTenantAccessIDs = (user: null | User): string[] => {
   if (!user) {
     return []
   }
-  return (
-    user?.tenants?.reduce((acc: string[], { tenant }) => {
-      if (tenant) {
-        acc.push(typeof tenant === 'string' ? tenant : tenant.id)
-      }
-      return acc
-    }, []) || []
-  )
+
+  const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
+  return [tenantID]
 }
 
 export const getTenantAdminTenantAccessIDs = (user: null | User): string[] => {
-  if (!user) {
+  if (!user || user.tenantRole !== 'admin') {
     return []
   }
 
-  return (
-    user?.tenants?.reduce((acc: string[], { roles, tenant }) => {
-      if (roles.includes('admin') && tenant) {
-        acc.push(typeof tenant === 'string' ? tenant : tenant.id)
-      }
-      return acc
-    }, []) || []
-  )
+  const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
+  return [tenantID]
 }

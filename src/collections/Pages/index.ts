@@ -1,11 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
-import { TenantField } from '../fields/TenantField'
-import { tenantAdmins } from '../access/tenantAdmins'
+import TenantField from '../fields/TenantField'
+import { tenantAdminCollectionAccess } from '../access/tenantAdminCollectionAccess'
 import formatSlug from './hooks/formatSlug'
 import ensureUniqueSlug from './hooks/enureUniqueSlug'
 import { readByDomain } from './access/readByDomain'
-import { tenantUser } from '../access/tenantUser'
+import { tenantUserCollectionAccess } from '../access/tenantUserCollectionAccess'
 import { Tenant } from '@/payload-types'
 
 export const Pages: CollectionConfig = {
@@ -29,9 +29,9 @@ export const Pages: CollectionConfig = {
   },
   access: {
     read: readByDomain,
-    create: tenantUser,
-    update: tenantUser,
-    delete: tenantAdmins,
+    create: tenantUserCollectionAccess,
+    update: tenantUserCollectionAccess,
+    delete: tenantAdminCollectionAccess,
   },
   fields: [
     {

@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 interface LogoProps {
@@ -22,7 +23,7 @@ const LogoClient: React.FC<LogoProps> = ({ logoMap, darkModeLogoMap }) => {
   if (currentLogo === '') return null
 
   return (
-    <img
+    <Image
       style={{
         maxHeight: '125px',
         maxWidth: '125px',

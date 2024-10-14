@@ -14,11 +14,7 @@ const TenantFieldComponent: React.FC<{
   const headers = await getHeaders()
   const { user } = await args.payload.auth({ headers })
 
-  if (
-    user &&
-    ((Array.isArray(user.tenants) && user.tenants.length > 1) ||
-      user?.roles?.includes('super-admin'))
-  ) {
+  if (user && user?.roles?.includes('super-admin')) {
     return (
       <TenantFieldComponentClient
         initialValue={cookies.get('payload-tenant')?.value || undefined}

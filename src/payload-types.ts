@@ -13,7 +13,13 @@ export interface Config {
   collections: {
     media: Media;
     pages: Page;
+    blogs: Blog;
     tenants: Tenant;
+    headers: Header;
+    footers: Footer;
+    'calendar-settings': CalendarSetting;
+    'event-types': EventType;
+    'chat-settings': ChatSetting;
     segments: Segment;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -25,9 +31,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {
-    'main-menu': MainMenu;
-  };
+  globals: {};
   locale: null;
   user: User & {
     collection: 'users';
@@ -71,6 +75,32 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    main?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    preview?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -110,21 +140,292 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "segments".
+ * via the `definition` "blogs".
  */
-export interface Segment {
+export interface Blog {
   id: string;
+  slug: string;
+  name: string;
+  subtitle?: string | null;
+  author: {
+    relationTo: 'users';
+    value: string | User;
+  };
+  featuredContent: string | Media;
+  time: number;
+  tags?:
+    | {
+        tagName?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  tenant?: (string | null) | Tenant;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  avatar?: (string | null) | Media;
+  firstName?: string | null;
+  lastName?: string | null;
+  roles: ('super-admin' | 'user' | 'domains-api')[];
+  tenant: string | Tenant;
+  tenantRole: 'admin' | 'user';
+  lastLoggedInTenant?: (string | null) | Tenant;
+  google?: string | null;
+  microsoft?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "headers".
+ */
+export interface Header {
+  id: string;
+  logo?: (string | null) | Media;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: string | Page;
+          } | null;
+          url?: string | null;
+          label: string;
+          appearance?: ('default' | 'primary' | 'secondary') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  tenant?: (string | null) | Tenant;
+  ctaText: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footers".
+ */
+export interface Footer {
+  id: string;
+  logo?: (string | null) | Media;
+  navItemsColumns?:
+    | {
+        navItems?:
+          | {
+              link: {
+                type?: ('reference' | 'custom') | null;
+                newTab?: boolean | null;
+                reference?: {
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null;
+                url?: string | null;
+                label: string;
+                appearance?: ('default' | 'primary' | 'secondary') | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  tenant?: (string | null) | Tenant;
+  socials?:
+    | {
+        socialUrl: string;
+        socialIcon: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  ctaText: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-settings".
+ */
+export interface CalendarSetting {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  bufferTime?:
+    | (
+        | '0 min'
+        | '5 min'
+        | '10 min'
+        | '15 min'
+        | '30 min'
+        | '45 min'
+        | '1 hr'
+        | '1 hr 30 min'
+        | '2 hrs'
+        | '2hrs 30 min'
+        | '3 hrs'
+      )
+    | null;
+  daysOutType?: ('rolling' | 'date_range' | 'indefinitely')[] | null;
+  incrementTime?: number | null;
+  incrementUnit?: ('min' | 'hrs') | null;
+  user: string | User;
+  twoWaySync?: boolean | null;
+  days?: ('monday' | 'tuesday' | 'Wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[] | null;
+  monday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tuesday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  wednesday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  thursday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  friday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  saturday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  Sunday?:
+    | {
+        startTime?: string | null;
+        endTime?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  lunchHours?: {
+    startTime?: string | null;
+    endTime?: string | null;
+  };
+  minNoticeUnit?: ('minutes' | 'hours' | 'days')[] | null;
+  minNoticeTime?: number | null;
+  rollingUnit?: ('calendar_days' | 'weekdays') | null;
+  rollingTime?: number | null;
+  timezone?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-types".
+ */
+export interface EventType {
+  id: string;
+  tenant?: (string | null) | Tenant;
+  afterBooking: 'redirect' | 'confirm';
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  durationTime?: number | null;
+  durationUnit?: ('min' | 'hrs') | null;
+  location: 'in_person' | 'zoom' | 'google_meet' | 'phone_call';
+  name: string;
+  redirectUrl?: string | null;
+  type: 'one_on_one' | 'group' | 'collective' | 'round-robin';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-settings".
+ */
+export interface ChatSetting {
+  id: string;
+  active?: boolean | null;
+  form?: (string | null) | Form;
+  agentName?: string | null;
+  picture?: (string | null) | Media;
+  tenant?: (string | null) | Tenant;
+  previewType?: ('image' | 'video') | null;
+  previewImage?: (string | null) | Media;
+  previewVideo?: (string | null) | Media;
+  introType?: ('video' | 'direct') | null;
+  introVideo?: (string | null) | Media;
+  introOptions?:
+    | {
+        option?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -292,6 +593,24 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segments".
+ */
+export interface Segment {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -309,40 +628,6 @@ export interface FormSubmission {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  avatar?: (string | null) | Media;
-  firstName?: string | null;
-  lastName?: string | null;
-  roles: ('super-admin' | 'user' | 'domains-api')[];
-  tenants?:
-    | {
-        tenant: string | Tenant;
-        roles: ('admin' | 'user')[];
-        id?: string | null;
-      }[]
-    | null;
-  lastLoggedInTenant?: (string | null) | Tenant;
-  google?: string | null;
-  microsoft?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -357,8 +642,32 @@ export interface PayloadLockedDocument {
         value: string | Page;
       } | null)
     | ({
+        relationTo: 'blogs';
+        value: string | Blog;
+      } | null)
+    | ({
         relationTo: 'tenants';
         value: string | Tenant;
+      } | null)
+    | ({
+        relationTo: 'headers';
+        value: string | Header;
+      } | null)
+    | ({
+        relationTo: 'footers';
+        value: string | Footer;
+      } | null)
+    | ({
+        relationTo: 'calendar-settings';
+        value: string | CalendarSetting;
+      } | null)
+    | ({
+        relationTo: 'event-types';
+        value: string | EventType;
+      } | null)
+    | ({
+        relationTo: 'chat-settings';
+        value: string | ChatSetting;
       } | null)
     | ({
         relationTo: 'segments';
@@ -417,30 +726,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "main-menu".
- */
-export interface MainMenu {
-  id: string;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: string | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

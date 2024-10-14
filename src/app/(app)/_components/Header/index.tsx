@@ -11,14 +11,14 @@ import classes from './index.module.scss'
 export const Header = async () => {
   const payload = await getPayloadHMR({ config })
 
-  const mainMenu = await payload.findGlobal({
-    slug: 'main-menu',
-    depth: 0,
-  })
+  // const mainMenu = await payload.findGlobal({
+  //   slug: 'main-menu',
+  //   depth: 0,
+  // })
 
-  const { navItems } = mainMenu
+  // const { navItems } = mainMenu
 
-  const hasNavItems = navItems && Array.isArray(navItems) && navItems.length > 0
+  // const hasNavItems = navItems && Array.isArray(navItems) && navItems.length > 0
 
   return (
     <header className={classes.header}>
@@ -37,13 +37,13 @@ export const Header = async () => {
             />
           </picture>
         </Link>
-        {hasNavItems && (
+        {/* {hasNavItems && (
           <nav className={classes.nav}>
             {navItems.map(({ link }, i) => {
               return <CMSLink key={i} {...link} />
             })}
           </nav>
-        )}
+        )} */}
       </Gutter>
     </header>
   )

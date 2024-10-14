@@ -3,19 +3,18 @@ import { CollectionConfig } from 'payload'
 // import { revalidateBlog } from './hooks/revalidateBlog'
 // import Calix from '../../blocks/firmleads/Calix'
 import { readByDomain } from '../Pages/access/readByDomain'
-import { tenantAdmins } from '../access/tenantAdmins'
-import { tenantUser } from '../access/tenantUser'
+import { tenantAdminCollectionAccess } from '../access/tenantAdminCollectionAccess'
+import { tenantUserCollectionAccess } from '../access/tenantUserCollectionAccess'
 import { Tenant } from '@/payload-types'
 import formatSlug from '../Pages/hooks/formatSlug'
 import ensureUniqueSlug from '../Pages/hooks/enureUniqueSlug'
-import { TenantField } from '../fields/TenantField'
+import TenantField from '../fields/TenantField'
 
 const Blogs: CollectionConfig = {
   slug: 'blogs',
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug', 'updatedAt'],
-
     livePreview: {
       url: async ({ data, payload }) => {
         let tenant: Tenant | string = data.tenant
@@ -36,9 +35,9 @@ const Blogs: CollectionConfig = {
 
   access: {
     read: readByDomain,
-    create: tenantUser,
-    update: tenantUser,
-    delete: tenantAdmins,
+    create: tenantUserCollectionAccess,
+    update: tenantUserCollectionAccess,
+    delete: tenantAdminCollectionAccess,
   },
 
   fields: [

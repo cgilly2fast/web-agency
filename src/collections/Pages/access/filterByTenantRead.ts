@@ -53,34 +53,3 @@ export const filterByTenantRead: Access = (args) => {
   // Deny access to all others
   return false
 }
-
-export const canMutatePage: Access = (args) => {
-  const req = args.req
-  const superAdmin = isSuperAdmin(args.req.user)
-
-  if (!req.user) {
-    return false
-  }
-
-  // super admins can mutate pages for any tenant
-  if (superAdmin) {
-    return true
-  }
-
-  const cookies = parseCookies(req.headers)
-  const selectedTenant = cookies.get('payload-tenant')
-
-  // tenant admins can add/delete/update
-  // pages they have access to
-  return (
-    req.user?.tenants?.reduce((hasAccess: boolean, accessRow) => {
-      if (hasAccess) {
-        return true
-      }
-      if (accessRow && accessRow.tenant === selectedTenant && accessRow.roles?.includes('admin')) {
-        return true
-      }
-      return hasAccess
-    }, false) || false
-  )
-}

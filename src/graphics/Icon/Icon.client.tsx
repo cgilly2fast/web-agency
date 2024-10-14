@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 interface IconProps {
@@ -22,7 +23,7 @@ const IconClient: React.FC<IconProps> = ({ iconMap, darkModeIconMap }) => {
   if (currentIcon === '') return null
 
   return (
-    <img
+    <Image
       style={{
         maxHeight: '19px',
         maxWidth: '19px',

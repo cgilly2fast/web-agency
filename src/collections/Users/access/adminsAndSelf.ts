@@ -9,7 +9,6 @@ export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
 
   const isSuper = isSuperAdmin(user)
 
-  // allow super-admins through only if they have not scoped their user via `lastLoggedInTenant`
   if (isSuper && !user?.lastLoggedInTenant) {
     return true
   }
@@ -20,9 +19,11 @@ export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
     },
   }
 
+  const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
+
   const tenantCondition: Where = isSuper
     ? {
-        'tenants.tenant': {
+        tenant: {
           in: [
             typeof user?.lastLoggedInTenant === 'string'
               ? user?.lastLoggedInTenant
@@ -31,12 +32,11 @@ export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
         },
       }
     : {
-        'tenants.tenant': {
-          in: (user?.tenants
-            ?.map(({ tenant, roles }) =>
-              roles.includes('admin') ? (typeof tenant === 'string' ? tenant : tenant.id) : null,
-            )
-            .filter(Boolean) || []) as string[],
+        tenant: {
+          equals: tenantID,
+        },
+        tenantRole: {
+          equals: 'admin',
         },
       }
 

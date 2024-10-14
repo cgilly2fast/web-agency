@@ -1,9 +1,10 @@
 'use client'
 import { Button } from '@payloadcms/ui'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-const GoogleOAuthButton: React.FC = () => {
+const OAuthButtons: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false)
 
   useEffect(() => {
@@ -39,12 +40,15 @@ const GoogleOAuthButton: React.FC = () => {
           size="large"
           iconPosition="left"
           icon={
-            <img
+            <Image
               src={
                 process.env.NEXT_PUBLIC_SERVER_URL +
                 (darkMode ? '/api/media/file/gLogoWhite.svg' : '/api/media/file/gLogoBlack.svg')
               }
-            ></img>
+              alt="google logo"
+              width={20}
+              height={20}
+            ></Image>
           }
         >
           Continue with Google
@@ -58,12 +62,15 @@ const GoogleOAuthButton: React.FC = () => {
           size="large"
           iconPosition="left"
           icon={
-            <img
+            <Image
               src={
                 process.env.NEXT_PUBLIC_SERVER_URL +
                 (darkMode ? '/api/media/file/msLogoWhite.svg' : '/api/media/file/msLogoBlack.svg')
               }
-            ></img>
+              alt="microsoft logo"
+              width={20}
+              height={20}
+            ></Image>
           }
         >
           Continue with Microsoft
@@ -73,4 +80,4 @@ const GoogleOAuthButton: React.FC = () => {
   )
 }
 
-export default GoogleOAuthButton
+export default OAuthButtons

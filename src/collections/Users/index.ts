@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone } from '../access/anyone'
 import { superAdminFieldAccess } from '../access/superAdmins'
 import { adminsAndSelf } from './access/adminsAndSelf'
-import { tenantAdmins } from './access/tenantAdmins'
+import { tenantAdminFieldAccess } from '../access/tenantAdminFieldAccess'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
 import { recordLastLoggedInTenant } from './hooks/recordLastLoggedInTenant'
 import { isSuperOrTenantAdmin } from './utilities/isSuperOrTenantAdmin'
@@ -81,52 +81,48 @@ export const Users: CollectionConfig = {
         },
       ],
     },
+
     {
-      name: 'tenants',
-      type: 'array',
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
       label: 'Tenants',
+      hasMany: false,
+      required: true,
+      validate: validateTenant,
       access: {
-        create: tenantAdmins,
-        update: tenantAdmins,
-        read: tenantAdmins,
+        create: tenantAdminFieldAccess,
+        update: tenantAdminFieldAccess,
+        read: tenantAdminFieldAccess,
       },
-      fields: [
-        {
-          name: 'tenant',
-          type: 'relationship',
-          relationTo: 'tenants',
-          hasMany: false,
-          required: true,
-          validate: validateTenant,
-          hooks: {
-            beforeValidate: [
-              ({ req, originalDoc, value }) => {
-                if (isSuperAdmin(req.user)) {
-                  return value
-                }
-                return originalDoc.tenant
-              },
-            ],
+      hooks: {
+        beforeValidate: [
+          ({ req, originalDoc, value }) => {
+            if (isSuperAdmin(req.user)) {
+              return value
+            }
+            return originalDoc.tenant
           },
+        ],
+      },
+    },
+    {
+      name: 'tenantRole',
+      type: 'select',
+      hasMany: false,
+      required: true,
+      options: [
+        {
+          label: 'Admin',
+          value: 'admin',
         },
         {
-          name: 'roles',
-          type: 'select',
-          hasMany: true,
-          required: true,
-          options: [
-            {
-              label: 'Admin',
-              value: 'admin',
-            },
-            {
-              label: 'User',
-              value: 'user',
-            },
-          ],
+          label: 'User',
+          value: 'user',
         },
       ],
     },
+
     {
       name: 'lastLoggedInTenant',
       type: 'relationship',
@@ -134,7 +130,7 @@ export const Users: CollectionConfig = {
       index: true,
       access: {
         create: () => false,
-        read: tenantAdmins,
+        read: tenantAdminFieldAccess,
         update: superAdminFieldAccess,
       },
       admin: {

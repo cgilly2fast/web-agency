@@ -4,11 +4,11 @@ import { superAdminFieldAccess } from '../../access/superAdmins'
 import { isSuperAdmin } from '../../utilities/isSuperAdmin'
 import { tenantAdminFieldAccess } from '../../access/tenantAdminFieldAccess'
 
-const TenantField: Field = {
+const TenantFieldUnique: Field = {
   name: 'tenant',
   type: 'relationship',
   relationTo: 'tenants',
-  // required: true,
+  unique: true,
   index: true,
   admin: {
     position: 'sidebar',
@@ -48,4 +48,4 @@ const TenantField: Field = {
   },
 }
 
-export default TenantField
+export default TenantFieldUnique

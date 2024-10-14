@@ -27,6 +27,11 @@ export function TenantFieldComponentClient({ initialValue, path, readOnly }: Pro
         label: 'Tenant',
         relationTo: 'tenants',
         required: true,
+        admin: {
+          style: {
+            maxWidth: '580px',
+          },
+        },
       }}
       readOnly={readOnly}
     />

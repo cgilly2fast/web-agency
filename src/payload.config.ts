@@ -16,9 +16,16 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Tenants } from './collections/Tenants/index'
 import { serviceAccount } from './config'
-import { MainMenu } from './collections/MainMenu'
 import { abrVideos } from './plugins/abrVideos'
 import Blogs from './collections/Blog/Blogs'
+import { readByDomain } from './collections/Pages/access/readByDomain'
+import { tenantUserCollectionAccess } from './collections/access/tenantUserCollectionAccess'
+import { tenantAdminCollectionAccess } from './collections/access/tenantAdminCollectionAccess'
+import Headers from './collections/Headers'
+import Footers from './collections/Footers'
+import CalendarSetting from './collections/CalendarSettings'
+import EventTypes from './collections/EventTypes'
+import ChatSettings from './collections/ChatSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,11 +45,15 @@ export default buildConfig({
         Icon: '@/graphics/Icon/index',
       },
       afterLogin: ['@/components/GoogleOAuthButton'],
-      afterNavLinks: ['@/views/Chat/components/ChatNavLink'],
+      Nav: '@/components/Nav/index',
       views: {
         chat: {
           Component: '@/views/Chat/index',
           path: '/chat',
+        },
+        Dashboard: {
+          Component: '@/views/Dashboard/index',
+          path: '/',
         },
       },
     },
@@ -51,9 +62,20 @@ export default buildConfig({
     },
   },
   cors: '*',
-  collections: [Users, Media, Pages, Tenants, Blogs],
+  collections: [
+    Users,
+    Media,
+    Pages,
+    Blogs,
+    Tenants,
+    Headers,
+    Footers,
+    CalendarSetting,
+    EventTypes,
+    ChatSettings,
+  ],
   editor: lexicalEditor(),
-  globals: [MainMenu],
+  globals: [],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -79,7 +101,7 @@ export default buildConfig({
       },
       segmentsOverrides: {
         admin: {
-          hidden: false,
+          hidden: true,
         },
       },
     }),
@@ -98,7 +120,24 @@ export default buildConfig({
         },
       },
     }),
-    formBuilderPlugin({}),
+    formBuilderPlugin({
+      formOverrides: {
+        access: {
+          read: readByDomain,
+          create: tenantUserCollectionAccess,
+          update: tenantUserCollectionAccess,
+          delete: tenantAdminCollectionAccess,
+        },
+      },
+      formSubmissionOverrides: {
+        access: {
+          read: readByDomain,
+          create: tenantUserCollectionAccess,
+          update: tenantUserCollectionAccess,
+          delete: tenantAdminCollectionAccess,
+        },
+      },
+    }),
     stripePlugin({
       stripeSecretKey: process.env.STRIPE_SECRET!,
       rest: true,
@@ -117,6 +156,8 @@ export default buildConfig({
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
         'openid',
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/gmail.send',
       ],
       providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
       getUserInfo: async (accessToken: string) => {
