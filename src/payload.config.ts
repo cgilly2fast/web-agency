@@ -24,8 +24,8 @@ import { tenantAdminCollectionAccess } from './collections/access/tenantAdminCol
 import Headers from './collections/Headers'
 import Footers from './collections/Footers'
 import CalendarSetting from './collections/CalendarSettings'
-import EventTypes from './collections/EventTypes'
 import ChatSettings from './collections/ChatSettings'
+import appointmentFormOverride from './collections/overrides/appointmentFormOverride'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,7 +71,7 @@ export default buildConfig({
     Headers,
     Footers,
     CalendarSetting,
-    EventTypes,
+    // EventTypes,
     ChatSettings,
   ],
   editor: lexicalEditor(),
@@ -122,6 +122,7 @@ export default buildConfig({
     }),
     formBuilderPlugin({
       formOverrides: {
+        labels: { singular: 'Form Template', plural: 'Form Templates' },
         access: {
           read: readByDomain,
           create: tenantUserCollectionAccess,
@@ -129,7 +130,35 @@ export default buildConfig({
           delete: tenantAdminCollectionAccess,
         },
       },
+      fields: {
+        payment: true,
+      },
       formSubmissionOverrides: {
+        access: {
+          read: readByDomain,
+          create: tenantUserCollectionAccess,
+          update: tenantUserCollectionAccess,
+          delete: tenantAdminCollectionAccess,
+        },
+      },
+    }),
+    formBuilderPlugin({
+      formOverrides: {
+        slug: 'meeting-templates',
+        labels: { singular: ' Meeting Template', plural: 'Meetings' },
+        admin: {
+          description: "Click 'Live Preview' to view a preview of your updates",
+        },
+        access: {
+          read: readByDomain,
+          create: tenantUserCollectionAccess,
+          update: tenantUserCollectionAccess,
+          delete: tenantAdminCollectionAccess,
+        },
+        fields: appointmentFormOverride,
+      },
+      formSubmissionOverrides: {
+        slug: 'meetings',
         access: {
           read: readByDomain,
           create: tenantUserCollectionAccess,

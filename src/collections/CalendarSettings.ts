@@ -46,8 +46,7 @@ const CalendarSetting: CollectionConfig = {
     },
     {
       name: 'daysOutType',
-      type: 'select',
-      hasMany: true,
+      type: 'radio',
       options: [
         {
           label: 'Rolling',

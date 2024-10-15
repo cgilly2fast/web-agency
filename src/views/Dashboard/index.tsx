@@ -146,7 +146,7 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   }
 
   const appointmentGroup: Group = {
-    entities: [dGroup['event-types']],
+    entities: [dGroup['meeting-templates'], dGroup['meetings']],
     label: 'Appointments',
   }
 

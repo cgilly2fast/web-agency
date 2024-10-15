@@ -18,11 +18,12 @@ export interface Config {
     headers: Header;
     footers: Footer;
     'calendar-settings': CalendarSetting;
-    'event-types': EventType;
     'chat-settings': ChatSetting;
     segments: Segment;
     forms: Form;
     'form-submissions': FormSubmission;
+    'appointment-templates': AppointmentTemplate;
+    meetings: Meeting;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -303,7 +304,7 @@ export interface CalendarSetting {
         | '3 hrs'
       )
     | null;
-  daysOutType?: ('rolling' | 'date_range' | 'indefinitely')[] | null;
+  daysOutType?: ('rolling' | 'date_range' | 'indefinitely') | null;
   incrementTime?: number | null;
   incrementUnit?: ('min' | 'hrs') | null;
   user: string | User;
@@ -367,39 +368,6 @@ export interface CalendarSetting {
   rollingUnit?: ('calendar_days' | 'weekdays') | null;
   rollingTime?: number | null;
   timezone?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "event-types".
- */
-export interface EventType {
-  id: string;
-  tenant?: (string | null) | Tenant;
-  afterBooking: 'redirect' | 'confirm';
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  durationTime?: number | null;
-  durationUnit?: ('min' | 'hrs') | null;
-  color: string;
-  location: 'in_person' | 'zoom' | 'google_meet' | 'phone_call';
-  name: string;
-  redirectUrl?: string | null;
-  type: 'one_on_one' | 'group' | 'collective' | 'round-robin';
   updatedAt: string;
   createdAt: string;
 }
@@ -494,6 +462,27 @@ export interface Form {
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            basePrice?: number | null;
+            priceConditions?:
+              | {
+                  fieldToUse?: string | null;
+                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
+                  valueForCondition?: string | null;
+                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
+                  valueType?: ('static' | 'valueOfField') | null;
+                  valueForOperator?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'payment';
           }
         | {
             name: string;
@@ -624,6 +613,452 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  payment?: {
+    field?: string | null;
+    status?: string | null;
+    amount?: number | null;
+    paymentProcessor?: string | null;
+    creditCard?: {
+      token?: string | null;
+      brand?: string | null;
+      number?: string | null;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointment-templates".
+ */
+export interface AppointmentTemplate {
+  id: string;
+  title: string;
+  duration?: ('15 min' | '30 min' | '45 min' | '60 min' | 'Custom') | null;
+  durationTime?: number | null;
+  durationUnit?: ('min' | 'hrs') | null;
+  location: 'in_person' | 'zoom' | 'google_meet' | 'phone_call';
+  hosts: string | User;
+  invites?: boolean | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  daysOutType?: ('rolling' | 'date_range' | 'indefinitely') | null;
+  rollingTime?: number | null;
+  rollingUnit?: ('calendar_days' | 'weekdays') | null;
+  dateRangeStart?: string | null;
+  dateRangeEnd?: string | null;
+  limits?: {
+    bufferTimeBefore?:
+      | (
+          | '0 min'
+          | '5 min'
+          | '10 min'
+          | '15 min'
+          | '30 min'
+          | '45 min'
+          | '1 hr'
+          | '1 hr 30 min'
+          | '2 hrs'
+          | '2hrs 30 min'
+          | '3 hrs'
+        )
+      | null;
+    bufferTimeAfter?:
+      | (
+          | '0 min'
+          | '5 min'
+          | '10 min'
+          | '15 min'
+          | '30 min'
+          | '45 min'
+          | '1 hr'
+          | '1 hr 30 min'
+          | '2 hrs'
+          | '2hrs 30 min'
+          | '3 hrs'
+        )
+      | null;
+    minNoticeUnit?: ('minutes' | 'hours' | 'days')[] | null;
+    minNoticeTime?: number | null;
+    dailyLimit?: number | null;
+  };
+  options?: {
+    timezoneDisplay?: ('invitees' | 'lock') | null;
+    increments?: ('5 min' | '10 min' | '15 min' | '20 min' | '30 min' | '45 min' | '60 min' | 'Custom') | null;
+    incrementTime?: number | null;
+    incrementUnit?: ('min' | 'hrs') | null;
+  };
+  link?: string | null;
+  bookingForm?: {
+    fields?:
+      | (
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              defaultValue?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'checkbox';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'country';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'email';
+            }
+          | {
+              message?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: string;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'message';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              defaultValue?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'number';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              defaultValue?: string | null;
+              options?:
+                | {
+                    label: string;
+                    value: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'select';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'state';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              defaultValue?: string | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'text';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              defaultValue?: string | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'textarea';
+            }
+        )[]
+      | null;
+    payment?: string | null;
+  };
+  confirmation?: {
+    confirmationType?: ('message' | 'redirect') | null;
+    confirmationMessage?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    url?: string | null;
+  };
+  replyToAddress?: ('host' | 'no-reply') | null;
+  confirmationNotif?: {
+    confirmType?: ('calendar' | 'email') | null;
+    calendarInvitation?: {
+      title?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      body?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    emailConfirmation?: {
+      replyToAddress?: ('host' | 'no-reply') | null;
+      subject?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      body?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    emailCancelation?: {
+      subject?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      body?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+  };
+  scheduledNotifs?: {
+    emailReminders?: {
+      active?: boolean | null;
+      subject?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      body?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      timing?:
+        | {
+            time?: number | null;
+            unit?: ('min' | 'hrs') | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    textReminders?: {
+      active?: boolean | null;
+      message?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      timing?:
+        | {
+            time?: number | null;
+            unit?: ('min' | 'hrs') | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    emailFollowUp?: {
+      active?: boolean | null;
+      subject?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      body?: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+      timing?:
+        | {
+            time?: number | null;
+            unit?: ('min' | 'hrs') | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+  };
+  cancelationPolicy?: string | null;
+  tenant?: (string | null) | Tenant;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "meetings".
+ */
+export interface Meeting {
+  id: string;
+  form: string | AppointmentTemplate;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -663,10 +1098,6 @@ export interface PayloadLockedDocument {
         value: string | CalendarSetting;
       } | null)
     | ({
-        relationTo: 'event-types';
-        value: string | EventType;
-      } | null)
-    | ({
         relationTo: 'chat-settings';
         value: string | ChatSetting;
       } | null)
@@ -681,6 +1112,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'form-submissions';
         value: string | FormSubmission;
+      } | null)
+    | ({
+        relationTo: 'appointment-templates';
+        value: string | AppointmentTemplate;
+      } | null)
+    | ({
+        relationTo: 'meetings';
+        value: string | Meeting;
       } | null)
     | ({
         relationTo: 'users';

@@ -18,38 +18,8 @@ import { Description, LabelFunction, StaticLabel, TextField } from 'payload'
 extend([namesPlugin])
 const defaultColor = '#9A9A9A'
 
-function isConfig(obj: unknown): obj is Config {
-  if (typeof obj !== 'object' || obj === null) {
-    return false
-  }
-
-  const possibleConfig = obj as Record<string, unknown>
-
-  // Check if 'type' property exists and is of correct type
-  if (
-    !('type' in possibleConfig) ||
-    typeof possibleConfig.type !== 'string' ||
-    !['hex', 'hexA', 'rgb', 'rgbA', 'hsl', 'hslA'].includes(possibleConfig.type)
-  ) {
-    return false
-  }
-
-  // Check if 'expanded' property, if it exists, is a boolean
-  if ('expanded' in possibleConfig && typeof possibleConfig.expanded !== 'boolean') {
-    return false
-  }
-
-  // Check if 'showPreview' property, if it exists, is a boolean
-  if ('showPreview' in possibleConfig && typeof possibleConfig.showPreview !== 'boolean') {
-    return false
-  }
-
-  // If all checks pass, it matches the Config type
-  return true
-}
-
 type Props = {
-  custom?: any
+  custom?: Config
   defaultValue?: any
   label?: false | LabelFunction | StaticLabel
   description?: Description
@@ -69,19 +39,18 @@ const ColorComponents: Record<Config['type'], any> = {
 const ColorPickerComponent: React.FC<Props> = (props) => {
   const { custom, defaultValue, readOnly, required, description, label } = props
 
-  if (!isConfig(custom)) return null
-  const field = useField({})
-
   const { value = '', setValue } = useField({})
-  const { t } = useTranslation()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const isExpanded = Boolean(custom.expanded ?? false)
+  const isExpanded = Boolean(custom?.expanded ?? false)
   const [color, setColor] = useState(value ?? defaultValue ?? defaultColor)
   const [isAdding, setIsAdding] = useState(isExpanded)
 
+  const field = useField({})
+  const { t } = useTranslation()
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const Picker = useMemo(() => {
-    return ColorComponents[custom.type]
-  }, [])
+    return ColorComponents[custom?.type ?? 'hex']
+  }, [custom?.type])
 
   const handleAddColorViaPicker = useCallback(
     (val?: string) => {
@@ -92,7 +61,7 @@ const ColorPickerComponent: React.FC<Props> = (props) => {
         }
       }
     },
-    [setIsAdding, setColor, inputRef, readOnly],
+    [setColor, inputRef, readOnly, value],
   )
 
   const handleAddColor = useCallback(
@@ -101,9 +70,11 @@ const ColorPickerComponent: React.FC<Props> = (props) => {
         setColor(val)
       }
     },
-    [setIsAdding, setColor, readOnly],
+    [setColor, readOnly, value],
   )
-  useTranslation()
+
+  if (!custom) return null
+
   return (
     <div className={`mr-1 max-w-fit mb-5`}>
       {/* {Array.isArray(beforeInput) && beforeInput.map((Component, i) => <Component key={i} />)} */}
