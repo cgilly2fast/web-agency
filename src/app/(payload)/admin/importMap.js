@@ -27,13 +27,15 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_25 } from '@pa
 import { UnderlineFeatureClient as UnderlineFeatureClient_26 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_27 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_28 } from '@payloadcms/richtext-lexical/client'
-import { default as default_29 } from '@/components/ProfilePicture'
-import { default as default_30 } from '@/components/Nav/index'
-import { default as default_31 } from '@/graphics/Icon/index'
-import { default as default_32 } from '@/graphics/Logo/index'
-import { default as default_33 } from '@/components/GoogleOAuthButton'
-import { default as default_34 } from '@/views/Chat/index'
-import { default as default_35 } from '@/views/Dashboard/index'
+import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_29 } from '@payloadcms/richtext-lexical/client'
+import { default as default_30 } from '@/collections/fields/ColorPicker/component/index'
+import { default as default_31 } from '@/components/ProfilePicture'
+import { default as default_32 } from '@/components/Nav/index'
+import { default as default_33 } from '@/graphics/Icon/index'
+import { default as default_34 } from '@/graphics/Logo/index'
+import { default as default_35 } from '@/components/GoogleOAuthButton'
+import { default as default_36 } from '@/views/Chat/index'
+import { default as default_37 } from '@/views/Dashboard/index'
 
 export const importMap = {
   "@/collections/fields/TenantField/components/index#default": default_0,
@@ -65,11 +67,13 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_26,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_27,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_28,
-  "@/components/ProfilePicture#default": default_29,
-  "@/components/Nav/index#default": default_30,
-  "@/graphics/Icon/index#default": default_31,
-  "@/graphics/Logo/index#default": default_32,
-  "@/components/GoogleOAuthButton#default": default_33,
-  "@/views/Chat/index#default": default_34,
-  "@/views/Dashboard/index#default": default_35
+  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_29,
+  "@/collections/fields/ColorPicker/component/index#default": default_30,
+  "@/components/ProfilePicture#default": default_31,
+  "@/components/Nav/index#default": default_32,
+  "@/graphics/Icon/index#default": default_33,
+  "@/graphics/Logo/index#default": default_34,
+  "@/components/GoogleOAuthButton#default": default_35,
+  "@/views/Chat/index#default": default_36,
+  "@/views/Dashboard/index#default": default_37
 }

@@ -1,8 +1,18 @@
 import { CollectionConfig } from 'payload'
-// import { ColourPickerField } from '@nouance/payload-better-fields-plugin'
 import TenantField from './fields/TenantField'
 import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
 import { readByDomain } from './Pages/access/readByDomain'
+import {
+  lexicalEditor,
+  BoldFeature,
+  UnderlineFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
+  LinkFeature,
+  ItalicFeature,
+  FixedToolbarFeature,
+} from '@payloadcms/richtext-lexical'
+import { ColorPickerField } from './fields/ColorPicker'
 
 const EventTypes: CollectionConfig = {
   slug: 'event-types',
@@ -35,6 +45,17 @@ const EventTypes: CollectionConfig = {
       name: 'description',
       type: 'richText',
       label: 'Description',
+      editor: lexicalEditor({
+        features: [
+          BoldFeature(),
+          UnderlineFeature(),
+          OrderedListFeature(),
+          UnorderedListFeature(),
+          LinkFeature(),
+          ItalicFeature(),
+          FixedToolbarFeature(),
+        ],
+      }),
     },
     {
       name: 'durationTime',
@@ -47,16 +68,16 @@ const EventTypes: CollectionConfig = {
       label: 'Duration Unit',
       options: ['min', 'hrs'],
     },
-    // ...ColourPickerField(
-    //   {
-    //     name: 'color',
-    //     label: 'Event Type Color',
-    //     required: true,
-    //   },
-    //   {
-    //     type: 'hexA',
-    //   },
-    // ),
+    ColorPickerField(
+      {
+        name: 'color',
+        label: 'Event Type Color',
+        required: true,
+      },
+      {
+        type: 'hexA',
+      },
+    ),
     {
       name: 'location',
       type: 'select',

@@ -10,6 +10,7 @@ const TenantFieldComponent: React.FC<{
   payload: Payload
   readOnly: boolean
 }> = async (args) => {
+  // console.log('TEST', args.payload.collections['event-types'].config.fields)
   const cookies = await getCookies()
   const headers = await getHeaders()
   const { user } = await args.payload.auth({ headers })

@@ -395,6 +395,7 @@ export interface EventType {
   } | null;
   durationTime?: number | null;
   durationUnit?: ('min' | 'hrs') | null;
+  color: string;
   location: 'in_person' | 'zoom' | 'google_meet' | 'phone_call';
   name: string;
   redirectUrl?: string | null;
