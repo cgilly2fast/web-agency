@@ -14,6 +14,9 @@ const Footers: CollectionConfig = {
     update: tenantUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
+  admin: {
+    components: { edit: { SaveButton: '@/components/GlobalTitle' } },
+  },
   fields: [
     {
       name: 'logo',
@@ -47,18 +50,16 @@ const Footers: CollectionConfig = {
           name: 'socialUrl',
           label: 'Social URL',
           type: 'text',
-          required: true,
         },
         {
           name: 'socialIcon',
           label: 'Social Icon',
           type: 'upload',
           relationTo: 'media',
-          required: true,
         },
       ],
     },
-    { name: 'ctaText', label: 'CTA Text', type: 'text', required: true },
+    { name: 'ctaText', label: 'CTA Text', type: 'text' },
   ],
 }
 

@@ -8,7 +8,8 @@ import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
 import { imageFilterOption, videoFilterOption } from '@/utils/imageFilterOption'
 
 const ChatSettings: CollectionConfig = {
-  slug: 'chat-settings',
+  slug: 'ai-configs',
+  labels: { singular: 'AI Config', plural: 'AI Configs' },
   access: {
     read: readByDomain,
     create: superAdminsCollectionAccess,
@@ -16,7 +17,7 @@ const ChatSettings: CollectionConfig = {
     delete: superAdminsCollectionAccess,
   },
   admin: {
-    useAsTitle: 'agentName',
+    components: { edit: { SaveButton: '@/components/GlobalTitle' } },
   },
   fields: [
     {

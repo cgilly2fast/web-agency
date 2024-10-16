@@ -21,6 +21,7 @@ import {
   BlockFields,
 } from '@payloadcms/richtext-lexical'
 import TenantField from '../fields/TenantField'
+import { User } from '@/payload-types'
 
 function arrayToObject(arr: any[]) {
   let obj: Record<string, Field> = {}
@@ -46,6 +47,33 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
           style: {
             maxWidth: '580px',
           },
+        },
+      },
+      {
+        name: 'type',
+        type: 'select',
+        label: 'Meeting Type',
+        required: true,
+        options: [
+          { value: 'one_on_one', label: 'One-on-One' },
+          // { value: 'group', label: 'Group' },
+          // { value: 'collective', label: 'Collective' },
+          // { value: 'round-robin', label: 'Round Robin' },
+        ],
+        admin: {
+          style: {
+            maxWidth: '285px',
+          },
+        },
+        validate: (val: any, { data }: any) => {
+          if ((val === 'one_on_one' || val === 'group') && !data.host) {
+            return 'Make sure to set a host.'
+          }
+
+          if ((val === 'collective' || val === 'round_robin') && !data.hosts) {
+            return 'Make sure to set at least one host.'
+          }
+          return true
         },
       },
       {
@@ -122,17 +150,46 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
           },
         },
       },
-
       {
         name: 'hosts',
         label: 'Host',
         type: 'relationship',
         relationTo: 'users',
-        required: true,
+        defaultValue: ({ user }: { user: User }) => user.id,
         admin: {
           style: {
             maxWidth: '285px',
           },
+          condition: (_, siblingData) =>
+            siblingData?.type === 'one_on_one' || siblingData?.type === 'group',
+        },
+        filterOptions: ({ user }) => {
+          return {
+            tenant: {
+              equals: typeof user?.tenant === 'string' ? user?.tenant : user?.tenant?.id,
+            },
+          }
+        },
+      },
+      {
+        name: 'hostsMulti',
+        label: 'Hosts',
+        type: 'relationship',
+        relationTo: 'users',
+        hasMany: true,
+        admin: {
+          style: {
+            maxWidth: '285px',
+          },
+          condition: (_, siblingData) =>
+            siblingData?.type === 'collective' || siblingData?.type === 'round_robin',
+        },
+        filterOptions: ({ user }) => {
+          return {
+            tenant: {
+              equals: typeof user?.tenant === 'string' ? user?.tenant : user?.tenant?.id,
+            },
+          }
         },
       },
       {
@@ -540,6 +597,7 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
       {
         name: 'link',
         type: 'text',
+
         admin: {
           description: '[Your Domain]/appointments/',
           style: { maxWidth: '580px', marginBottom: '36px' },
@@ -563,9 +621,64 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
           } as BlocksField,
           {
             name: 'payment',
-            type: 'text',
+            type: 'radio',
+            defaultValue: 'none',
             admin: {
-              style: { maxWidth: '580px' },
+              style: {
+                maxWidth: '285px',
+                marginTop: '36px',
+              },
+            },
+            options: [
+              { label: 'Do not collect payments for this event', value: 'none' },
+              { label: 'Accept payments with Stripe', value: 'stripe' },
+              // { label: 'Accept payments with PayPal', value: 'paypal' },
+            ],
+          },
+          {
+            type: 'row',
+            fields: [
+              {
+                name: 'paymentAmount',
+                type: 'number',
+                defaultValue: 0.0,
+                admin: {
+                  style: { maxWidth: '155px' },
+                  condition: (_, siblingData) => siblingData?.payment !== 'none',
+                },
+                validate: (val: any) => {
+                  if (val < 0) {
+                    return 'Please specify a number greater than 0'
+                  }
+
+                  if ((val * 100) % 1 !== 0) {
+                    return 'Make sure your amount is round to the nearest .00'
+                  }
+                  return true
+                },
+              },
+              {
+                name: 'dollarType',
+                type: 'select',
+                defaultValue: 'USD',
+                options: ['USD', 'EUR', 'CAD', 'GBP', 'AUD'],
+                admin: {
+                  style: { maxWidth: '120px' },
+                  condition: (_, siblingData) => siblingData?.payment !== 'none',
+                },
+              },
+            ],
+          },
+          {
+            name: 'paymentTerms',
+            type: 'textarea',
+            admin: {
+              description:
+                'Make sure you have your selected payment method set up in your integrations tab!',
+              style: {
+                maxWidth: '285px',
+              },
+              condition: (_, siblingData) => siblingData?.payment !== 'none',
             },
           },
         ],
@@ -665,6 +778,9 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
             type: 'radio',
             defaultValue: 'calendar',
             admin: {
+              style: {
+                maxWidth: '580px',
+              },
               description:
                 'Choose how invitees will receive event confirmation. Calendar invite sends a calendar event invite, email confirmation sends an email confirmation.',
             },

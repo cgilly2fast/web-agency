@@ -145,7 +145,7 @@ export default buildConfig({
     formBuilderPlugin({
       formOverrides: {
         slug: 'meeting-templates',
-        labels: { singular: ' Meeting Template', plural: 'Meetings' },
+        labels: { singular: ' Meeting Template', plural: 'Meeting Templates' },
         admin: {
           description: "Click 'Live Preview' to view a preview of your updates",
         },

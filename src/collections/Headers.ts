@@ -14,6 +14,9 @@ const Headers: CollectionConfig = {
     update: tenantUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
+  admin: {
+    components: { edit: { SaveButton: '@/components/GlobalTitle' } },
+  },
   fields: [
     {
       name: 'logo',
@@ -28,7 +31,7 @@ const Headers: CollectionConfig = {
       fields: [Link({})],
     },
     TenantFieldUnique,
-    { name: 'ctaText', label: 'CTA Text', type: 'text', required: true },
+    { name: 'ctaText', label: 'CTA Text', type: 'text' },
   ],
 }
 

@@ -39,6 +39,42 @@ export const Users: CollectionConfig = {
   hooks: {
     afterChange: [loginAfterCreate],
     afterLogin: [recordLastLoggedInTenant],
+    afterOperation: [
+      async ({ operation, req, result }) => {
+        if (operation === 'create') {
+          const { payload } = req
+
+          await payload.create({
+            collection: 'calendar-settings',
+            data: {
+              tenant: result.tenant,
+              user: result.id,
+            },
+          })
+        }
+        return result
+      },
+      async ({ operation, req, result }) => {
+        if (operation === 'delete') {
+          const { payload } = req
+          for (let i = 0; i < result.docs.length; i++) {
+            const doc = result.docs[i]
+            await payload.delete({
+              collection: 'calendar-settings',
+              where: {
+                user: {
+                  equals: doc.id,
+                },
+                tenant: {
+                  equals: doc.tenant,
+                },
+              },
+            })
+          }
+        }
+        return result
+      },
+    ],
   },
   fields: [
     {

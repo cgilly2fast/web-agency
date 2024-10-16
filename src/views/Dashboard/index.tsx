@@ -1,23 +1,19 @@
-import type { EntityToGroup, groupNavItems } from '@payloadcms/ui/shared'
 import type {
   BasePayload,
   ClientCollectionConfig,
+  ClientGlobalConfig,
   ClientUser,
   CollectionSlug,
   Permissions,
   SanitizedCollectionConfig,
+  SanitizedGlobalConfig,
   ServerProps,
   VisibleEntities,
 } from 'payload'
 
 import { getTranslation } from '@payloadcms/translations'
 import { Button, Card, Gutter, Locked, SetStepNav, SetViewActions } from '@payloadcms/ui'
-import {
-  EntityType,
-  formatAdminURL,
-  getCreateMappedComponent,
-  RenderComponent,
-} from '@payloadcms/ui/shared'
+import { formatAdminURL, getCreateMappedComponent, RenderComponent } from '@payloadcms/ui/shared'
 import React, { Fragment } from 'react'
 
 // import './index.scss'
@@ -27,6 +23,25 @@ import { transformTitle } from '@/utils/transformTitle'
 const baseClass = 'dashboard'
 
 /******** ADDED CODE *******/
+enum EntityType {
+  collection = 'collections',
+  global = 'globals',
+  direct = 'direct',
+}
+export type EntityToGroup =
+  | {
+      entity: ClientCollectionConfig | SanitizedCollectionConfig
+      type: EntityType.collection
+    }
+  | {
+      entity: ClientCollectionConfig | SanitizedCollectionConfig
+      type: EntityType.direct
+    }
+  | {
+      entity: ClientGlobalConfig | SanitizedGlobalConfig
+      type: EntityType.global
+    }
+
 type Entities =
   | EntityToGroup
   | {
@@ -63,7 +78,6 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
     ],
     label: 'AI Live Chat',
   }
-
   let group: Group = groups[0]
 
   const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
@@ -79,7 +93,7 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   const header = {
     entity: payload.collections['headers'].config,
     id: headerData.docs[0].id,
-    type: 'direct',
+    type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   const footerData = await payload.find({
@@ -93,7 +107,7 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   const footer = {
     entity: payload.collections['footers'].config,
     id: footerData.docs[0].id,
-    type: 'direct',
+    type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   const calendarData = await payload.find({
@@ -107,11 +121,11 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   const calendar = {
     entity: payload.collections['calendar-settings'].config,
     id: calendarData.docs[0].id,
-    type: 'direct',
+    type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   const chatData = await payload.find({
-    collection: 'chat-settings',
+    collection: 'ai-configs',
     where: {
       tenant: {
         equals: tenantID,
@@ -119,21 +133,21 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
     },
   })
   const chat = {
-    entity: payload.collections['chat-settings'].config,
+    entity: payload.collections['ai-configs'].config,
     id: chatData.docs[0].id,
-    type: 'direct',
+    type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   const userSettings = {
     entity: payload.collections['users'].config,
     id: user.id,
-    type: 'direct',
+    type: EntityType.direct,
   }
 
   const firmSettings = {
     entity: payload.collections['tenants'].config,
     id: tenantID,
-    type: 'direct',
+    type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   chatGroup.entities.push(chat)
@@ -293,7 +307,7 @@ const DefaultDashboard: React.FC<DashboardProps> = async (props) => {
                         }
                       }
                       /******** ADDED CODE *******/
-                      if (type === 'direct') {
+                      if (type === EntityType.direct) {
                         title = transformTitle(entity.labels as any)
 
                         title = getTranslation(title, i18n)

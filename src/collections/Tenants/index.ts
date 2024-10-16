@@ -15,7 +15,69 @@ export const Tenants: CollectionConfig = {
     delete: superAdminsCollectionAccess,
   },
   admin: {
-    useAsTitle: 'name',
+    components: { edit: { SaveButton: '@/components/GlobalTitle' } },
+  },
+  hooks: {
+    afterOperation: [
+      async ({ operation, req, result }) => {
+        if (operation === 'create') {
+          const { payload } = req
+
+          await payload.create({
+            collection: 'headers',
+            data: {
+              tenant: result.id,
+            },
+          })
+
+          await payload.create({
+            collection: 'footers',
+            data: {
+              tenant: result.id,
+            },
+          })
+
+          await payload.create({
+            collection: 'ai-configs',
+            data: {
+              tenant: result.id,
+            },
+          })
+        }
+        return result
+      },
+      async ({ operation, req, result }) => {
+        if (operation === 'delete') {
+          const { payload } = req
+          for (let i = 0; i < result.docs.length; i++) {
+            const doc = result.docs[i]
+            await payload.delete({
+              collection: 'headers',
+              where: {
+                tenant: {
+                  equals: doc.id,
+                },
+              },
+            })
+
+            await payload.delete({
+              collection: 'footers',
+              where: {
+                tenant: { equals: doc.id },
+              },
+            })
+
+            await payload.delete({
+              collection: 'ai-configs',
+              where: {
+                tenant: { equals: doc.id },
+              },
+            })
+          }
+        }
+        return result
+      },
+    ],
   },
   fields: [
     {
