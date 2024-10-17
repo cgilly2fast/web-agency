@@ -1,14 +1,5 @@
 import { FieldsOverride } from 'node_modules/@payloadcms/plugin-form-builder/dist/types'
-import {
-  BlocksField,
-  Field,
-  GroupField,
-  RadioField,
-  Block,
-  RichTextField,
-  TabsField,
-  UnnamedTab,
-} from 'payload'
+import { BlocksField, Field, TabsField, UnnamedTab } from 'payload'
 import {
   lexicalEditor,
   BoldFeature,
@@ -22,6 +13,18 @@ import {
 } from '@payloadcms/richtext-lexical'
 import TenantField from '../fields/TenantField'
 import { User } from '@/payload-types'
+import {
+  Checkbox,
+  Country,
+  Email,
+  Message,
+  Number,
+  Text,
+  Payment,
+  Select,
+  State,
+  TextArea,
+} from '@/lib/formBuilderBlocks'
 
 function arrayToObject(arr: any[]) {
   let obj: Record<string, Field> = {}
@@ -599,8 +602,19 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
         type: 'text',
 
         admin: {
-          description: '[Your Domain]/appointments/',
+          description:
+            "Direct Event URL is the link you can share with your invitees and go directly to the 'Pick Date & Time' step. We'll automatically generate an Event URL for you if you don't specify one.",
           style: { maxWidth: '580px', marginBottom: '36px' },
+          components: {
+            beforeInput: ['@/components/BookingPageUrlPreview'],
+          },
+        },
+        validate: (val: any) => {
+          const regex = /^[a-z0-9_-]+$/
+          if (!regex.test(val)) {
+            return "Invalid. Please use lowercase only 'a-z', '0-9', '-', or '_' characters"
+          }
+          return true
         },
       },
       {
@@ -618,6 +632,20 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
               description: 'Questions given to the invitee before booking is completed.',
               initCollapsed: true,
             },
+            name: 'fields',
+            type: 'blocks',
+            blocks: [
+              Select,
+              Text,
+              TextArea,
+              Number,
+              Email,
+              State,
+              Country,
+              Checkbox,
+              // Payment,
+              Message,
+            ],
           } as BlocksField,
           {
             name: 'payment',

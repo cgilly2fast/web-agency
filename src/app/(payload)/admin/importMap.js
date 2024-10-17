@@ -37,15 +37,17 @@ import { default as default_35 } from '@/components/MinNoticeRowLabel'
 import { default as default_36 } from '@/components/DailyLimitRowLabel'
 import { default as default_37 } from '@/components/TimezoneDisplayRowLabel'
 import { default as default_38 } from '@/components/IncrementsRowLabel'
-import { default as default_39 } from '@/components/TimingReminderRowLabel'
-import { default as default_40 } from '@/components/TimingFollowUpRowLabel'
-import { default as default_41 } from '@/components/ProfilePicture'
-import { default as default_42 } from '@/components/Nav/index'
-import { default as default_43 } from '@/graphics/Icon/index'
-import { default as default_44 } from '@/graphics/Logo/index'
-import { default as default_45 } from '@/components/GoogleOAuthButton'
-import { default as default_46 } from '@/views/Chat/index'
-import { default as default_47 } from '@/views/Dashboard/index'
+import { default as default_39 } from '@/components/BookingPageUrlPreview'
+import { default as default_40 } from '@/components/BlocksRowLabel'
+import { default as default_41 } from '@/components/TimingReminderRowLabel'
+import { default as default_42 } from '@/components/TimingFollowUpRowLabel'
+import { default as default_43 } from '@/components/ProfilePicture'
+import { default as default_44 } from '@/components/Nav/index'
+import { default as default_45 } from '@/graphics/Icon/index'
+import { default as default_46 } from '@/graphics/Logo/index'
+import { default as default_47 } from '@/components/GoogleOAuthButton'
+import { default as default_48 } from '@/views/Chat/index'
+import { default as default_49 } from '@/views/Dashboard/index'
 
 export const importMap = {
   "@/collections/fields/TenantField/components/index#default": default_0,
@@ -87,13 +89,15 @@ export const importMap = {
   "@/components/DailyLimitRowLabel#default": default_36,
   "@/components/TimezoneDisplayRowLabel#default": default_37,
   "@/components/IncrementsRowLabel#default": default_38,
-  "@/components/TimingReminderRowLabel#default": default_39,
-  "@/components/TimingFollowUpRowLabel#default": default_40,
-  "@/components/ProfilePicture#default": default_41,
-  "@/components/Nav/index#default": default_42,
-  "@/graphics/Icon/index#default": default_43,
-  "@/graphics/Logo/index#default": default_44,
-  "@/components/GoogleOAuthButton#default": default_45,
-  "@/views/Chat/index#default": default_46,
-  "@/views/Dashboard/index#default": default_47
+  "@/components/BookingPageUrlPreview#default": default_39,
+  "@/components/BlocksRowLabel#default": default_40,
+  "@/components/TimingReminderRowLabel#default": default_41,
+  "@/components/TimingFollowUpRowLabel#default": default_42,
+  "@/components/ProfilePicture#default": default_43,
+  "@/components/Nav/index#default": default_44,
+  "@/graphics/Icon/index#default": default_45,
+  "@/graphics/Logo/index#default": default_46,
+  "@/components/GoogleOAuthButton#default": default_47,
+  "@/views/Chat/index#default": default_48,
+  "@/views/Dashboard/index#default": default_49
 }

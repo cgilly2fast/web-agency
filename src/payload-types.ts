@@ -198,8 +198,21 @@ export interface User {
   tenant: string | Tenant;
   tenantRole: 'admin' | 'user';
   lastLoggedInTenant?: (string | null) | Tenant;
-  google?: string | null;
-  microsoft?: string | null;
+  google?: {
+    accessToken?: string | null;
+    expiresIn?: number | null;
+    refreshToken?: string | null;
+    scope?: string | null;
+    tokenType?: string | null;
+  };
+  microsoft?: {
+    accessToken?: string | null;
+    tokenType?: string | null;
+    expiresIn?: number | null;
+    scope?: string | null;
+    refreshToken?: string | null;
+    idToken?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -2295,64 +2308,6 @@ export interface MeetingTemplate {
               name: string;
               label?: string | null;
               width?: number | null;
-              required?: boolean | null;
-              defaultValue?: boolean | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'checkbox';
-            }
-          | {
-              name: string;
-              label?: string | null;
-              width?: number | null;
-              required?: boolean | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'country';
-            }
-          | {
-              name: string;
-              label?: string | null;
-              width?: number | null;
-              required?: boolean | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'email';
-            }
-          | {
-              message?: {
-                root: {
-                  type: string;
-                  children: {
-                    type: string;
-                    version: number;
-                    [k: string]: unknown;
-                  }[];
-                  direction: ('ltr' | 'rtl') | null;
-                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                  indent: number;
-                  version: number;
-                };
-                [k: string]: unknown;
-              } | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'message';
-            }
-          | {
-              name: string;
-              label?: string | null;
-              width?: number | null;
-              defaultValue?: number | null;
-              required?: boolean | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'number';
-            }
-          | {
-              name: string;
-              label?: string | null;
-              width?: number | null;
               defaultValue?: string | null;
               options?:
                 | {
@@ -2365,15 +2320,6 @@ export interface MeetingTemplate {
               id?: string | null;
               blockName?: string | null;
               blockType: 'select';
-            }
-          | {
-              name: string;
-              label?: string | null;
-              width?: number | null;
-              required?: boolean | null;
-              id?: string | null;
-              blockName?: string | null;
-              blockType: 'state';
             }
           | {
               name: string;
@@ -2394,6 +2340,73 @@ export interface MeetingTemplate {
               id?: string | null;
               blockName?: string | null;
               blockType: 'textarea';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              defaultValue?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'number';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'email';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'state';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'country';
+            }
+          | {
+              name: string;
+              label?: string | null;
+              width?: number | null;
+              required?: boolean | null;
+              defaultValue?: boolean | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'checkbox';
+            }
+          | {
+              message?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: string;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'message';
             }
         )[]
       | null;

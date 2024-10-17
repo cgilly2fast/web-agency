@@ -84,9 +84,9 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
         user = await req.payload.create({
           req,
           collection: authCollection,
+          //@ts-ignore
           data: {
-            ...userInfo,
-            // Stuff breaks when password is missing
+            [subFieldName]: userInfo.sub,
             password: crypto.randomBytes(32).toString('hex'),
           },
           showHiddenFields: true,
@@ -114,7 +114,9 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
             req,
             collection: authCollection,
             id: existingUser.docs[0].id,
-            data: userInfo,
+            data: {
+              [subFieldName]: { id: userInfo.sub, ...tokenData },
+            },
             showHiddenFields: true,
           })
         } catch (error) {

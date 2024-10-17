@@ -2,15 +2,15 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { BasePayload, buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { gcsStorage } from '@payloadcms/storage-gcs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { OAuth2Plugin } from './plugins/oauth2'
 
+import { OAuth2Plugin } from './plugins/oauth2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -184,17 +184,24 @@ export default buildConfig({
       scopes: [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
-        'openid',
-        'https://www.googleapis.com/auth/gmail.readonly',
-        'https://www.googleapis.com/auth/gmail.send',
+        'https://www.googleapis.com/auth/calendar',
       ],
       providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      getExistingScope: async (payload: BasePayload, userId: string) => {
+        const user = await payload.findByID({
+          collection: 'users',
+          id: userId,
+        })
+        if (!user || !user.google || !user.google.scope) return []
+
+        return user.google.scope.split(' ')
+      },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         const user = await response.json()
-        return { email: user.email, sub: user.sub }
+        return { sub: user.sub }
       },
       useEmailAsIdentity: true,
       successRedirect: () => '/admin',
@@ -211,14 +218,32 @@ export default buildConfig({
       clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
       callbackPath: '/ms/oauth/callback',
       tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-      scopes: ['https://graph.microsoft.com/User.Read', 'openid', 'email', 'profile'],
+      scopes: [
+        'https://graph.microsoft.com/User.Read',
+        'openid',
+        'offline_access',
+        'email',
+        'profile',
+        'https://graph.microsoft.com/Calendars.ReadWrite',
+        'https://graph.microsoft.com/Calendars.ReadWrite.Shared',
+      ],
       providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+      getExistingScope: async (payload: BasePayload, userId: string) => {
+        const user = await payload.findByID({
+          collection: 'users',
+          id: userId,
+        })
+
+        if (!user || !user.microsoft || !user.microsoft.scope) return []
+
+        return user.microsoft.scope.split(' ')
+      },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         const user = await response.json()
-        return { email: user.mail || user.userPrincipalName, sub: user.id }
+        return { sub: user.id }
       },
       useEmailAsIdentity: true,
       successRedirect: () => '/admin',

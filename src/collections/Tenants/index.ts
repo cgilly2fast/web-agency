@@ -15,7 +15,8 @@ export const Tenants: CollectionConfig = {
     delete: superAdminsCollectionAccess,
   },
   admin: {
-    components: { edit: { SaveButton: '@/components/GlobalTitle' } },
+    useAsTitle: 'name',
+    // components: { edit: { SaveButton: '@/components/GlobalTitle' } },
   },
   hooks: {
     afterOperation: [

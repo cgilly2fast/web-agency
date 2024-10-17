@@ -1,16 +1,16 @@
-import { PayloadRequest } from "payload";
+import { BasePayload, PayloadRequest } from 'payload'
 
 export interface PluginTypes {
   /**
    * Enable or disable plugin
    * @default false
    */
-  enabled?: boolean;
+  enabled?: boolean
 
   /**
    * Name of the strategy
    */
-  strategyName: string;
+  strategyName: string
 
   /**
    * Use email as identity. If true, the user's email will be used as the
@@ -18,44 +18,44 @@ export interface PluginTypes {
    * OAuth providers using the same email.
    * @default false
    */
-  useEmailAsIdentity?: boolean;
+  useEmailAsIdentity?: boolean
 
   /**
    * URL to the server. This is used to redirect users after login.
    * Must not have trailing slash.
    * Must start with http:// or https://
    */
-  serverURL: string;
+  serverURL: string
 
   /**
    * Slug of the collection where user information will be stored
    * @default "users"
    */
-  authCollection?: string;
+  authCollection?: string
 
   /**
    * Field name in the auth collection where the OAuth provider's user ID will
    * be stored
    * @default "sub"
    */
-  subFieldName?: string;
+  subFieldName?: string
 
   /**
    * Client ID for the OAuth provider
    */
-  clientId: string;
+  clientId: string
 
   /**
    * Client secret for the OAuth provider
    */
-  clientSecret: string;
+  clientSecret: string
 
   /**
    * URL to the token endpoint.
    * The following are token endpoints for popular OAuth providers:
    * - Google: https://oauth2.googleapis.com/token
    */
-  tokenEndpoint: string;
+  tokenEndpoint: string
 
   /**
    * URL to the provider authorization endpoint.
@@ -63,7 +63,15 @@ export interface PluginTypes {
    * The following are authorization endpoints for popular OAuth providers:
    * - Google: https://accounts.google.com/o/oauth2/v2/auth
    */
-  providerAuthorizationUrl: string;
+  providerAuthorizationUrl: string
+
+  /**
+   *
+   * @param payload base payload object
+   * @param userId user id to look up already saved scopes
+   * @returns string array of current scopes
+   */
+  getExistingScope: (payload: BasePayload, userId: string) => Promise<string[]>
 
   /**
    * Function to get user information from the OAuth provider.
@@ -71,7 +79,7 @@ export interface PluginTypes {
    * information that will be stored in database.
    * @param accessToken Access token obtained from OAuth provider
    */
-  getUserInfo: (accessToken: string) => Promise<any> | any;
+  getUserInfo: (accessToken: string) => Promise<any> | any
 
   /**
    * Scope for the OAuth provider.
@@ -81,7 +89,7 @@ export interface PluginTypes {
    *   + https://www.googleapis.com/auth/userinfo.profile
    *   + openid
    */
-  scopes: string[];
+  scopes: string[]
 
   /**
    * Path to the authorize endpoint.
@@ -90,7 +98,7 @@ export interface PluginTypes {
    * This path will have /api/<auth-collection-slug> prepended to it.
    * @default "/oauth/authorize"
    */
-  authorizePath?: string;
+  authorizePath?: string
 
   /**
    * Path to the callback endpoint.
@@ -99,24 +107,21 @@ export interface PluginTypes {
    * This path will have /api/<auth-collection-slug> prepended to it.
    * @default "/oauth/callback"
    */
-  callbackPath?: string;
+  callbackPath?: string
 
   /**
    * Redirect users after successful login.
    */
-  successRedirect: (req: PayloadRequest) => string | Promise<string>;
+  successRedirect: (req: PayloadRequest) => string | Promise<string>
 
   /**
    * Redirect users after failed login.
    */
-  failureRedirect: (
-    req: PayloadRequest,
-    error?: unknown,
-  ) => string | Promise<string>;
+  failureRedirect: (req: PayloadRequest, error?: unknown) => string | Promise<string>
 
-  OAuthLoginButton?: React.ComponentType;
+  OAuthLoginButton?: React.ComponentType
 }
 
 export interface NewCollectionTypes {
-  title: string;
+  title: string
 }
