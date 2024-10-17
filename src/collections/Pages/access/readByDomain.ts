@@ -1,28 +1,28 @@
-import { isPayloadAdminPanel } from '@/collections/utilities/isPayloadAdminPanel'
+import { isPayloadAdminPanel } from '@/utils/collections/isPayloadAdminPanel'
 import { Access } from 'payload'
-import { filterByTenantRead } from './filterByTenantRead'
+import { filterByFirmRead } from './filterByFirmRead'
 
 export const readByDomain: Access = (args) => {
   const { req, data } = args
   if (isPayloadAdminPanel(req)) {
-    return filterByTenantRead(args)
+    return filterByFirmRead(args)
   }
 
   return true
   //only allow pages to be accessed from their domains
 
   //   const payload = req.payload
-  //   let tenant = args.data.tenant
+  //   let firm = args.data.firm
 
-  //   if (!tenant || tenant === '') {
+  //   if (!firm || firm === '') {
   //     return false
   //   }
 
-  //   tenant = typeof tenant !== 'string' ? tenant.id : tenant
+  //   firm = typeof firm !== 'string' ? firm.id : firm
 
-  //   tenant = await payload.findByID({
-  //     collection: 'tenants',
-  //     id: tenant,
+  //   firm = await payload.findByID({
+  //     collection: 'firms',
+  //     id: firm,
   //     depth: 1,
   //   })
 

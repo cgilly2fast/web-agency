@@ -30,7 +30,7 @@ function isConfig(obj: unknown): obj is Config {
   return true
 }
 
-const TenantFieldComponent: React.FC<{
+const FirmFieldComponent: React.FC<{
   path: string
   payload: Payload
   readOnly: boolean
@@ -49,4 +49,4 @@ const TenantFieldComponent: React.FC<{
   )
 }
 
-export default TenantFieldComponent
+export default FirmFieldComponent

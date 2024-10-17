@@ -1,7 +1,7 @@
 import { Field } from 'payload'
 import { TextField } from 'payload'
 import { PartialRequired } from '../../../utils/partialRequired'
-import deepMerge from '../../utilities/deepMerge'
+import deepMerge from '../../../utils/collections/deepMerge'
 
 export type Config = {
   type: 'hex' | 'hexA' | 'rgb' | 'rgbA' | 'hsl' | 'hslA'

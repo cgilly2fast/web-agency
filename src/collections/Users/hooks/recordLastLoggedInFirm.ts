@@ -1,9 +1,9 @@
 import { CollectionAfterLoginHook } from 'payload'
 
-export const recordLastLoggedInTenant: CollectionAfterLoginHook = async ({ req, user }) => {
+export const recordLastLoggedInFirm: CollectionAfterLoginHook = async ({ req, user }) => {
   try {
     const relatedOrg = await req.payload.find({
-      collection: 'tenants',
+      collection: 'firms',
       where: {
         'domains.domain': {
           in: [req.headers.get('host')],
@@ -18,12 +18,12 @@ export const recordLastLoggedInTenant: CollectionAfterLoginHook = async ({ req, 
         id: user.id,
         collection: 'users',
         data: {
-          lastLoggedInTenant: relatedOrg.docs[0].id,
+          lastLoggedInFirm: relatedOrg.docs[0].id,
         },
       })
     }
   } catch (err: unknown) {
-    req.payload.logger.error(`Error recording last logged in tenant for user ${user.id}: ${err}`)
+    req.payload.logger.error(`Error recording last logged in firm for user ${user.id}: ${err}`)
   }
 
   return user

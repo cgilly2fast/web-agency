@@ -1,15 +1,15 @@
 import type { CollectionConfig } from 'payload'
-import { tenantAdminCollectionAccess } from './access/tenantAdminCollectionAccess'
-import { anyone } from './access/anyone'
-import TenantField from './fields/TenantField'
+import { firmAdminCollectionAccess } from '../lib/access/firmAdminCollectionAccess'
+import { anyone } from '../lib/access/anyone'
+import FirmField from './fields/FirmField'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    create: tenantAdminCollectionAccess,
+    create: firmAdminCollectionAccess,
     read: anyone,
-    update: tenantAdminCollectionAccess,
-    delete: tenantAdminCollectionAccess,
+    update: firmAdminCollectionAccess,
+    delete: firmAdminCollectionAccess,
   },
   upload: {
     imageSizes: [
@@ -41,6 +41,6 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: true,
     },
-    TenantField,
+    FirmField,
   ],
 }

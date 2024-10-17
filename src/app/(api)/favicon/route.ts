@@ -8,7 +8,7 @@ export const GET = async (req: Request) => {
   })
 
   const data = await payload.find({
-    collection: 'tenants',
+    collection: 'firms',
     where: {
       name: {
         equals: req.headers.get('host'),

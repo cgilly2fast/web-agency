@@ -14,11 +14,12 @@ export interface Config {
     media: Media;
     pages: Page;
     blogs: Blog;
-    tenants: Tenant;
+    firms: Firm;
     headers: Header;
     footers: Footer;
-    'calendar-settings': CalendarSetting;
+    'availability-settings': AvailabilitySetting;
     'ai-configs': AiConfig;
+    interactions: Interaction;
     segments: Segment;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -63,7 +64,7 @@ export interface UserAuthOperations {
 export interface Media {
   id: string;
   alt: string;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   prefix?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -105,9 +106,9 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tenants".
+ * via the `definition` "firms".
  */
-export interface Tenant {
+export interface Firm {
   id: string;
   name: string;
   domain: string;
@@ -128,7 +129,7 @@ export interface Page {
   id: string;
   title: string;
   slug?: string | null;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   richText?: string | null;
   meta?: {
     title?: string | null;
@@ -175,7 +176,7 @@ export interface Blog {
     };
     [k: string]: unknown;
   };
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -195,9 +196,9 @@ export interface User {
   firstName?: string | null;
   lastName?: string | null;
   roles: ('super-admin' | 'user' | 'domains-api')[];
-  tenant: string | Tenant;
-  tenantRole: 'admin' | 'user';
-  lastLoggedInTenant?: (string | null) | Tenant;
+  firm: string | Firm;
+  firmRole: 'admin' | 'user';
+  lastLoggedInFirm?: (string | null) | Firm;
   google?: {
     accessToken?: string | null;
     expiresIn?: number | null;
@@ -250,7 +251,7 @@ export interface Header {
         id?: string | null;
       }[]
     | null;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   ctaText?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -283,7 +284,7 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   socials?:
     | {
         socialUrl?: string | null;
@@ -297,9 +298,9 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "calendar-settings".
+ * via the `definition` "availability-settings".
  */
-export interface CalendarSetting {
+export interface AvailabilitySetting {
   id: string;
   name?: string | null;
   user: string | User;
@@ -1964,7 +1965,7 @@ export interface CalendarSetting {
         | 'Pacific/Auckland'
       )
     | null;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   updatedAt: string;
   createdAt: string;
 }
@@ -1978,7 +1979,7 @@ export interface AiConfig {
   form?: (string | null) | Form;
   agentName?: string | null;
   picture?: (string | null) | Media;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   previewType?: ('image' | 'video') | null;
   previewImage?: (string | null) | Media;
   previewVideo?: (string | null) | Media;
@@ -2180,29 +2181,34 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "segments".
+ * via the `definition` "interactions".
  */
-export interface Segment {
+export interface Interaction {
   id: string;
+  callAgain?: boolean | null;
+  error?: string | null;
+  fromEmail?: string | null;
+  fromPhone?: string | null;
+  firm?: (string | null) | Firm;
+  meeting?: (string | null) | Meeting;
+  scheduledTime?: string | null;
+  status?: ('delivered' | 'failed' | 'scheduled' | 'sent' | 'unknown' | 'canceled') | null;
+  toPhone?: string | null;
+  toEmail?: string | null;
+  subject?: string | null;
+  body?: string | null;
+  transferTo?: string | null;
+  type: '0' | '1' | '2';
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
+ * via the `definition` "meetings".
  */
-export interface FormSubmission {
+export interface Meeting {
   id: string;
-  form: string | Form;
+  form: string | MeetingTemplate;
   submissionData?:
     | {
         field: string;
@@ -2210,17 +2216,6 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
-  payment?: {
-    field?: string | null;
-    status?: string | null;
-    amount?: number | null;
-    paymentProcessor?: string | null;
-    creditCard?: {
-      token?: string | null;
-      brand?: string | null;
-      number?: string | null;
-    };
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -2643,17 +2638,35 @@ export interface MeetingTemplate {
     };
   };
   cancelationPolicy?: string | null;
-  tenant?: (string | null) | Tenant;
+  firm?: (string | null) | Firm;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "meetings".
+ * via the `definition` "segments".
  */
-export interface Meeting {
+export interface Segment {
   id: string;
-  form: string | MeetingTemplate;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: string;
+  form: string | Form;
   submissionData?:
     | {
         field: string;
@@ -2661,6 +2674,17 @@ export interface Meeting {
         id?: string | null;
       }[]
     | null;
+  payment?: {
+    field?: string | null;
+    status?: string | null;
+    amount?: number | null;
+    paymentProcessor?: string | null;
+    creditCard?: {
+      token?: string | null;
+      brand?: string | null;
+      number?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -2684,8 +2708,8 @@ export interface PayloadLockedDocument {
         value: string | Blog;
       } | null)
     | ({
-        relationTo: 'tenants';
-        value: string | Tenant;
+        relationTo: 'firms';
+        value: string | Firm;
       } | null)
     | ({
         relationTo: 'headers';
@@ -2696,12 +2720,16 @@ export interface PayloadLockedDocument {
         value: string | Footer;
       } | null)
     | ({
-        relationTo: 'calendar-settings';
-        value: string | CalendarSetting;
+        relationTo: 'availability-settings';
+        value: string | AvailabilitySetting;
       } | null)
     | ({
         relationTo: 'ai-configs';
         value: string | AiConfig;
+      } | null)
+    | ({
+        relationTo: 'interactions';
+        value: string | Interaction;
       } | null)
     | ({
         relationTo: 'segments';

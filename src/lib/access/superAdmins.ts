@@ -1,6 +1,6 @@
 import type { FieldAccess, Access } from 'payload'
 
-import { checkUserRoles } from '../utilities/checkUserRoles'
+import { checkUserRoles } from '../../utils/collections/checkUserRoles'
 
 export const superAdminsCollectionAccess: Access = ({ req: { user } }) =>
   checkUserRoles(['super-admin'], user)

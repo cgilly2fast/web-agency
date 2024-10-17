@@ -1,4 +1,3 @@
-// storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -14,18 +13,19 @@ import { OAuth2Plugin } from './plugins/oauth2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
-import { Tenants } from './collections/Tenants/index'
+import { Firms } from './collections/Firms/index'
 import { serviceAccount } from './config'
 import { abrVideos } from './plugins/abrVideos'
 import Blogs from './collections/Blog/Blogs'
 import { readByDomain } from './collections/Pages/access/readByDomain'
-import { tenantUserCollectionAccess } from './collections/access/tenantUserCollectionAccess'
-import { tenantAdminCollectionAccess } from './collections/access/tenantAdminCollectionAccess'
+import { firmUserCollectionAccess } from './lib/access/firmUserCollectionAccess'
+import { firmAdminCollectionAccess } from './lib/access/firmAdminCollectionAccess'
 import Headers from './collections/Headers'
 import Footers from './collections/Footers'
-import CalendarSetting from './collections/CalendarSettings'
+import AvailabilitySettings from './collections/AvailabilitySettings'
 import ChatSettings from './collections/ChatSettings'
-import appointmentFormOverride from './collections/overrides/appointmentFormOverride'
+import appointmentFormOverride from './lib/overrides/appointmentFormOverride'
+import Interactions from './collections/Interactions'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -67,12 +67,12 @@ export default buildConfig({
     Media,
     Pages,
     Blogs,
-    Tenants,
+    Firms,
     Headers,
     Footers,
-    CalendarSetting,
-    // EventTypes,
+    AvailabilitySettings,
     ChatSettings,
+    Interactions,
   ],
   editor: lexicalEditor(),
   globals: [],
@@ -125,9 +125,9 @@ export default buildConfig({
         labels: { singular: 'Form Template', plural: 'Form Templates' },
         access: {
           read: readByDomain,
-          create: tenantUserCollectionAccess,
-          update: tenantUserCollectionAccess,
-          delete: tenantAdminCollectionAccess,
+          create: firmUserCollectionAccess,
+          update: firmUserCollectionAccess,
+          delete: firmAdminCollectionAccess,
         },
       },
       fields: {
@@ -136,9 +136,9 @@ export default buildConfig({
       formSubmissionOverrides: {
         access: {
           read: readByDomain,
-          create: tenantUserCollectionAccess,
-          update: tenantUserCollectionAccess,
-          delete: tenantAdminCollectionAccess,
+          create: firmUserCollectionAccess,
+          update: firmUserCollectionAccess,
+          delete: firmAdminCollectionAccess,
         },
       },
     }),
@@ -151,9 +151,9 @@ export default buildConfig({
         },
         access: {
           read: readByDomain,
-          create: tenantUserCollectionAccess,
-          update: tenantUserCollectionAccess,
-          delete: tenantAdminCollectionAccess,
+          create: firmUserCollectionAccess,
+          update: firmUserCollectionAccess,
+          delete: firmAdminCollectionAccess,
         },
         fields: appointmentFormOverride,
       },
@@ -161,9 +161,9 @@ export default buildConfig({
         slug: 'meetings',
         access: {
           read: readByDomain,
-          create: tenantUserCollectionAccess,
-          update: tenantUserCollectionAccess,
-          delete: tenantAdminCollectionAccess,
+          create: firmUserCollectionAccess,
+          update: firmUserCollectionAccess,
+          delete: firmAdminCollectionAccess,
         },
       },
     }),

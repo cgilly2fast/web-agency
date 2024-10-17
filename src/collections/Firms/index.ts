@@ -1,17 +1,17 @@
 import type { CollectionConfig } from 'payload'
 
-import { superAdminsCollectionAccess } from '../access/superAdmins'
-import { tenantAdminCollectionAccess } from '../access/tenantAdminCollectionAccess'
-import { anyone } from '../access/anyone'
+import { superAdminsCollectionAccess } from '../../lib/access/superAdmins'
+import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
+import { anyone } from '../../lib/access/anyone'
 import { validateDomain } from './validation/validateDomain'
 
-export const Tenants: CollectionConfig = {
-  slug: 'tenants',
+export const Firms: CollectionConfig = {
+  slug: 'firms',
   labels: { singular: 'Firm Setting', plural: 'Firm Settings' },
   access: {
     create: superAdminsCollectionAccess,
-    read: anyone, //tenantAdmins, // add domains api access
-    update: tenantAdminCollectionAccess,
+    read: anyone, //firmAdmins, // add domains api access
+    update: firmAdminCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
   admin: {
@@ -27,21 +27,21 @@ export const Tenants: CollectionConfig = {
           await payload.create({
             collection: 'headers',
             data: {
-              tenant: result.id,
+              firm: result.id,
             },
           })
 
           await payload.create({
             collection: 'footers',
             data: {
-              tenant: result.id,
+              firm: result.id,
             },
           })
 
           await payload.create({
             collection: 'ai-configs',
             data: {
-              tenant: result.id,
+              firm: result.id,
             },
           })
         }
@@ -55,7 +55,7 @@ export const Tenants: CollectionConfig = {
             await payload.delete({
               collection: 'headers',
               where: {
-                tenant: {
+                firm: {
                   equals: doc.id,
                 },
               },
@@ -64,14 +64,14 @@ export const Tenants: CollectionConfig = {
             await payload.delete({
               collection: 'footers',
               where: {
-                tenant: { equals: doc.id },
+                firm: { equals: doc.id },
               },
             })
 
             await payload.delete({
               collection: 'ai-configs',
               where: {
-                tenant: { equals: doc.id },
+                firm: { equals: doc.id },
               },
             })
           }

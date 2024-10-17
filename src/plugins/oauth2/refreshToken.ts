@@ -25,8 +25,8 @@ export async function refreshAccessToken(refreshToken: string) {
 }
 
 export async function refreshMicrosoftAccessToken(refreshToken: string): Promise<string> {
-  const tenantId = process.env.MICROSOFT_TENANT_ID || 'common' // Use 'common' for multi-tenant apps
-  const response = await fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
+  const firmId = process.env.MICROSOFT_TENANT_ID || 'common' // Use 'common' for multi-firm apps
+  const response = await fetch(`https://login.microsoftonline.com/${firmId}/oauth2/v2.0/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

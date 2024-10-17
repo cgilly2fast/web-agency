@@ -1,6 +1,6 @@
 import { CollectionConfig } from 'payload'
-import TenantField from './fields/TenantField'
-import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
+import FirmField from './fields/FirmField'
+import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
 import { readByDomain } from './Pages/access/readByDomain'
 import {
   lexicalEditor,
@@ -22,15 +22,15 @@ const EventTypes: CollectionConfig = {
   },
   access: {
     read: readByDomain,
-    create: tenantUserCollectionAccess,
-    update: tenantUserCollectionAccess,
-    delete: tenantUserCollectionAccess,
+    create: firmUserCollectionAccess,
+    update: firmUserCollectionAccess,
+    delete: firmUserCollectionAccess,
   },
   admin: {
     useAsTitle: 'name',
   },
   fields: [
-    TenantField,
+    FirmField,
     {
       name: 'afterBooking',
       type: 'select',

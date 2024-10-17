@@ -11,7 +11,7 @@ import {
   FixedToolbarFeature,
   BlockFields,
 } from '@payloadcms/richtext-lexical'
-import TenantField from '../fields/TenantField'
+import FirmField from '../../collections/fields/FirmField'
 import { User } from '@/payload-types'
 import {
   Checkbox,
@@ -168,8 +168,8 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
         },
         filterOptions: ({ user }) => {
           return {
-            tenant: {
-              equals: typeof user?.tenant === 'string' ? user?.tenant : user?.tenant?.id,
+            firm: {
+              equals: typeof user?.firm === 'string' ? user?.firm : user?.firm?.id,
             },
           }
         },
@@ -189,8 +189,8 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
         },
         filterOptions: ({ user }) => {
           return {
-            tenant: {
-              equals: typeof user?.tenant === 'string' ? user?.tenant : user?.tenant?.id,
+            firm: {
+              equals: typeof user?.firm === 'string' ? user?.firm : user?.firm?.id,
             },
           }
         },
@@ -622,7 +622,7 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
         type: 'group',
         fields: [
           {
-            ...map.fields,
+            // ...map.fields,
             label: false,
             labels: { singular: 'New Question', plural: 'Invitee Questions' },
             admin: {
@@ -1324,7 +1324,7 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
     type: 'tabs',
     tabs: [eventDetails, scheduleSettings, bookingPage, notifications],
   }
-  return [tabs, TenantField]
+  return [tabs, FirmField]
 }
 
 export default appointmentFormOverride

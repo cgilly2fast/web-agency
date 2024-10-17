@@ -97,7 +97,7 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
         })
 
         const data = await payload.find({
-          collection: 'tenants',
+          collection: 'firms',
           where: {
             domain: {
               equals: userInfo.email.split('@')[1],
@@ -106,7 +106,7 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
         })
 
         if (!data.docs || data.docs.length === 0) {
-          throw Error('The domain of the email you are trying to login with is not a tenant.')
+          throw Error('The domain of the email you are trying to login with is not a firm.')
         }
 
         try {

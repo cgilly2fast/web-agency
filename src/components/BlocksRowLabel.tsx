@@ -1,5 +1,12 @@
 'use client'
-import { ErrorPill, Pill, SectionTitle, useField, useTranslation } from '@payloadcms/ui'
+import {
+  ErrorPill,
+  Pill,
+  SectionTitle,
+  useField,
+  useFormFields,
+  useTranslation,
+} from '@payloadcms/ui'
 import { Row } from 'payload'
 import { useMemo } from 'react'
 
@@ -19,6 +26,9 @@ const CustomBlocksRowLabel: React.FC<BlocksRowLabelProps> = ({ blockKind, formDa
   }, [field.rows, formData.id])
 
   const block = useField({ path: field.path + '.' + rowIndex })
+
+  const test = useFormFields(([fields, dispatch]) => fields)
+  console.log('TEST', test)
 
   return (
     <div className={`${baseClass}__block-header`}>

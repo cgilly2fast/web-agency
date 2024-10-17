@@ -1,4 +1,4 @@
-import { default as default_0 } from '@/collections/fields/TenantField/components/index'
+import { default as default_0 } from '@/collections/fields/FirmField/components/index'
 import { OverviewComponent as OverviewComponent_1 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_2 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_3 } from '@payloadcms/plugin-seo/client'
@@ -50,7 +50,7 @@ import { default as default_48 } from '@/views/Chat/index'
 import { default as default_49 } from '@/views/Dashboard/index'
 
 export const importMap = {
-  "@/collections/fields/TenantField/components/index#default": default_0,
+  "@/collections/fields/FirmField/components/index#default": default_0,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_1,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_2,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_3,

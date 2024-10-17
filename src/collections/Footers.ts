@@ -1,9 +1,9 @@
 import type { CollectionConfig } from 'payload'
 
 import Link from './fields/LinkField'
-import TenantFieldUnique from './fields/TenantField/TenantFieldUnique'
-import { superAdminsCollectionAccess } from './access/superAdmins'
-import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
+import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
+import { superAdminsCollectionAccess } from '../lib/access/superAdmins'
+import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
 import { readByDomain } from './Pages/access/readByDomain'
 
 const Footers: CollectionConfig = {
@@ -11,7 +11,7 @@ const Footers: CollectionConfig = {
   access: {
     read: readByDomain,
     create: superAdminsCollectionAccess,
-    update: tenantUserCollectionAccess,
+    update: firmUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
   admin: {
@@ -39,7 +39,7 @@ const Footers: CollectionConfig = {
         },
       ],
     },
-    TenantFieldUnique,
+    FirmFieldUnique,
     {
       name: 'socials',
       label: 'Social Media Links',

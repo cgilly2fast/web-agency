@@ -1,17 +1,17 @@
 import type { CollectionConfig } from 'payload'
 
 import Link from './fields/LinkField'
-import TenantFieldUnique from './fields/TenantField/TenantFieldUnique'
-import { superAdminsCollectionAccess } from './access/superAdmins'
+import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
+import { superAdminsCollectionAccess } from '../lib/access/superAdmins'
 import { readByDomain } from './Pages/access/readByDomain'
-import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
+import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
 
 const Headers: CollectionConfig = {
   slug: 'headers',
   access: {
     read: readByDomain,
     create: superAdminsCollectionAccess,
-    update: tenantUserCollectionAccess,
+    update: firmUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
   admin: {
@@ -30,7 +30,7 @@ const Headers: CollectionConfig = {
       maxRows: 8,
       fields: [Link({})],
     },
-    TenantFieldUnique,
+    FirmFieldUnique,
     { name: 'ctaText', label: 'CTA Text', type: 'text' },
   ],
 }

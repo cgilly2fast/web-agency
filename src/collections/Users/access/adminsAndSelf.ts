@@ -1,6 +1,6 @@
 import type { Access, Where } from 'payload'
 import type { User } from '../../../payload-types'
-import { isSuperAdmin } from '../../utilities/isSuperAdmin'
+import { isSuperAdmin } from '../../../utils/collections/isSuperAdmin'
 
 export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
   if (!user) {
@@ -9,7 +9,7 @@ export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
 
   const isSuper = isSuperAdmin(user)
 
-  if (isSuper && !user?.lastLoggedInTenant) {
+  if (isSuper && !user?.lastLoggedInFirm) {
     return true
   }
 
@@ -19,28 +19,28 @@ export const adminsAndSelf: Access<User> = async ({ req: { user } }) => {
     },
   }
 
-  const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
+  const firmID = typeof user.firm === 'string' ? user.firm : user.firm.id
 
-  const tenantCondition: Where = isSuper
+  const firmCondition: Where = isSuper
     ? {
-        tenant: {
+        firm: {
           in: [
-            typeof user?.lastLoggedInTenant === 'string'
-              ? user?.lastLoggedInTenant
-              : user?.lastLoggedInTenant?.id,
+            typeof user?.lastLoggedInFirm === 'string'
+              ? user?.lastLoggedInFirm
+              : user?.lastLoggedInFirm?.id,
           ].filter(Boolean) as string[],
         },
       }
     : {
-        tenant: {
-          equals: tenantID,
+        firm: {
+          equals: firmID,
         },
-        tenantRole: {
+        firmRole: {
           equals: 'admin',
         },
       }
 
   return {
-    or: [baseConditions, tenantCondition],
+    or: [baseConditions, firmCondition],
   }
 }

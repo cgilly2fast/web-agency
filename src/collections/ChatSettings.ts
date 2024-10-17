@@ -1,10 +1,9 @@
 import type { CollectionConfig } from 'payload'
 
-import Link from './fields/LinkField'
-import TenantFieldUnique from './fields/TenantField/TenantFieldUnique'
-import { superAdminsCollectionAccess } from './access/superAdmins'
+import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
+import { superAdminsCollectionAccess } from '../lib/access/superAdmins'
 import { readByDomain } from './Pages/access/readByDomain'
-import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
+import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
 import { imageFilterOption, videoFilterOption } from '@/utils/imageFilterOption'
 
 const ChatSettings: CollectionConfig = {
@@ -13,7 +12,7 @@ const ChatSettings: CollectionConfig = {
   access: {
     read: readByDomain,
     create: superAdminsCollectionAccess,
-    update: tenantUserCollectionAccess,
+    update: firmUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
   admin: {
@@ -78,7 +77,7 @@ const ChatSettings: CollectionConfig = {
                 },
               },
             },
-            TenantFieldUnique,
+            FirmFieldUnique,
           ],
         },
         {

@@ -1,15 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone } from '../access/anyone'
-import { superAdminFieldAccess } from '../access/superAdmins'
+import { superAdminFieldAccess } from '../../lib/access/superAdmins'
 import { adminsAndSelf } from './access/adminsAndSelf'
-import { tenantAdminFieldAccess } from '../access/tenantAdminFieldAccess'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
-import { recordLastLoggedInTenant } from './hooks/recordLastLoggedInTenant'
-import { isSuperOrTenantAdmin } from './utilities/isSuperOrTenantAdmin'
+import { recordLastLoggedInFirm } from './hooks/recordLastLoggedInFirm'
+import { isSuperOrFirmAdmin } from './utilities/isSuperOrFirmAdmin'
 import { meToo } from '@/lib/meToo'
-import { isSuperAdmin } from '../utilities/isSuperAdmin'
-import { validateTenant } from './validation/tenantValidation'
+import { isSuperAdmin } from '../../utils/collections/isSuperAdmin'
+import { validateFirm } from './validation/firmValidation'
+import { accountSetup } from './hooks/accountSetup'
+import { accountDelete } from './hooks/accountDelete'
+import { firmAdminFieldAccess } from '../../lib/access/firmAdminFieldAccess'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -31,50 +32,15 @@ export const Users: CollectionConfig = {
   },
   access: {
     read: adminsAndSelf,
-    create: isSuperOrTenantAdmin,
+    create: isSuperOrFirmAdmin,
     update: adminsAndSelf,
     delete: adminsAndSelf,
-    admin: isSuperOrTenantAdmin,
+    admin: isSuperOrFirmAdmin,
   },
   hooks: {
     afterChange: [loginAfterCreate],
-    afterLogin: [recordLastLoggedInTenant],
-    afterOperation: [
-      async ({ operation, req, result }) => {
-        if (operation === 'create') {
-          const { payload } = req
-
-          await payload.create({
-            collection: 'calendar-settings',
-            data: {
-              tenant: result.tenant,
-              user: result.id,
-            },
-          })
-        }
-        return result
-      },
-      async ({ operation, req, result }) => {
-        if (operation === 'delete') {
-          const { payload } = req
-          for (let i = 0; i < result.docs.length; i++) {
-            const doc = result.docs[i]
-            await payload.delete({
-              collection: 'calendar-settings',
-              where: {
-                user: {
-                  equals: doc.id,
-                },
-                tenant: {
-                  equals: doc.tenant,
-                },
-              },
-            })
-          }
-        }
-        return result
-      },
-    ],
+    afterLogin: [recordLastLoggedInFirm],
+    afterOperation: [accountSetup, accountDelete],
   },
   fields: [
     {
@@ -119,17 +85,17 @@ export const Users: CollectionConfig = {
     },
 
     {
-      name: 'tenant',
+      name: 'firm',
       type: 'relationship',
-      relationTo: 'tenants',
-      label: 'Tenants',
+      relationTo: 'firms',
+      label: 'Firms',
       hasMany: false,
       required: true,
-      validate: validateTenant,
+      validate: validateFirm,
       access: {
-        create: tenantAdminFieldAccess,
-        update: tenantAdminFieldAccess,
-        read: tenantAdminFieldAccess,
+        create: firmAdminFieldAccess,
+        update: firmAdminFieldAccess,
+        read: firmAdminFieldAccess,
       },
       hooks: {
         beforeValidate: [
@@ -137,13 +103,13 @@ export const Users: CollectionConfig = {
             if (isSuperAdmin(req.user)) {
               return value
             }
-            return originalDoc.tenant
+            return originalDoc.firm
           },
         ],
       },
     },
     {
-      name: 'tenantRole',
+      name: 'firmRole',
       type: 'select',
       hasMany: false,
       required: true,
@@ -160,13 +126,13 @@ export const Users: CollectionConfig = {
     },
 
     {
-      name: 'lastLoggedInTenant',
+      name: 'lastLoggedInFirm',
       type: 'relationship',
-      relationTo: 'tenants',
+      relationTo: 'firms',
       index: true,
       access: {
         create: () => false,
-        read: tenantAdminFieldAccess,
+        read: firmAdminFieldAccess,
         update: superAdminFieldAccess,
       },
       admin: {

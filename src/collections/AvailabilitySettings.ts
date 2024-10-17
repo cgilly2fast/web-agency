@@ -2,9 +2,9 @@ import { CollectionConfig } from 'payload'
 // import { accountFilterOption } from '../validatation/accountFilterOption'
 // import { accountValidation } from '../validatation/accountValidation'
 import { readByDomain } from './Pages/access/readByDomain'
-import { superAdminFieldAccess, superAdminsCollectionAccess } from './access/superAdmins'
-import { tenantUserCollectionAccess } from './access/tenantUserCollectionAccess'
-import TenantField from './fields/TenantField/TenantFieldUnique'
+import { superAdminFieldAccess, superAdminsCollectionAccess } from '../lib/access/superAdmins'
+import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
+import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
 
 const availabilityOptions = [
   '12:00am',
@@ -105,8 +105,8 @@ const availabilityOptions = [
   '11:45pm',
 ]
 
-const CalendarSetting: CollectionConfig = {
-  slug: 'calendar-settings',
+const AvailabilitySettings: CollectionConfig = {
+  slug: 'availability-settings',
   labels: {
     singular: 'Availability Setting',
     plural: 'Availability Settings',
@@ -114,7 +114,7 @@ const CalendarSetting: CollectionConfig = {
   access: {
     read: readByDomain,
     create: superAdminsCollectionAccess,
-    update: tenantUserCollectionAccess,
+    update: firmUserCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
   admin: {
@@ -628,8 +628,8 @@ const CalendarSetting: CollectionConfig = {
         { label: 'New Zealand Standard Time', value: 'Pacific/Auckland' },
       ],
     },
-    TenantField,
+    FirmFieldUnique,
   ],
 }
 
-export default CalendarSetting
+export default AvailabilitySettings

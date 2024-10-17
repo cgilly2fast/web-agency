@@ -7,7 +7,7 @@ type Props = {
   path: string
   readOnly: boolean
 }
-export function TenantFieldComponentClient({ initialValue, path, readOnly }: Props) {
+export function FirmFieldComponentClient({ initialValue, path, readOnly }: Props) {
   const { formInitializing, setValue, value } = useField({ path })
   const hasSetInitialValue = React.useRef(false)
 
@@ -24,8 +24,8 @@ export function TenantFieldComponentClient({ initialValue, path, readOnly }: Pro
         name: path,
         type: 'relationship',
         _path: path,
-        label: 'Tenant',
-        relationTo: 'tenants',
+        label: 'Firm',
+        relationTo: 'firms',
         required: true,
         admin: {
           style: {

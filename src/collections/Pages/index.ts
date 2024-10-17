@@ -1,12 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
-import TenantField from '../fields/TenantField'
-import { tenantAdminCollectionAccess } from '../access/tenantAdminCollectionAccess'
+import FirmField from '../fields/FirmField'
+import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
 import formatSlug from './hooks/formatSlug'
 import ensureUniqueSlug from './hooks/enureUniqueSlug'
 import { readByDomain } from './access/readByDomain'
-import { tenantUserCollectionAccess } from '../access/tenantUserCollectionAccess'
-import { Tenant } from '@/payload-types'
+import { firmUserCollectionAccess } from '../../lib/access/firmUserCollectionAccess'
+import { Firm } from '@/payload-types'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -15,23 +15,23 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: async ({ data, payload }) => {
-        let tenant: Tenant | string = data.tenant
-        if (typeof tenant === 'string') {
-          tenant = await payload.findByID({
-            collection: 'tenants',
-            id: data.tenant,
+        let firm: Firm | string = data.firm
+        if (typeof firm === 'string') {
+          firm = await payload.findByID({
+            collection: 'firms',
+            id: data.firm,
           })
         }
         const isHomePage = data.slug === 'home'
-        return `https://${tenant.domain}${!isHomePage ? `/${data.slug}` : ''}`
+        return `https://${firm.domain}${!isHomePage ? `/${data.slug}` : ''}`
       },
     },
   },
   access: {
     read: readByDomain,
-    create: tenantUserCollectionAccess,
-    update: tenantUserCollectionAccess,
-    delete: tenantAdminCollectionAccess,
+    create: firmUserCollectionAccess,
+    update: firmUserCollectionAccess,
+    delete: firmAdminCollectionAccess,
   },
   fields: [
     {
@@ -51,7 +51,7 @@ export const Pages: CollectionConfig = {
         beforeValidate: [formatSlug('title'), ensureUniqueSlug],
       },
     },
-    TenantField,
+    FirmField,
     {
       name: 'richText',
       type: 'textarea',

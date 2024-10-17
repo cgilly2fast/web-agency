@@ -3,12 +3,12 @@ import { CollectionConfig } from 'payload'
 // import { revalidateBlog } from './hooks/revalidateBlog'
 // import Calix from '../../blocks/firmleads/Calix'
 import { readByDomain } from '../Pages/access/readByDomain'
-import { tenantAdminCollectionAccess } from '../access/tenantAdminCollectionAccess'
-import { tenantUserCollectionAccess } from '../access/tenantUserCollectionAccess'
-import { Tenant } from '@/payload-types'
+import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
+import { firmUserCollectionAccess } from '../../lib/access/firmUserCollectionAccess'
+import { Firm } from '@/payload-types'
 import formatSlug from '../Pages/hooks/formatSlug'
 import ensureUniqueSlug from '../Pages/hooks/enureUniqueSlug'
-import TenantField from '../fields/TenantField'
+import FirmField from '../fields/FirmField'
 
 const Blogs: CollectionConfig = {
   slug: 'blogs',
@@ -17,14 +17,14 @@ const Blogs: CollectionConfig = {
     defaultColumns: ['name', 'slug', 'updatedAt'],
     livePreview: {
       url: async ({ data, payload }) => {
-        let tenant: Tenant | string = data.tenant
-        if (typeof tenant === 'string') {
-          tenant = await payload.findByID({
-            collection: 'tenants',
-            id: data.tenant,
+        let firm: Firm | string = data.firm
+        if (typeof firm === 'string') {
+          firm = await payload.findByID({
+            collection: 'firms',
+            id: data.firm,
           })
         }
-        return `https://${tenant.domain}/blog/${data.slug}`
+        return `https://${firm.domain}/blog/${data.slug}`
       },
     },
   },
@@ -35,9 +35,9 @@ const Blogs: CollectionConfig = {
 
   access: {
     read: readByDomain,
-    create: tenantUserCollectionAccess,
-    update: tenantUserCollectionAccess,
-    delete: tenantAdminCollectionAccess,
+    create: firmUserCollectionAccess,
+    update: firmUserCollectionAccess,
+    delete: firmAdminCollectionAccess,
   },
 
   fields: [
@@ -100,7 +100,7 @@ const Blogs: CollectionConfig = {
       type: 'richText',
       required: true,
     },
-    TenantField,
+    FirmField,
     // {
     //   name: 'layout',
     //   label: 'Layout',

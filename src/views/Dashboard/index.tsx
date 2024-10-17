@@ -80,13 +80,13 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   }
   let group: Group = groups[0]
 
-  const tenantID = typeof user.tenant === 'string' ? user.tenant : user.tenant.id
+  const firmID = typeof user.firm === 'string' ? user.firm : user.firm.id
 
   const headerData = await payload.find({
     collection: 'headers',
     where: {
-      tenant: {
-        equals: tenantID,
+      firm: {
+        equals: firmID,
       },
     },
   })
@@ -99,8 +99,8 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   const footerData = await payload.find({
     collection: 'footers',
     where: {
-      tenant: {
-        equals: tenantID,
+      firm: {
+        equals: firmID,
       },
     },
   })
@@ -110,25 +110,25 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
-  const calendarData = await payload.find({
-    collection: 'calendar-settings',
+  const availabilityData = await payload.find({
+    collection: 'availability-settings',
     where: {
       user: {
         equals: user.id,
       },
     },
   })
-  const calendar = {
-    entity: payload.collections['calendar-settings'].config,
-    id: calendarData.docs[0].id,
+  const availability = {
+    entity: payload.collections['availability-settings'].config,
+    id: availabilityData.docs[0].id,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
   const chatData = await payload.find({
     collection: 'ai-configs',
     where: {
-      tenant: {
-        equals: tenantID,
+      firm: {
+        equals: firmID,
       },
     },
   })
@@ -145,8 +145,8 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   }
 
   const firmSettings = {
-    entity: payload.collections['tenants'].config,
-    id: tenantID,
+    entity: payload.collections['firms'].config,
+    id: firmID,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
@@ -170,11 +170,11 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   }
 
   const settingsGroup: Group = {
-    entities: [firmSettings, userSettings, calendar],
+    entities: [firmSettings, userSettings, availability],
     label: 'Settings',
   }
 
-  if (user.roles.includes('super-admin') || user.tenantRole.includes('admin')) {
+  if (user.roles.includes('super-admin') || user.firmRole.includes('admin')) {
     settingsGroup.entities.push(dGroup.users)
   }
 

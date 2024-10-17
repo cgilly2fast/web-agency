@@ -3,9 +3,9 @@ import type { Payload } from 'payload'
 import { cookies as getCookies, headers as getHeaders } from 'next/headers'
 import React from 'react'
 
-import { TenantFieldComponentClient } from './Field.client'
+import { FirmFieldComponentClient } from './Field.client'
 
-const TenantFieldComponent: React.FC<{
+const FirmFieldComponent: React.FC<{
   path: string
   payload: Payload
   readOnly: boolean
@@ -17,8 +17,8 @@ const TenantFieldComponent: React.FC<{
 
   if (user && user?.roles?.includes('super-admin')) {
     return (
-      <TenantFieldComponentClient
-        initialValue={cookies.get('payload-tenant')?.value || undefined}
+      <FirmFieldComponentClient
+        initialValue={cookies.get('payload-firm')?.value || undefined}
         path={args.path}
         readOnly={args.readOnly}
       />
@@ -28,4 +28,4 @@ const TenantFieldComponent: React.FC<{
   return null
 }
 
-export default TenantFieldComponent
+export default FirmFieldComponent

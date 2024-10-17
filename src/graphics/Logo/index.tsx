@@ -1,7 +1,7 @@
 import { LoadingOverlay } from '@payloadcms/ui'
 import { PaginatedDocs } from 'payload'
 import dynamic from 'next/dynamic'
-import { Tenant } from '@/payload-types'
+import { Firm } from '@/payload-types'
 
 const LogoClient = dynamic(() => import('./Logo.client'), {
   loading: () => <LoadingOverlay />,
@@ -10,14 +10,14 @@ const LogoClient = dynamic(() => import('./Logo.client'), {
 async function getData() {
   const res = await fetch(
     process.env.PAYLOAD_PUBLIC_SERVER_URL +
-      '/api/tenants?depth=1&draft=false&locale=undefined&limit=333',
+      '/api/firms?depth=1&draft=false&locale=undefined&limit=333',
     {
       headers: {
         Authorization: `users API-Key b18679fe-62fb-4d46-98ad-0bb6beff33ed`,
       },
     },
   )
-  const data = (await res.json()) as PaginatedDocs<Tenant>
+  const data = (await res.json()) as PaginatedDocs<Firm>
   const logoMap: Record<string, string> = {}
   const darkModeLogoMap: Record<string, string> = {}
 

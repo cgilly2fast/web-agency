@@ -1,4 +1,4 @@
-import { Tenant } from '@/payload-types'
+import { Firm } from '@/payload-types'
 import { LoadingOverlay } from '@payloadcms/ui'
 import { PaginatedDocs } from 'payload'
 import dynamic from 'next/dynamic'
@@ -10,14 +10,14 @@ const IconClient = dynamic(() => import('./Icon.client'), {
 async function getData() {
   const res = await fetch(
     process.env.PAYLOAD_PUBLIC_SERVER_URL +
-      '/api/tenants?depth=1&draft=false&locale=undefined&limit=333',
+      '/api/firms?depth=1&draft=false&locale=undefined&limit=333',
     {
       headers: {
         Authorization: `users API-Key 476165bd-d304-4e5c-b1cb-cde748c5ff7b`,
       },
     },
   )
-  const data = (await res.json()) as PaginatedDocs<Tenant>
+  const data = (await res.json()) as PaginatedDocs<Firm>
   const iconMap: Record<string, string> = {}
   const darkModeIconMap: Record<string, string> = {}
 
