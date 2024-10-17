@@ -1,6 +1,9 @@
 import { OutreachType } from '@/lib/types'
 import { PayloadHandler } from 'payload'
 import moment from 'moment-timezone'
+import { makeEmailClient } from '@/lib/factories/makeEmailClient'
+import { sendEmail } from '@/lib/contact/sendEmail'
+import { sendText } from '@/lib/contact/sendText'
 
 export const MsgDispatcher: PayloadHandler = async (req) => {
   const { payload } = req
@@ -29,18 +32,20 @@ export const MsgDispatcher: PayloadHandler = async (req) => {
     try {
       switch (interaction.type) {
         case OutreachType.TXT:
-          await sendText(interaction.toPhone, interaction.fromPhone, interaction.body)
+          await sendText(interaction.toPhone, interaction.fromPhone, interaction.textBody)
           break
         case OutreachType.CALL:
           //   await makeCallHelper(interaction)
           break
         case OutreachType.EMAIL:
-          await sendEmail(
-            interaction.toEmail,
-            interaction.fromEmail,
-            interaction.subject,
-            interaction.body,
-          )
+          const emailClient = await makeEmailClient(interaction, payload)
+          const { toEmail, fromEmail, subject, emailBody } = interaction
+
+          if (!toEmail || !fromEmail || !subject || !emailBody) {
+            throw new Error('Incomplete interaction for email provider')
+          }
+
+          await sendEmail(emailClient!, toEmail, fromEmail, subject, emailBody)
           break
       }
       payload.update({

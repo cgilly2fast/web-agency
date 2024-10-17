@@ -49,12 +49,47 @@ const Interactions: CollectionConfig = {
       relationTo: 'meetings',
       label: 'Meeting',
     },
+    {
+      name: 'user',
+      type: 'relationship',
+      relationTo: 'users',
+      label: 'Users',
+      // required: true,
+    },
     // {
     //   name: 'requestUrl',
     //   type: 'text',
     //   label: 'Request URL',
     //   required: true,
     // },
+    {
+      name: 'emailReplyType',
+      type: 'select',
+      options: [
+        {
+          label: 'Host',
+          value: 'host',
+        },
+        {
+          label: 'No-Reply',
+          value: 'noreply',
+        },
+      ],
+    },
+    {
+      name: 'emailProvider',
+      type: 'select',
+      options: [
+        {
+          label: 'Google',
+          value: 'google',
+        },
+        {
+          label: 'Microsoft',
+          value: 'microsoft',
+        },
+      ],
+    },
     {
       name: 'scheduledTime',
       type: 'date',
@@ -97,10 +132,17 @@ const Interactions: CollectionConfig = {
       },
     },
     {
-      name: 'body',
+      name: 'textBody',
       type: 'text',
       admin: {
-        description: `Email or text body`,
+        description: `Text message body`,
+      },
+    },
+    {
+      name: 'emailBody',
+      type: 'text',
+      admin: {
+        description: `Email body`,
       },
     },
     {

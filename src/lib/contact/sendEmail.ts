@@ -1,6 +1,12 @@
-/**
-import { google } from 'googleapis'
-export function sendEmail(to: string, from: string, subject: string, body: any) {
+import { gmail_v1 } from 'googleapis'
+
+export async function sendEmail(
+  gmail: gmail_v1.Gmail,
+  to: string,
+  from: string,
+  subject: string,
+  body: any,
+) {
   const message = {
     from: from,
     to: to,
@@ -9,23 +15,32 @@ export function sendEmail(to: string, from: string, subject: string, body: any) 
   }
 
   console.log('email message', message)
-  // get access token for
 
   const request = {
     userId: 'me',
     resource: {
       raw: base64UrlEncode(message),
     },
-    auth: jwt,
-    key: credentials.firebase.apiKey!,
+    // auth: jwt,
+    // key: credentials.firebase.apiKey!,
   }
-  const gmail = google.gmail('v1')
   try {
-    return gmail.users.messages.send(request)
+    const response = await gmail.users.messages.send(request)
+    return { success: true, statusCode: response.status }
   } catch (error) {
-    console.log('send email error', error)
-    return 'Error'
+    if (error instanceof Error) {
+      const googleError = error as any // Type assertion for Google API error
+      const statusCode = googleError.code || 500
+      const errorMessage = googleError.message || 'Unknown error'
+
+      console.log('send email error', { statusCode, errorMessage })
+
+      return {
+        success: false,
+        statusCode: statusCode,
+        error: errorMessage,
+      }
+    }
+    return { success: false, error: 'Unknown error occurred' }
   }
 }
-
- */

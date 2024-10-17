@@ -4,7 +4,7 @@ import Telnyx from 'telnyx'
 
 export async function telynxNumberLookup(phone: string) {
   // @ts-ignore
-  const telnyx = Telnyx('')
+  const telnyx = Telnyx(process.env.TELYNX_APIKEY)
   console.log('phone', phone)
   console.log('converted phone', convertToE164(phone))
   const response = await telnyx.number_lookup.retrieve(convertToE164(phone))

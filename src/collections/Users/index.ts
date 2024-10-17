@@ -146,6 +146,13 @@ export const Users: CollectionConfig = {
       hidden: true,
       fields: [
         {
+          name: 'id',
+          type: 'text',
+          admin: {
+            description: 'sub id from OAuth workflow.',
+          },
+        },
+        {
           name: 'accessToken',
           type: 'text',
           admin: {
@@ -190,6 +197,13 @@ export const Users: CollectionConfig = {
       type: 'group',
       hidden: true,
       fields: [
+        {
+          name: 'id',
+          type: 'text',
+          admin: {
+            description: 'sub id from OAuth workflow.',
+          },
+        },
         {
           name: 'accessToken',
           type: 'text',

@@ -178,6 +178,10 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
     settingsGroup.entities.push(dGroup.users)
   }
 
+  if (user.roles.includes('super-admin')) {
+    settingsGroup.entities.push(dGroup.interactions)
+  }
+
   return [websiteGroup, appointmentGroup, chatGroup, formGroup, settingsGroup]
 }
 

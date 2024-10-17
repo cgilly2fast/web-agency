@@ -200,6 +200,7 @@ export interface User {
   firmRole: 'admin' | 'user';
   lastLoggedInFirm?: (string | null) | Firm;
   google?: {
+    id?: string | null;
     accessToken?: string | null;
     expiresIn?: number | null;
     refreshToken?: string | null;
@@ -207,6 +208,7 @@ export interface User {
     tokenType?: string | null;
   };
   microsoft?: {
+    id?: string | null;
     accessToken?: string | null;
     tokenType?: string | null;
     expiresIn?: number | null;
@@ -2191,12 +2193,16 @@ export interface Interaction {
   fromPhone?: string | null;
   firm?: (string | null) | Firm;
   meeting?: (string | null) | Meeting;
+  user?: (string | null) | User;
+  emailReplyType?: ('host' | 'noreply') | null;
+  emailProvider?: ('google' | 'microsoft') | null;
   scheduledTime?: string | null;
   status?: ('delivered' | 'failed' | 'scheduled' | 'sent' | 'unknown' | 'canceled') | null;
   toPhone?: string | null;
   toEmail?: string | null;
   subject?: string | null;
-  body?: string | null;
+  textBody?: string | null;
+  emailBody?: string | null;
   transferTo?: string | null;
   type: '0' | '1' | '2';
   updatedAt: string;
