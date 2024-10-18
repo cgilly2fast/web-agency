@@ -53,6 +53,10 @@ export default buildConfig({
           Component: '@/views/Chat/index',
           path: '/chat',
         },
+        integrations: {
+          Component: '@/views/Integrations/index',
+          path: '/integrations',
+        },
         Dashboard: {
           Component: '@/views/Dashboard/index',
           path: '/',
