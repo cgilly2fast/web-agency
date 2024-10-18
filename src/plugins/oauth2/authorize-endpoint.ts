@@ -24,13 +24,14 @@ export const createAuthorizeEndpoint = (pluginOptions: PluginTypes): Endpoint =>
       allScopes = [...new Set([...pluginOptions.scopes, ...additionalScopes])]
     }
 
+    const state = (req.query.state as string) || 'login'
     const scope = encodeURIComponent(allScopes.join(' '))
     const responseType = 'code'
     const accessType = 'offline'
     const includeGrantedScopes = 'true'
     const prompt = 'select_account consent'
 
-    const authorizeUrl = `${pluginOptions.providerAuthorizationUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&access_type=${accessType}&include_granted_scopes=${includeGrantedScopes}&prompt=${encodeURIComponent(prompt)}`
+    const authorizeUrl = `${pluginOptions.providerAuthorizationUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&access_type=${accessType}&include_granted_scopes=${includeGrantedScopes}&prompt=${encodeURIComponent(prompt)}&state=${encodeURIComponent(state)}`
 
     return Response.redirect(authorizeUrl)
   },

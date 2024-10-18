@@ -38,14 +38,26 @@ export const MsgDispatcher: PayloadHandler = async (req) => {
           //   await makeCallHelper(interaction)
           break
         case OutreachType.EMAIL:
-          const emailClient = await makeEmailClient(interaction, payload)
+          let emailClient = await makeEmailClient(interaction, payload)
           const { toEmail, fromEmail, subject, emailBody } = interaction
 
           if (!toEmail || !fromEmail || !subject || !emailBody) {
             throw new Error('Incomplete interaction for email provider')
           }
 
-          await sendEmail(emailClient!, toEmail, fromEmail, subject, emailBody)
+          let emailResp = await sendEmail(emailClient!, toEmail, fromEmail, subject, emailBody)
+
+          if (emailResp.success) break
+
+          console.log(emailResp)
+
+          if (emailResp.statusCode !== 401) throw new Error(JSON.stringify(emailResp))
+
+          // revalidate token
+
+          emailClient = await makeEmailClient(interaction, payload)
+          emailResp = await sendEmail(emailClient!, toEmail, fromEmail, subject, emailBody)
+
           break
       }
       payload.update({

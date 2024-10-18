@@ -14,18 +14,25 @@ export const makeEmailClient = async (
     return createGmailClient(AuthType.JWT)
   }
 
-  const userData = await payload.findByID({
-    collection: 'users',
-    id: typeof user === 'string' ? user : user.id,
+  const id = typeof user === 'string' ? user : user.id
+  const snapshot = await payload.find({
+    collection: 'user-tokens',
+    where: {
+      user: {
+        equals: id,
+      },
+    },
   })
 
-  if (interaction.emailProvider === 'google') {
-    if (!userData.google) throw new Error('No google tokens')
+  const tokenData = snapshot.docs[0]
 
-    return createGmailClient(AuthType.OAUTH, userData.google)
+  if (interaction.emailProvider === 'google') {
+    if (!tokenData.google) throw new Error('No google tokens')
+
+    return createGmailClient(AuthType.OAUTH, tokenData.google)
   }
 
-  if (!userData.microsoft) throw new Error('No microsoft tokens')
+  if (!tokenData.microsoft) throw new Error('No microsoft tokens')
 
   return undefined
 }

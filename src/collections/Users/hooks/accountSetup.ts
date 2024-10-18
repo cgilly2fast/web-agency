@@ -15,6 +15,12 @@ export const accountSetup: CollectionAfterOperationHook<'users'> = async ({
         user: result.id,
       },
     })
+    await payload.create({
+      collection: 'user-tokens',
+      data: {
+        user: result.id,
+      },
+    })
   }
   return result
 }

@@ -26,6 +26,8 @@ import AvailabilitySettings from './collections/AvailabilitySettings'
 import ChatSettings from './collections/ChatSettings'
 import appointmentFormOverride from './lib/overrides/appointmentFormOverride'
 import Interactions from './collections/Interactions'
+import { UserTokens } from './collections/UserTokens'
+import { FirmTokens } from './collections/FirmTokens'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,7 +73,9 @@ export default buildConfig({
     Headers,
     Footers,
     AvailabilitySettings,
+    FirmTokens,
     ChatSettings,
+    UserTokens,
     Interactions,
   ],
   editor: lexicalEditor(),
@@ -188,13 +192,19 @@ export default buildConfig({
       ],
       providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
       getExistingScope: async (payload: BasePayload, userId: string) => {
-        const user = await payload.findByID({
-          collection: 'users',
-          id: userId,
+        const snapshot = await payload.find({
+          collection: 'user-tokens',
+          where: {
+            user: {
+              equals: userId,
+            },
+          },
+          limit: 1,
         })
-        if (!user || !user.google || !user.google.scope) return []
+        const tokens = snapshot.docs[0]
+        if (!tokens || !tokens.google || !tokens.google.scope) return []
 
-        return user.google.scope.split(' ')
+        return tokens.google.scope.split(' ')
       },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -204,8 +214,18 @@ export default buildConfig({
         return { sub: user.sub }
       },
       useEmailAsIdentity: true,
-      successRedirect: () => '/admin',
-      failureRedirect: () => '/admin/login',
+      successRedirect: (req, state) => {
+        if (state === 'integrations') {
+          return '/admin/integrations'
+        }
+        return '/admin'
+      },
+      failureRedirect: (req, error, state) => {
+        if (state === 'integrations') {
+          return '/admin/integrations'
+        }
+        return '/admin/login'
+      },
       strategyName: 'google',
       subFieldName: 'google',
     }),
@@ -229,14 +249,23 @@ export default buildConfig({
       ],
       providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
       getExistingScope: async (payload: BasePayload, userId: string) => {
+        const snapshot = await payload.find({
+          collection: 'user-tokens',
+          where: {
+            user: {
+              equals: userId,
+            },
+          },
+          limit: 1,
+        })
         const user = await payload.findByID({
           collection: 'users',
           id: userId,
         })
+        const tokens = snapshot.docs[0]
+        if (!tokens || !tokens.microsoft || !tokens.microsoft.scope) return []
 
-        if (!user || !user.microsoft || !user.microsoft.scope) return []
-
-        return user.microsoft.scope.split(' ')
+        return tokens.microsoft.scope.split(' ')
       },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
@@ -246,8 +275,18 @@ export default buildConfig({
         return { sub: user.id }
       },
       useEmailAsIdentity: true,
-      successRedirect: () => '/admin',
-      failureRedirect: () => '/admin/login',
+      successRedirect: (req, state) => {
+        if (state === 'integrations') {
+          return '/admin/integrations'
+        }
+        return '/admin'
+      },
+      failureRedirect: (req, error, state) => {
+        if (state === 'integrations') {
+          return '/admin/integrations'
+        }
+        return '/admin/login'
+      },
       strategyName: 'microsoft',
       subFieldName: 'microsoft',
     }),

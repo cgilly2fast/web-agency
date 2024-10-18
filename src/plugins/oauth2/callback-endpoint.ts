@@ -2,15 +2,17 @@ import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import { CollectionSlug, Endpoint, generatePayloadCookie, getFieldsToSign } from 'payload'
 import { PluginTypes } from './types'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { refreshMicrosoftAccessToken } from '@/lib/refresh/refreshMicrosoftToken'
+import { User } from '@/payload-types'
+import { OAuthProvider } from '@/lib/types'
+import { revalidateOAuthToken } from '@/lib/factories/refreshOAuthToken'
 
 export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => ({
   method: 'get',
   path: pluginOptions.callbackPath || '/oauth/callback',
   handler: async (req) => {
     try {
-      const { code } = req.query
+      const { code, state } = req.query
       if (typeof code !== 'string')
         throw new Error(`Code not in query string: ${JSON.stringify(req.query)}`)
 
@@ -22,7 +24,7 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       const collectionConfig = req.payload.collections[authCollection].config
       const callbackPath = pluginOptions.callbackPath || '/oauth/callback'
       const redirectUri = `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/${authCollection}${callbackPath}`
-      const useEmailAsIdentity = pluginOptions.useEmailAsIdentity ?? false
+      // const useEmailAsIdentity = pluginOptions.useEmailAsIdentity ?? false
 
       // /////////////////////////////////////
       // beforeOperation - Collection
@@ -52,71 +54,63 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       if (typeof access_token !== 'string')
         throw new Error(`No access token: ${JSON.stringify(tokenData)}`)
 
-      // /////////////////////////////////////
-      // get user info
-      // /////////////////////////////////////
       const userInfo = await pluginOptions.getUserInfo(access_token)
 
-      // /////////////////////////////////////
-      // ensure user exists
-      // /////////////////////////////////////
-      let existingUser: any
-      if (useEmailAsIdentity) {
-        existingUser = await req.payload.find({
-          req,
-          collection: authCollection,
-          where: { email: { equals: userInfo.email } },
-          showHiddenFields: true,
-          limit: 1,
-        })
-      } else {
-        existingUser = await req.payload.find({
-          req,
-          collection: authCollection,
-          where: { [subFieldName]: { equals: userInfo[subFieldName] } },
-          showHiddenFields: true,
-          limit: 1,
-        })
+      const snapshot = await req.payload.find({
+        req,
+        collection: 'user-tokens',
+        where: { email: { equals: userInfo.email } },
+        showHiddenFields: true,
+        limit: 1,
+      })
+      if (!snapshot || !snapshot.docs || snapshot.docs.length === 0) {
+        throw Error('Only existing users can OAuth login')
+      }
+      let userToken = snapshot.docs[0]
+
+      const data = await req.payload.find({
+        collection: 'firms',
+        where: {
+          domain: {
+            equals: userInfo.email.split('@')[1],
+          },
+        },
+      })
+
+      if (!data.docs || data.docs.length === 0) {
+        throw Error('The domain of the email you are trying to login with is not a firm.')
       }
 
-      let user: any
-      if (existingUser.docs.length === 0) {
-        user = await req.payload.create({
-          req,
-          collection: authCollection,
-          //@ts-ignore
-          data: {
-            [subFieldName]: userInfo.sub,
-            password: crypto.randomBytes(32).toString('hex'),
-          },
-          showHiddenFields: true,
-        })
-      } else {
-        const payload = await getPayload({
-          config: configPromise,
-        })
+      if (subFieldName === 'microsoft' && userToken.microsoft?.refreshToken) {
+        await revalidateOAuthToken(OAuthProvider.MICROSOFT, userToken.id, req.payload)
+      }
 
-        const data = await payload.find({
-          collection: 'firms',
-          where: {
-            domain: {
-              equals: userInfo.email.split('@')[1],
-            },
+      if (
+        !(userToken as any)[subFieldName] ||
+        !(userToken as any)[subFieldName].scope ||
+        (userToken as any)[subFieldName].scope.length < tokenData.scope.length
+      ) {
+        let updateData: any = {
+          [subFieldName]: {
+            id: userInfo.sub,
+            accessToken: tokenData.access_token,
+            tokenType: tokenData.token_type,
+            expiresIn: tokenData.expires_in,
+            scope: tokenData.scope,
+            refreshToken: tokenData.refresh_token,
           },
-        })
+        }
 
-        if (!data.docs || data.docs.length === 0) {
-          throw Error('The domain of the email you are trying to login with is not a firm.')
+        if (subFieldName === 'microsoft') {
+          updateData[subFieldName].idToken = tokenData.id_token
         }
 
         try {
-          user = await req.payload.update({
+          await req.payload.update({
             req,
-            collection: authCollection,
-            id: existingUser.docs[0].id,
-            data: {
-              [subFieldName]: { id: userInfo.sub, ...tokenData },
-            },
+            collection: 'user-tokens',
+            id: userToken.id,
+            data: updateData,
             showHiddenFields: true,
           })
         } catch (error) {
@@ -128,17 +122,17 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       // /////////////////////////////////////
       // beforeLogin - Collection
       // /////////////////////////////////////
-
+      let user: any = req.user
       await collectionConfig.hooks.beforeLogin.reduce(async (priorHook, hook) => {
         await priorHook
-
+        req.user
         user =
           (await hook({
             collection: collectionConfig,
             context: req.context,
             req,
-            user,
-          })) || user
+            user: req.user,
+          })) || req.user
       }, Promise.resolve())
 
       // /////////////////////////////////////
@@ -146,7 +140,6 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       // /////////////////////////////////////
       let fieldsToSign
       try {
-        console.log('fields to sign', { collectionConfig, email: user.email, user })
         fieldsToSign = getFieldsToSign({
           collectionConfig,
           email: user.email,
@@ -160,7 +153,7 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       const token = jwt.sign(fieldsToSign, req.payload.secret, {
         expiresIn: collectionConfig.auth.tokenExpiration,
       })
-      console.log('token', token)
+
       req.user = user
 
       // /////////////////////////////////////

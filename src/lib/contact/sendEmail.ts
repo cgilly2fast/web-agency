@@ -30,8 +30,8 @@ export async function sendEmail(
   } catch (error) {
     if (error instanceof Error) {
       const googleError = error as any // Type assertion for Google API error
-      const statusCode = googleError.code || 500
-      const errorMessage = googleError.message || 'Unknown error'
+      const statusCode = (googleError.code as number) || 500
+      const errorMessage = (googleError.message as string) || 'Unknown error'
 
       console.log('send email error', { statusCode, errorMessage })
 

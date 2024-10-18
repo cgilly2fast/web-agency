@@ -13,7 +13,7 @@ async function getData() {
       '/api/firms?depth=1&draft=false&locale=undefined&limit=333',
     {
       headers: {
-        Authorization: `users API-Key b18679fe-62fb-4d46-98ad-0bb6beff33ed`,
+        Authorization: `users API-Key 476165bd-d304-4e5c-b1cb-cde748c5ff7b`,
       },
     },
   )

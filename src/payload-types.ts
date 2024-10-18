@@ -18,7 +18,9 @@ export interface Config {
     headers: Header;
     footers: Footer;
     'availability-settings': AvailabilitySetting;
+    'firm-tokens': FirmToken;
     'ai-configs': AiConfig;
+    'user-tokens': UserToken;
     interactions: Interaction;
     segments: Segment;
     forms: Form;
@@ -199,23 +201,8 @@ export interface User {
   firm: string | Firm;
   firmRole: 'admin' | 'user';
   lastLoggedInFirm?: (string | null) | Firm;
-  google?: {
-    id?: string | null;
-    accessToken?: string | null;
-    expiresIn?: number | null;
-    refreshToken?: string | null;
-    scope?: string | null;
-    tokenType?: string | null;
-  };
-  microsoft?: {
-    id?: string | null;
-    accessToken?: string | null;
-    tokenType?: string | null;
-    expiresIn?: number | null;
-    scope?: string | null;
-    refreshToken?: string | null;
-    idToken?: string | null;
-  };
+  google?: string | null;
+  microsoft?: string | null;
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -1973,6 +1960,16 @@ export interface AvailabilitySetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "firm-tokens".
+ */
+export interface FirmToken {
+  id: string;
+  firm: string | Firm;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ai-configs".
  */
 export interface AiConfig {
@@ -2178,6 +2175,33 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-tokens".
+ */
+export interface UserToken {
+  id: string;
+  user: string | User;
+  google?: {
+    id?: string | null;
+    accessToken?: string | null;
+    expiresIn?: number | null;
+    refreshToken?: string | null;
+    scope?: string | null;
+    tokenType?: string | null;
+  };
+  microsoft?: {
+    id?: string | null;
+    accessToken?: string | null;
+    tokenType?: string | null;
+    expiresIn?: number | null;
+    scope?: string | null;
+    refreshToken?: string | null;
+    idToken?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -2730,8 +2754,16 @@ export interface PayloadLockedDocument {
         value: string | AvailabilitySetting;
       } | null)
     | ({
+        relationTo: 'firm-tokens';
+        value: string | FirmToken;
+      } | null)
+    | ({
         relationTo: 'ai-configs';
         value: string | AiConfig;
+      } | null)
+    | ({
+        relationTo: 'user-tokens';
+        value: string | UserToken;
       } | null)
     | ({
         relationTo: 'interactions';

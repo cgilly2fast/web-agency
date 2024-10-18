@@ -9,6 +9,14 @@ export const enum AuthType {
   JWT = 'JWT',
 }
 
+export const enum OAuthProvider {
+  GOOGLE = 'google',
+  MICROSOFT = 'microsoft',
+  ZOOM = 'zoom',
+  STRIPE = 'stripe',
+  PAYPAL = 'paypal',
+}
+
 export interface OAuthCredentials {
   accessToken?: string | null
   refreshToken?: string | null

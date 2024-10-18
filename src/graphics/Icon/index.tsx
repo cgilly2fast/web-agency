@@ -37,5 +37,6 @@ async function getData() {
 
 export default async function Icon() {
   const { iconMap, darkModeIconMap } = await getData()
+  // console.log(iconMap, darkModeIconMap)
   return <IconClient iconMap={iconMap} darkModeIconMap={darkModeIconMap} />
 }
