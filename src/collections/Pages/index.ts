@@ -26,6 +26,9 @@ export const Pages: CollectionConfig = {
         return `https://${firm.domain}${!isHomePage ? `/${data.slug}` : ''}`
       },
     },
+    pagination: {
+      defaultLimit: 20,
+    },
   },
   access: {
     read: readByDomain,

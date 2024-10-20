@@ -26,8 +26,9 @@ import AvailabilitySettings from './collections/AvailabilitySettings'
 import ChatSettings from './collections/ChatSettings'
 import appointmentFormOverride from './lib/overrides/appointmentFormOverride'
 import Interactions from './collections/Interactions'
-import { UserTokens } from './collections/UserTokens'
-import { FirmTokens } from './collections/FirmTokens'
+import AuthTokens from './collections/AuthTokens/AuthTokens'
+import Integrations from './collections/Integrations'
+import OAuthStates from './collections/OAuthState'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,6 +49,7 @@ export default buildConfig({
       },
       afterLogin: ['@/components/GoogleOAuthButton'],
       Nav: '@/components/Nav/index',
+      providers: ['@/providers/DirectDocumentProvider'],
       views: {
         chat: {
           Component: '@/views/Chat/index',
@@ -77,9 +79,10 @@ export default buildConfig({
     Headers,
     Footers,
     AvailabilitySettings,
-    FirmTokens,
+    AuthTokens,
+    Integrations,
+    OAuthStates,
     ChatSettings,
-    UserTokens,
     Interactions,
   ],
   editor: lexicalEditor(),
@@ -92,6 +95,7 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   sharp,
+  telemetry: false,
   plugins: [
     abrVideos({
       collections: {
@@ -195,27 +199,13 @@ export default buildConfig({
         'https://www.googleapis.com/auth/calendar',
       ],
       providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-      getExistingScope: async (payload: BasePayload, userId: string) => {
-        const snapshot = await payload.find({
-          collection: 'user-tokens',
-          where: {
-            user: {
-              equals: userId,
-            },
-          },
-          limit: 1,
-        })
-        const tokens = snapshot.docs[0]
-        if (!tokens || !tokens.google || !tokens.google.scope) return []
 
-        return tokens.google.scope.split(' ')
-      },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         const user = await response.json()
-        return { sub: user.sub }
+        return { accountEmail: user.email, accountId: user.localId }
       },
       useEmailAsIdentity: true,
       successRedirect: (req, state) => {
@@ -252,31 +242,12 @@ export default buildConfig({
         'https://graph.microsoft.com/Calendars.ReadWrite.Shared',
       ],
       providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-      getExistingScope: async (payload: BasePayload, userId: string) => {
-        const snapshot = await payload.find({
-          collection: 'user-tokens',
-          where: {
-            user: {
-              equals: userId,
-            },
-          },
-          limit: 1,
-        })
-        const user = await payload.findByID({
-          collection: 'users',
-          id: userId,
-        })
-        const tokens = snapshot.docs[0]
-        if (!tokens || !tokens.microsoft || !tokens.microsoft.scope) return []
-
-        return tokens.microsoft.scope.split(' ')
-      },
       getUserInfo: async (accessToken: string) => {
         const response = await fetch('https://graph.microsoft.com/v1.0/me', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         const user = await response.json()
-        return { sub: user.id }
+        return { accountEmail: user.mail, accountId: user.id }
       },
       useEmailAsIdentity: true,
       successRedirect: (req, state) => {

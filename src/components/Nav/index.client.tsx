@@ -14,17 +14,34 @@ import {
 import { EntityType, formatAdminURL, groupNavItems } from '@payloadcms/ui/shared'
 import LinkWithDefault from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Group } from '@/views/Dashboard'
 import { transformTitle } from '@/utils/transformTitle'
+import { useDirectDocuments } from '@/providers/DirectDocumentProvider'
 
 const baseClass = 'nav'
 
 interface DefaultNavClientProps {
   groups: Group[]
+  ids: {
+    header: string
+    footer: string
+    aiConfig: string
+    calendarSettings: string
+    firm: string
+  }
 }
-export const DefaultNavClient: React.FC<DefaultNavClientProps> = ({ groups }) => {
+export const DefaultNavClient: React.FC<DefaultNavClientProps> = ({ groups, ids }) => {
   const pathname = usePathname()
+  const { setFirm, setAiConfig, setCalendarSettings, setHeader, setFooter } = useDirectDocuments()
+
+  useEffect(() => {
+    setFirm(ids.firm)
+    setAiConfig(ids.aiConfig)
+    setCalendarSettings(ids.calendarSettings)
+    setHeader(ids.header)
+    setFooter(ids.footer)
+  }, [ids, setFirm, setAiConfig, setCalendarSettings, setHeader, setFooter])
 
   const {
     config: {
@@ -36,33 +53,6 @@ export const DefaultNavClient: React.FC<DefaultNavClientProps> = ({ groups }) =>
 
   const { i18n } = useTranslation()
   const { navOpen } = useNav()
-
-  // const groups = groupNavItems(
-  //   [
-  //     ...collections
-  //       .filter(({ slug }) => isEntityVisible({ collectionSlug: slug }))
-  //       .map((collection) => {
-  //         const entityToGroup: EntityToGroup = {
-  //           type: EntityType.collection,
-  //           entity: collection,
-  //         }
-
-  //         return entityToGroup
-  //       }),
-  //     ...globals
-  //       .filter(({ slug }) => isEntityVisible({ globalSlug: slug }))
-  //       .map((global) => {
-  //         const entityToGroup: EntityToGroup = {
-  //           type: EntityType.global,
-  //           entity: global,
-  //         }
-
-  //         return entityToGroup
-  //       }),
-  //   ],
-  //   permissions!,
-  //   i18n,
-  // )
 
   return (
     <Fragment>

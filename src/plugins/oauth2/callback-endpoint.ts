@@ -1,10 +1,11 @@
-import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import { CollectionSlug, Endpoint, generatePayloadCookie, getFieldsToSign } from 'payload'
 import { PluginTypes } from './types'
+import moment from 'moment-timezone'
+import { Integration, User } from '@/payload-types'
+import crypto from 'crypto'
 import { refreshMicrosoftAccessToken } from '@/lib/refresh/refreshMicrosoftToken'
-import { User } from '@/payload-types'
-import { OAuthProvider } from '@/lib/types'
+import { DB_TIME_FORMAT, OAuthProvider } from '@/lib/types'
 import { revalidateOAuthToken } from '@/lib/factories/refreshOAuthToken'
 
 export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => ({
@@ -13,12 +14,22 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
   handler: async (req) => {
     try {
       const { code, state } = req.query
+      const { payload } = req
       if (typeof code !== 'string')
         throw new Error(`Code not in query string: ${JSON.stringify(req.query)}`)
 
-      // /////////////////////////////////////
-      // shorthands
-      // /////////////////////////////////////
+      if (typeof state !== 'string' || state === '') {
+        throw new Error('Invalid state, possible csrf attack.')
+      }
+
+      const oAuthState = await payload.findByID({
+        collection: 'oauth-states',
+        id: state,
+        depth: 1,
+      })
+
+      let user = oAuthState.user as User
+      const integration = oAuthState.integration as Integration
       const subFieldName = pluginOptions.subFieldName || 'sub'
       const authCollection = (pluginOptions.authCollection as CollectionSlug) || 'users'
       const collectionConfig = req.payload.collections[authCollection].config
@@ -57,72 +68,54 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       const userInfo = await pluginOptions.getUserInfo(access_token)
 
       const snapshot = await req.payload.find({
-        req,
-        collection: 'user-tokens',
-        where: { email: { equals: userInfo.email } },
+        collection: 'auth-tokens',
+        where: {
+          user: { equals: user.id },
+          accountEmail: { equals: userInfo.accountEmail },
+          integration: {
+            equals: integration,
+          },
+        },
         showHiddenFields: true,
         limit: 1,
       })
+
       if (!snapshot || !snapshot.docs || snapshot.docs.length === 0) {
-        throw Error('Only existing users can OAuth login')
-      }
-      let userToken = snapshot.docs[0]
-
-      const data = await req.payload.find({
-        collection: 'firms',
-        where: {
-          domain: {
-            equals: userInfo.email.split('@')[1],
-          },
-        },
-      })
-
-      if (!data.docs || data.docs.length === 0) {
-        throw Error('The domain of the email you are trying to login with is not a firm.')
-      }
-
-      if (subFieldName === 'microsoft' && userToken.microsoft?.refreshToken) {
-        await revalidateOAuthToken(OAuthProvider.MICROSOFT, userToken.id, req.payload)
-      }
-
-      if (
-        !(userToken as any)[subFieldName] ||
-        !(userToken as any)[subFieldName].scope ||
-        (userToken as any)[subFieldName].scope.length < tokenData.scope.length
-      ) {
-        let updateData: any = {
-          [subFieldName]: {
-            id: userInfo.sub,
+        await req.payload.create({
+          collection: 'auth-tokens',
+          data: {
+            user: user.id,
+            integration,
+            firm: typeof user.firm === 'string' ? user.firm : user.firm.id,
+            id: userInfo.accountId,
             accessToken: tokenData.access_token,
-            tokenType: tokenData.token_type,
-            expiresIn: tokenData.expires_in,
+            expiresAt: moment().add(tokenData.expires_in, 'seconds').format(DB_TIME_FORMAT),
             scope: tokenData.scope,
             refreshToken: tokenData.refresh_token,
+            status: 'active',
           },
-        }
+        })
+      } else {
+        let authToken = snapshot.docs[0]
 
-        if (subFieldName === 'microsoft') {
-          updateData[subFieldName].idToken = tokenData.id_token
-        }
-
-        try {
-          await req.payload.update({
-            req,
-            collection: 'user-tokens',
-            id: userToken.id,
-            data: updateData,
-            showHiddenFields: true,
-          })
-        } catch (error) {
-          console.log('User Update Error:', error)
-          throw error
-        }
+        await req.payload.update({
+          req,
+          collection: 'auth-tokens',
+          id: authToken.id,
+          data: {
+            id: userInfo.accountId,
+            accessToken: tokenData.access_token,
+            expiresAt: moment().add(tokenData.expires_in, 'seconds').format(DB_TIME_FORMAT),
+            scope: tokenData.scope,
+            refreshToken: tokenData.refresh_token,
+            status: 'active',
+          },
+        })
       }
 
       // /////////////////////////////////////
       // beforeLogin - Collection
       // /////////////////////////////////////
-      let user: any = req.user
       await collectionConfig.hooks.beforeLogin.reduce(async (priorHook, hook) => {
         await priorHook
         req.user
@@ -139,11 +132,13 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       // login - OAuth2
       // /////////////////////////////////////
       let fieldsToSign
+
+      req.user = { ...user, collection: 'users' }
       try {
         fieldsToSign = getFieldsToSign({
           collectionConfig,
           email: user.email,
-          user,
+          user: req.user,
         })
       } catch (error) {
         console.log('getFieldsToSign', error)
@@ -153,8 +148,6 @@ export const createCallbackEndpoint = (pluginOptions: PluginTypes): Endpoint => 
       const token = jwt.sign(fieldsToSign, req.payload.secret, {
         expiresIn: collectionConfig.auth.tokenExpiration,
       })
-
-      req.user = user
 
       // /////////////////////////////////////
       // afterLogin - Collection

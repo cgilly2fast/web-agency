@@ -11,21 +11,33 @@ export const createAuthorizeEndpoint = (pluginOptions: PluginTypes): Endpoint =>
     const redirectUri = encodeURIComponent(
       `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/${authCollection}${callbackPath}`,
     )
-    const additionalScopes = req.query.scopes
-      ? (req.query.scopes as string).split(',').map((scope) => decodeURIComponent(scope.trim()))
-      : []
 
-    let allScopes = []
     const userId = String(req.query.userId)
-    if (userId) {
-      const existingScope = await pluginOptions.getExistingScope(req.payload, userId)
-      allScopes = [...new Set([...existingScope, ...additionalScopes])]
-    } else {
-      allScopes = [...new Set([...pluginOptions.scopes, ...additionalScopes])]
+    const integrationId = String(req.query.integrationId)
+
+    console.log(userId, integrationId)
+
+    if (!userId || !integrationId) {
+      const origin = req.headers.get('origin') || 'https://firmleads.io/admin/login' // How send back to their domain?
+      return Response.redirect(origin)
     }
 
-    const state = (req.query.state as string) || 'login'
-    const scope = encodeURIComponent(allScopes.join(' '))
+    const stateObj = await req.payload.create({
+      collection: 'oauth-states',
+      data: {
+        user: userId,
+        integration: integrationId,
+      },
+    })
+
+    const integration = await req.payload.findByID({
+      collection: 'integrations',
+      id: integrationId,
+    })
+    const requiredScopes = integration.requiredScopes || []
+
+    const state = stateObj.id
+    const scope = encodeURIComponent(requiredScopes.join(' '))
     const responseType = 'code'
     const accessType = 'offline'
     const includeGrantedScopes = 'true'

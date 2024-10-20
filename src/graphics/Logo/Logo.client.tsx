@@ -1,4 +1,5 @@
 'use client'
+import { useTheme } from '@payloadcms/ui'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -9,16 +10,15 @@ interface LogoProps {
 
 const LogoClient: React.FC<LogoProps> = ({ logoMap, darkModeLogoMap }) => {
   const [currentLogo, setCurrentLogo] = useState('')
+  const { theme } = useTheme()
 
   useEffect(() => {
-    const htmlElement = document.documentElement
-    const currentTheme = htmlElement.getAttribute('data-theme')
-    if (currentTheme === 'light') {
+    if (theme === 'light') {
       setCurrentLogo(logoMap[window.location.hostname] || logoMap['firmleads.io'])
     } else {
       setCurrentLogo(darkModeLogoMap[window.location.hostname] || darkModeLogoMap['firmleads.io'])
     }
-  }, [logoMap, darkModeLogoMap])
+  }, [logoMap, darkModeLogoMap, theme])
 
   if (currentLogo === '') return null
 

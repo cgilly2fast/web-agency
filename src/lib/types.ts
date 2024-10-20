@@ -1,3 +1,5 @@
+export const DB_TIME_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
+
 export const enum OutreachType {
   TXT = '0',
   EMAIL = '1',

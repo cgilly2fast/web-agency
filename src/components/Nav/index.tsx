@@ -20,11 +20,12 @@ import { Group, parseGroups } from '@/views/Dashboard/index'
 export type NavProps = ServerProps
 
 const DefaultNav: React.FC<NavProps> = async (props) => {
+  const start = performance.now()
   const { i18n, locale, params, payload, permissions, searchParams, user } = props
 
-  if (!payload?.config) {
-    return null
-  }
+  // if (!payload?.config) {
+  //   return null
+  // }
 
   const {
     admin: {
@@ -81,7 +82,8 @@ const DefaultNav: React.FC<NavProps> = async (props) => {
     }),
   ]
 
-  let groups = await parseGroups([{ entities, label: 'Collections' }], payload, user!)
+  let { ids, groups } = await parseGroups([{ entities, label: 'Collections' }], payload, user!)
+
   groups = groups.map((item) => {
     return {
       ...item,
@@ -94,12 +96,13 @@ const DefaultNav: React.FC<NavProps> = async (props) => {
       }),
     }
   }) as unknown as Group[]
-
+  const end = performance.now()
+  console.log(`Nav Execution time: ${end - start} milliseconds`)
   return (
     <NavWrapper baseClass={baseClass}>
       <nav className={`${baseClass}__wrap`}>
         <RenderComponent mappedComponent={mappedBeforeNavLinks} />
-        <DefaultNavClient groups={groups} />
+        <DefaultNavClient groups={groups} ids={ids} />
         <RenderComponent mappedComponent={mappedAfterNavLinks} />
         <div className={`${baseClass}__controls`}>
           <Logout />

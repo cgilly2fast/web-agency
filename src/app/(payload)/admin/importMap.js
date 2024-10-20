@@ -46,9 +46,10 @@ import { default as default_44 } from '@/components/Nav/index'
 import { default as default_45 } from '@/graphics/Icon/index'
 import { default as default_46 } from '@/graphics/Logo/index'
 import { default as default_47 } from '@/components/GoogleOAuthButton'
-import { default as default_48 } from '@/views/Chat/index'
-import { default as default_49 } from '@/views/Integrations/index'
-import { default as default_50 } from '@/views/Dashboard/index'
+import { default as default_48 } from '@/providers/DirectDocumentProvider'
+import { default as default_49 } from '@/views/Chat/index'
+import { default as default_50 } from '@/views/Integrations/index'
+import { default as default_51 } from '@/views/Dashboard/index'
 
 export const importMap = {
   "@/collections/fields/FirmField/components/index#default": default_0,
@@ -99,7 +100,8 @@ export const importMap = {
   "@/graphics/Icon/index#default": default_45,
   "@/graphics/Logo/index#default": default_46,
   "@/components/GoogleOAuthButton#default": default_47,
-  "@/views/Chat/index#default": default_48,
-  "@/views/Integrations/index#default": default_49,
-  "@/views/Dashboard/index#default": default_50
+  "@/providers/DirectDocumentProvider#default": default_48,
+  "@/views/Chat/index#default": default_49,
+  "@/views/Integrations/index#default": default_50,
+  "@/views/Dashboard/index#default": default_51
 }

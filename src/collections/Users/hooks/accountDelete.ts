@@ -20,15 +20,6 @@ export const accountDelete: CollectionAfterOperationHook<'users'> = async ({
           },
         },
       })
-
-      await payload.delete({
-        collection: 'user-tokens',
-        where: {
-          user: {
-            equals: doc.id,
-          },
-        },
-      })
     }
   }
   return result

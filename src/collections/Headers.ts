@@ -16,6 +16,9 @@ const Headers: CollectionConfig = {
   },
   admin: {
     components: { edit: { SaveButton: '@/components/GlobalTitle' } },
+    pagination: {
+      defaultLimit: 20,
+    },
   },
   fields: [
     {

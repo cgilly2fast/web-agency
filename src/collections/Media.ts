@@ -11,6 +11,11 @@ export const Media: CollectionConfig = {
     update: firmAdminCollectionAccess,
     delete: firmAdminCollectionAccess,
   },
+  admin: {
+    pagination: {
+      defaultLimit: 20,
+    },
+  },
   upload: {
     imageSizes: [
       {

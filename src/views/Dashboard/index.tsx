@@ -66,8 +66,23 @@ function arrayToObject(arr: Entities[]) {
   return obj
 }
 
-export async function parseGroups(groups: Group[], payload: BasePayload, user: User) {
-  if (!user || !payload || !groups || groups.length === 0) return []
+export type ParsedGroups = {
+  ids: {
+    header: string
+    footer: string
+    aiConfig: string
+    calendarSettings: string
+    firm: string
+  }
+  groups: Group[]
+}
+
+export async function parseGroups(collections: Group[], payload: BasePayload, user: User) {
+  if (!user || !payload || !collections || collections.length === 0)
+    return {
+      ids: { header: '', footer: '', aiConfig: '', calendarSettings: '', firm: '' },
+      groups: [],
+    }
 
   let chatGroup: Group = {
     entities: [
@@ -78,7 +93,7 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
     ],
     label: 'AI Live Chat',
   }
-  let group: Group = groups[0]
+  let group: Group = collections[0]
 
   const firmID = typeof user.firm === 'string' ? user.firm : user.firm.id
 
@@ -170,19 +185,46 @@ export async function parseGroups(groups: Group[], payload: BasePayload, user: U
   }
 
   const settingsGroup: Group = {
-    entities: [firmSettings, userSettings, availability],
+    entities: [
+      firmSettings,
+      userSettings,
+      availability,
+      {
+        type: 'custom-route',
+        entity: {
+          slug: 'integrations',
+          labels: { singular: 'Integrations', plural: 'Integrations' },
+        },
+      },
+    ],
     label: 'Settings',
+  }
+
+  const devGroup: Group = {
+    entities: [dGroup.interactions, dGroup.integrations, dGroup['auth-tokens']],
+    label: 'Dev Only',
   }
 
   if (user.roles.includes('super-admin') || user.firmRole.includes('admin')) {
     settingsGroup.entities.push(dGroup.users)
   }
 
+  let groups = [websiteGroup, appointmentGroup, chatGroup, formGroup, settingsGroup]
+
   if (user.roles.includes('super-admin')) {
-    settingsGroup.entities.push(dGroup.interactions)
+    groups.push(devGroup)
   }
 
-  return [websiteGroup, appointmentGroup, chatGroup, formGroup, settingsGroup]
+  return {
+    ids: {
+      header: headerData.docs[0].id,
+      footer: footerData.docs[0].id,
+      aiConfig: chatData.docs[0].id,
+      calendarSettings: availabilityData.docs[0].id,
+      firm: firmID,
+    },
+    groups,
+  }
 }
 
 /******** ADDED CODE *******/
@@ -195,6 +237,7 @@ export type DashboardProps = {
 } & ServerProps
 
 const DefaultDashboard: React.FC<DashboardProps> = async (props) => {
+  const start = performance.now()
   let {
     globalData,
     i18n,
@@ -217,7 +260,8 @@ const DefaultDashboard: React.FC<DashboardProps> = async (props) => {
     user,
   } = props
   if (user && navGroups) {
-    navGroups = await parseGroups(navGroups, payload, user)
+    const { ids, groups } = await parseGroups(navGroups, payload, user)
+    navGroups = groups
   }
 
   const createMappedComponent: any = getCreateMappedComponent({
@@ -246,7 +290,8 @@ const DefaultDashboard: React.FC<DashboardProps> = async (props) => {
     undefined,
     'afterDashboard',
   )
-
+  const end = performance.now()
+  console.log(`Dashboard Execution time: ${end - start} milliseconds`)
   return (
     <div className={baseClass}>
       <SetStepNav nav={[]} />

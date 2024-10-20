@@ -1,4 +1,5 @@
 'use client'
+import { useTheme } from '@payloadcms/ui'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -9,16 +10,15 @@ interface IconProps {
 
 const IconClient: React.FC<IconProps> = ({ iconMap, darkModeIconMap }) => {
   const [currentIcon, setCurrentIcon] = useState('')
+  const { theme } = useTheme()
 
   useEffect(() => {
-    const htmlElement = document.documentElement
-    const currentTheme = htmlElement.getAttribute('data-theme')
-    if (currentTheme === 'light') {
+    if (theme === 'light') {
       setCurrentIcon(iconMap[window.location.hostname] || iconMap['firmleads.io'])
     } else {
       setCurrentIcon(darkModeIconMap[window.location.hostname] || darkModeIconMap['firmleads.io'])
     }
-  }, [iconMap, darkModeIconMap])
+  }, [iconMap, darkModeIconMap, theme])
 
   if (currentIcon === '') return null
 

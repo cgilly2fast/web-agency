@@ -66,20 +66,16 @@ export interface PluginTypes {
   providerAuthorizationUrl: string
 
   /**
-   *
-   * @param payload base payload object
-   * @param userId user id to look up already saved scopes
-   * @returns string array of current scopes
-   */
-  getExistingScope: (payload: BasePayload, userId: string) => Promise<string[]>
-
-  /**
    * Function to get user information from the OAuth provider.
    * This function should return a promise that resolves to the user
    * information that will be stored in database.
    * @param accessToken Access token obtained from OAuth provider
    */
-  getUserInfo: (accessToken: string) => Promise<any> | any
+  getUserInfo: (
+    accessToken: string,
+  ) =>
+    | Promise<{ accountEmail: string; accountId: string }>
+    | { accountEmail: string; accountId: string }
 
   /**
    * Scope for the OAuth provider.

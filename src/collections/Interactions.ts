@@ -10,6 +10,11 @@ const Interactions: CollectionConfig = {
     update: superAdminsCollectionAccess,
     delete: superAdminsCollectionAccess,
   },
+  admin: {
+    pagination: {
+      defaultLimit: 20,
+    },
+  },
   fields: [
     {
       name: 'callAgain',
@@ -89,6 +94,12 @@ const Interactions: CollectionConfig = {
           value: 'microsoft',
         },
       ],
+    },
+    {
+      name: 'emailIntegration',
+      type: 'relationship',
+      relationTo: 'integrations',
+      label: 'Email Integration',
     },
     {
       name: 'scheduledTime',

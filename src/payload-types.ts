@@ -18,9 +18,11 @@ export interface Config {
     headers: Header;
     footers: Footer;
     'availability-settings': AvailabilitySetting;
-    'firm-tokens': FirmToken;
+    'auth-tokens': AuthToken;
+    integrations: Integration;
+    'integration-connections': IntegrationConnection;
+    'oauth-states': OauthState;
     'ai-configs': AiConfig;
-    'user-tokens': UserToken;
     interactions: Interaction;
     segments: Segment;
     forms: Form;
@@ -1960,11 +1962,93 @@ export interface AvailabilitySetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "firm-tokens".
+ * via the `definition` "auth-tokens".
  */
-export interface FirmToken {
+export interface AuthToken {
   id: string;
+  user: string | User;
   firm: string | Firm;
+  integration: string | Integration;
+  status?: ('active' | 'disconnected' | 'error') | null;
+  provider?: string | null;
+  accountEmail?: string | null;
+  accountId?: string | null;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  expiresAt?: string | null;
+  scope?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "integrations".
+ */
+export interface Integration {
+  id: string;
+  name?: string | null;
+  provider?: ('g' | 'ms' | 'str' | 'clio' | 'lead_docket' | 'z') | null;
+  description?: string | null;
+  icon?: (string | null) | Media;
+  group?: string | null;
+  drawer?: {
+    title?: string | null;
+    features?:
+      | {
+          feature?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    requirements?:
+      | {
+          requirement?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    nowCan?:
+      | {
+          feature?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    connectedText?: string | null;
+    connectedButtonText?: string | null;
+    connectedRouteTo?: ('disconnect' | 'calendar_settings' | 'firm_settings') | null;
+    documentationLink?: string | null;
+  };
+  apiVersion?: string | null;
+  authType?: ('oauth' | 'api_key' | 'none') | null;
+  requiredScopes?:
+    | {
+        scope?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "integration-connections".
+ */
+export interface IntegrationConnection {
+  id: string;
+  user: string | User;
+  firm: string | Firm;
+  integration: string | Integration;
+  authToken: string | AuthToken;
+  status?: ('active' | 'disconnected' | 'error') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-states".
+ */
+export interface OauthState {
+  id: string;
+  user: string | User;
+  integration: string | Integration;
   updatedAt: string;
   createdAt: string;
 }
@@ -2180,33 +2264,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "user-tokens".
- */
-export interface UserToken {
-  id: string;
-  user: string | User;
-  google?: {
-    id?: string | null;
-    accessToken?: string | null;
-    expiresIn?: number | null;
-    refreshToken?: string | null;
-    scope?: string | null;
-    tokenType?: string | null;
-  };
-  microsoft?: {
-    id?: string | null;
-    accessToken?: string | null;
-    tokenType?: string | null;
-    expiresIn?: number | null;
-    scope?: string | null;
-    refreshToken?: string | null;
-    idToken?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "interactions".
  */
 export interface Interaction {
@@ -2220,6 +2277,7 @@ export interface Interaction {
   user?: (string | null) | User;
   emailReplyType?: ('host' | 'noreply') | null;
   emailProvider?: ('google' | 'microsoft') | null;
+  emailIntegration?: (string | null) | Integration;
   scheduledTime?: string | null;
   status?: ('delivered' | 'failed' | 'scheduled' | 'sent' | 'unknown' | 'canceled') | null;
   toPhone?: string | null;
@@ -2754,16 +2812,24 @@ export interface PayloadLockedDocument {
         value: string | AvailabilitySetting;
       } | null)
     | ({
-        relationTo: 'firm-tokens';
-        value: string | FirmToken;
+        relationTo: 'auth-tokens';
+        value: string | AuthToken;
+      } | null)
+    | ({
+        relationTo: 'integrations';
+        value: string | Integration;
+      } | null)
+    | ({
+        relationTo: 'integration-connections';
+        value: string | IntegrationConnection;
+      } | null)
+    | ({
+        relationTo: 'oauth-states';
+        value: string | OauthState;
       } | null)
     | ({
         relationTo: 'ai-configs';
         value: string | AiConfig;
-      } | null)
-    | ({
-        relationTo: 'user-tokens';
-        value: string | UserToken;
       } | null)
     | ({
         relationTo: 'interactions';

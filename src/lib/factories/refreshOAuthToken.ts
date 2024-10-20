@@ -1,55 +1,36 @@
-import { User } from '@/payload-types'
-import { OAuthProvider } from '../types'
+import { AuthToken, User } from '@/payload-types'
+import { DB_TIME_FORMAT, OAuthProvider } from '../types'
+import moment from 'moment-timezone'
 
 import configPromise from '@payload-config'
 import { BasePayload, getPayload } from 'payload'
 import { refreshGoogleAccessToken } from '../refresh/refreshGoogleTokens'
 import { refreshMicrosoftAccessToken } from '../refresh/refreshMicrosoftToken'
 
-export const revalidateOAuthToken = async (
-  oAuthProvider: OAuthProvider,
-  user: User | string,
-  payload?: BasePayload,
-) => {
+export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BasePayload) => {
   if (!payload) {
     payload = await getPayload({
       config: configPromise,
     })
   }
 
-  const userId = typeof user === 'string' ? user : user.id
-
-  const snapshot = await payload.find({
-    collection: 'user-tokens',
-    where: {
-      user: {
-        equals: userId,
-      },
-    },
-  })
-
-  const tokenData = snapshot.docs[0]
-
   let resp
-  switch (oAuthProvider) {
+  switch (authToken.provider) {
     case OAuthProvider.GOOGLE:
-      if (!tokenData?.google?.refreshToken) break
+      if (!authToken.refreshToken) break
 
-      resp = await refreshGoogleAccessToken(tokenData.google.refreshToken)
+      resp = await refreshGoogleAccessToken(authToken.refreshToken)
       if (resp.success) {
         const { data } = resp
         await payload.update({
-          collection: 'user-tokens',
-          id: tokenData.id,
+          collection: 'auth-tokens',
+          id: authToken.id,
           data: {
-            google: {
-              id: tokenData.google.id,
-              accessToken: data.access_token,
-              expiresIn: data.expires_in,
-              refreshToken: data.refresh_token,
-              scope: data.scope,
-              tokenType: data.token_type,
-            },
+            accessToken: data.access_token,
+            expiresAt: moment().add(data.expires_in, 'seconds').format(DB_TIME_FORMAT),
+            refreshToken: data.refresh_token,
+            scope: data.scope,
+            status: 'active',
           },
         })
         break
@@ -60,38 +41,31 @@ export const revalidateOAuthToken = async (
       }
 
       await payload.update({
-        collection: 'user-tokens',
-        id: tokenData.id,
+        collection: 'auth-tokens',
+        id: authToken.id,
         data: {
-          google: {
-            id: tokenData.google.id,
-            accessToken: undefined,
-            expiresIn: undefined,
-            refreshToken: undefined,
-            scope: undefined,
-            tokenType: undefined,
-          },
+          accessToken: undefined,
+          expiresAt: undefined,
+          refreshToken: undefined,
+          scope: undefined,
+          status: 'disconnected',
         },
       })
 
     case OAuthProvider.MICROSOFT:
-      if (!tokenData.microsoft?.refreshToken) break
-      resp = await refreshMicrosoftAccessToken(tokenData.microsoft.refreshToken)
+      if (!authToken.refreshToken) break
+      resp = await refreshMicrosoftAccessToken(authToken.refreshToken)
       if (resp.success) {
         const { data } = resp
         await payload.update({
-          collection: 'user-tokens',
-          id: tokenData.id,
+          collection: 'auth-tokens',
+          id: authToken.id,
           data: {
-            microsoft: {
-              id: tokenData.microsoft.id,
-              accessToken: data.access_token,
-              tokenType: data.token_type,
-              expiresIn: data.expires_in,
-              scope: data.scope,
-              refreshToken: data.refresh_token,
-              idToken: data.id_token,
-            },
+            accessToken: data.access_token,
+            expiresAt: moment().add(data.expires_in, 'seconds').format(DB_TIME_FORMAT),
+            scope: data.scope,
+            refreshToken: data.refresh_token,
+            status: 'active',
           },
         })
         break
@@ -102,18 +76,14 @@ export const revalidateOAuthToken = async (
       }
 
       await payload.update({
-        collection: 'user-tokens',
-        id: tokenData.id,
+        collection: 'auth-tokens',
+        id: authToken.id,
         data: {
-          microsoft: {
-            id: tokenData.microsoft.id,
-            accessToken: undefined,
-            tokenType: undefined,
-            expiresIn: undefined,
-            scope: undefined,
-            refreshToken: undefined,
-            idToken: undefined,
-          },
+          accessToken: undefined,
+          expiresAt: undefined,
+          scope: undefined,
+          refreshToken: undefined,
+          status: 'disconnected',
         },
       })
   }
