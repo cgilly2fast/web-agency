@@ -18,7 +18,7 @@ export interface Config {
     firms: Firm;
     headers: Header;
     footers: Footer;
-    'availability-settings': AvailabilitySetting;
+    'calendar-settings': CalendarSetting;
     'auth-tokens': AuthToken;
     integrations: Integration;
     'oauth-states': OauthState;
@@ -72,6 +72,7 @@ export interface User {
   roles: ('super-admin' | 'user' | 'domains-api')[];
   firm: string | Firm;
   firmRole: 'admin' | 'user';
+  calendarSettings?: (string | null) | CalendarSetting;
   lastLoggedInFirm?: (string | null) | Firm;
   updatedAt: string;
   createdAt: string;
@@ -142,6 +143,9 @@ export interface Firm {
   id: string;
   name: string;
   domain: string;
+  header?: (string | null) | Header;
+  footer?: (string | null) | Footer;
+  aiConfig?: (string | null) | AiConfig;
   logo?: (string | null) | Media;
   logoDarkMode?: (string | null) | Media;
   icon?: (string | null) | Media;
@@ -150,71 +154,6 @@ export interface Firm {
   ogImage?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: string;
-  title: string;
-  slug?: string | null;
-  firm?: (string | null) | Firm;
-  richText?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (string | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "blogs".
- */
-export interface Blog {
-  id: string;
-  slug: string;
-  name: string;
-  subtitle?: string | null;
-  author: {
-    relationTo: 'users';
-    value: string | User;
-  };
-  featuredContent: string | Media;
-  time: number;
-  tags?:
-    | {
-        tagName?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  firm?: (string | null) | Firm;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (string | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -243,6 +182,25 @@ export interface Header {
   ctaText?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  slug?: string | null;
+  firm?: (string | null) | Firm;
+  richText?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -286,9 +244,219 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "availability-settings".
+ * via the `definition` "ai-configs".
  */
-export interface AvailabilitySetting {
+export interface AiConfig {
+  id: string;
+  active?: boolean | null;
+  form?: (string | null) | Form;
+  agentName?: string | null;
+  picture?: (string | null) | Media;
+  firm?: (string | null) | Firm;
+  previewType?: ('image' | 'video') | null;
+  previewImage?: (string | null) | Media;
+  previewVideo?: (string | null) | Media;
+  introType?: ('video' | 'direct') | null;
+  introVideo?: (string | null) | Media;
+  introOptions?:
+    | {
+        option?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: string;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            basePrice?: number | null;
+            priceConditions?:
+              | {
+                  fieldToUse?: string | null;
+                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
+                  valueForCondition?: string | null;
+                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
+                  valueType?: ('static' | 'valueOfField') | null;
+                  valueForOperator?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'payment';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    url: string;
+  };
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-settings".
+ */
+export interface CalendarSetting {
   id: string;
   timezone?:
     | (
@@ -2031,179 +2199,26 @@ export interface Integration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "oauth-states".
+ * via the `definition` "blogs".
  */
-export interface OauthState {
+export interface Blog {
   id: string;
-  user?: (string | null) | User;
-  integration: string | Integration;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-configs".
- */
-export interface AiConfig {
-  id: string;
-  active?: boolean | null;
-  form?: (string | null) | Form;
-  agentName?: string | null;
-  picture?: (string | null) | Media;
-  firm?: (string | null) | Firm;
-  previewType?: ('image' | 'video') | null;
-  previewImage?: (string | null) | Media;
-  previewVideo?: (string | null) | Media;
-  introType?: ('video' | 'direct') | null;
-  introVideo?: (string | null) | Media;
-  introOptions?:
+  slug: string;
+  name: string;
+  subtitle?: string | null;
+  author: {
+    relationTo: 'users';
+    value: string | User;
+  };
+  featuredContent: string | Media;
+  time: number;
+  tags?:
     | {
-        option?: string | null;
+        tagName?: string | null;
         id?: string | null;
       }[]
     | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms".
- */
-export interface Form {
-  id: string;
-  title: string;
-  fields?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
-          }
-        | {
-            message?: {
-              root: {
-                type: string;
-                children: {
-                  type: string;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            basePrice?: number | null;
-            priceConditions?:
-              | {
-                  fieldToUse?: string | null;
-                  condition?: ('hasValue' | 'equals' | 'notEquals') | null;
-                  valueForCondition?: string | null;
-                  operator?: ('add' | 'subtract' | 'multiply' | 'divide') | null;
-                  valueType?: ('static' | 'valueOfField') | null;
-                  valueForOperator?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'payment';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-      )[]
-    | null;
-  submitButtonLabel?: string | null;
-  confirmationType?: ('message' | 'redirect') | null;
-  confirmationMessage?: {
+  content: {
     root: {
       type: string;
       children: {
@@ -2217,36 +2232,25 @@ export interface Form {
       version: number;
     };
     [k: string]: unknown;
-  } | null;
-  redirect?: {
-    url: string;
   };
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
+  firm?: (string | null) | Firm;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-states".
+ */
+export interface OauthState {
+  id: string;
+  user?: (string | null) | User;
+  integration: string | Integration;
   updatedAt: string;
   createdAt: string;
 }
@@ -2800,8 +2804,8 @@ export interface PayloadLockedDocument {
         value: string | Footer;
       } | null)
     | ({
-        relationTo: 'availability-settings';
-        value: string | AvailabilitySetting;
+        relationTo: 'calendar-settings';
+        value: string | CalendarSetting;
       } | null)
     | ({
         relationTo: 'auth-tokens';

@@ -9,7 +9,7 @@ export const accountSetup: CollectionAfterOperationHook<'users'> = async ({
     const { payload } = req
 
     await payload.create({
-      collection: 'availability-settings',
+      collection: 'calendar-settings',
       data: {
         firm: result.firm,
         user: result.id,

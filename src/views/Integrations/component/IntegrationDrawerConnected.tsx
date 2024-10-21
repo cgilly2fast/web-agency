@@ -35,7 +35,6 @@ export interface IntegrationDrawerConnectedProps {
   icon?: string | Media | null
   connectedTo?: string[] | null
   integrationId: string
-  provider?: 'g' | 'ms' | 'str' | 'clio' | 'lead_docket' | 'z' | null
 }
 
 const IntegrationDrawerConnected: React.FC<IntegrationDrawerConnectedProps> = ({
@@ -45,7 +44,6 @@ const IntegrationDrawerConnected: React.FC<IntegrationDrawerConnectedProps> = ({
   icon,
   connectedTo,
   integrationId,
-  provider,
 }) => {
   const { firm, calendarSettings } = useDirectDocuments()
   const { user } = useAuth()
@@ -56,7 +54,7 @@ const IntegrationDrawerConnected: React.FC<IntegrationDrawerConnectedProps> = ({
         className="ml-[100px]"
         to={
           process.env.NEXT_PUBLIC_SERVER_URL +
-          `/api/users/${provider}/oauth/revoke?integrationId=${integrationId}&userId=${user?.id}`
+          `/api/users/oauth/revoke?integrationId=${integrationId}&userId=${user?.id}`
         }
         Link={Link}
         el={'link'}
@@ -68,7 +66,7 @@ const IntegrationDrawerConnected: React.FC<IntegrationDrawerConnectedProps> = ({
     connectButton = (
       <Button
         className="ml-[100px]"
-        to={`/admin/collections/availability-settings/${calendarSettings}`}
+        to={`/admin/collections/calendar-settings/${calendarSettings}`}
         Link={Link}
         el={'link'}
       >

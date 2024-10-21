@@ -130,6 +130,17 @@ export const Users: CollectionConfig = {
     },
 
     {
+      name: 'calendarSettings',
+      type: 'relationship',
+      relationTo: 'calendar-settings',
+      access: {
+        create: () => false,
+        read: superAdminFieldAccess,
+        update: superAdminFieldAccess,
+      },
+    },
+
+    {
       name: 'lastLoggedInFirm',
       type: 'relationship',
       relationTo: 'firms',

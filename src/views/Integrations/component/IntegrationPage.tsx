@@ -5,7 +5,6 @@ import IntegrationCard from './IntegrationCard'
 import IntegrationSection from './IntegrationSection'
 import { Media } from '@/payload-types'
 import { ConnectedIntegration } from '..'
-import { useDirectDocuments } from '@/providers/DirectDocumentProvider'
 import IntegrationDrawerDefault from './IntegrationDrawerDefault'
 import IntegrationDrawerConnected from './IntegrationDrawerConnected'
 
@@ -48,7 +47,6 @@ const IntegrationsPage: React.FC<IntegrationPageProps> = ({ sections, firmLogo, 
                     firmLogo={firmLogo}
                     icon={app.icon}
                     integrationId={app.id}
-                    provider={app.provider}
                   />
                 ) : (
                   <IntegrationDrawerConnected
@@ -58,7 +56,6 @@ const IntegrationsPage: React.FC<IntegrationPageProps> = ({ sections, firmLogo, 
                     icon={app.icon}
                     connectedTo={app.connectedTo}
                     integrationId={app.id}
-                    provider={app.provider}
                   />
                 )}
               </IntegrationCard>

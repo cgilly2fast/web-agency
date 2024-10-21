@@ -22,7 +22,7 @@ import { firmUserCollectionAccess } from './lib/access/firmUserCollectionAccess'
 import { firmAdminCollectionAccess } from './lib/access/firmAdminCollectionAccess'
 import Headers from './collections/Headers'
 import Footers from './collections/Footers'
-import AvailabilitySettings from './collections/CalendarSettings/AvailabilitySettings'
+import CalendarSettings from './collections/CalendarSettings/CalendarSettings'
 import ChatSettings from './collections/ChatSettings'
 import appointmentFormOverride from './lib/overrides/appointmentFormOverride'
 import Interactions from './collections/Interactions'
@@ -78,7 +78,7 @@ export default buildConfig({
     Firms,
     Headers,
     Footers,
-    AvailabilitySettings,
+    CalendarSettings,
     AuthTokens,
     Integrations,
     OAuthStates,

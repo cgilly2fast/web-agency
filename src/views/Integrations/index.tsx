@@ -17,18 +17,36 @@ const Integrations: React.FC<AdminViewProps> = async ({ initPageResult, params, 
   if (!user) {
     return null
   }
-  const authSnapshot = await payload.find({
-    collection: 'auth-tokens',
-    limit: 333,
-    depth: 0,
-  })
+  // const authSnapshot = await payload.find({
+  //   collection: 'auth-tokens',
+  //   limit: 333,
+  //   depth: 0,
+  // })
 
-  const snapshot: PaginatedDocs<ConnectedIntegration> = await payload.find({
-    collection: 'integrations',
-    limit: 333,
-  })
+  // const snapshot: PaginatedDocs<ConnectedIntegration> = await payload.find({
+  //   collection: 'integrations',
+  //   limit: 333,
+  // })
 
-  if (snapshot.docs.length === 0) return null
+  let [authSnapshot, integrationsSnapshot] = await Promise.all([
+    payload.find({
+      collection: 'auth-tokens',
+      where: {
+        user: {
+          equals: user.id,
+        },
+      },
+      limit: 333,
+      depth: 0,
+    }),
+    payload.find({
+      collection: 'integrations',
+      limit: 333,
+    }),
+  ])
+
+  if (integrationsSnapshot.docs.length === 0) return null
+  let snapshot = integrationsSnapshot as PaginatedDocs<ConnectedIntegration>
 
   const map: Record<string, ConnectedIntegration[]> = {}
   const authMap: Record<string, AuthToken> = {}

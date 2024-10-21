@@ -106,8 +106,8 @@ const availabilityOptions = [
   '11:45pm',
 ]
 
-const AvailabilitySettings: CollectionConfig = {
-  slug: 'availability-settings',
+const CalendarSettings: CollectionConfig = {
+  slug: 'calendar-settings',
   labels: {
     singular: 'Availability Setting',
     plural: 'Availability Settings',
@@ -568,4 +568,4 @@ const AvailabilitySettings: CollectionConfig = {
   ],
 }
 
-export default AvailabilitySettings
+export default CalendarSettings

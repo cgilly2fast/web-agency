@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { superAdminsCollectionAccess } from '../../lib/access/superAdmins'
+import { superAdminFieldAccess, superAdminsCollectionAccess } from '../../lib/access/superAdmins'
 import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
 import { anyone } from '../../lib/access/anyone'
 import { validateDomain } from './validation/validateDomain'
@@ -110,6 +110,36 @@ export const Firms: CollectionConfig = {
                 description:
                   'The domain name where your site is deployed. Example: hawaiilegalhelp.com. Do not include https://',
                 width: '50%',
+              },
+            },
+            {
+              name: 'header',
+              type: 'relationship',
+              relationTo: 'headers',
+              access: {
+                create: () => false,
+                read: superAdminFieldAccess,
+                update: superAdminFieldAccess,
+              },
+            },
+            {
+              name: 'footer',
+              type: 'relationship',
+              relationTo: 'footers',
+              access: {
+                create: () => false,
+                read: superAdminFieldAccess,
+                update: superAdminFieldAccess,
+              },
+            },
+            {
+              name: 'aiConfig',
+              type: 'relationship',
+              relationTo: 'ai-configs',
+              access: {
+                create: () => false,
+                read: superAdminFieldAccess,
+                update: superAdminFieldAccess,
               },
             },
           ],

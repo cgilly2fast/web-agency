@@ -10,7 +10,7 @@ export const accountDelete: CollectionAfterOperationHook<'users'> = async ({
     for (let i = 0; i < result.docs.length; i++) {
       const doc = result.docs[i]
       await payload.delete({
-        collection: 'availability-settings',
+        collection: 'calendar-settings',
         where: {
           user: {
             equals: doc.id,

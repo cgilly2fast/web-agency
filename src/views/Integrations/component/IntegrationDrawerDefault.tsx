@@ -34,7 +34,6 @@ export interface IntegrationDrawerDefaultProps {
   firmLogo: Media
   icon?: string | Media | null
   integrationId: string
-  provider?: 'g' | 'ms' | 'str' | 'clio' | 'lead_docket' | 'z' | null
 }
 
 const IntegrationDrawerDefault: React.FC<IntegrationDrawerDefaultProps> = ({
@@ -43,7 +42,6 @@ const IntegrationDrawerDefault: React.FC<IntegrationDrawerDefaultProps> = ({
   firmLogo,
   icon,
   integrationId,
-  provider,
 }) => {
   const { theme } = useTheme()
   const { firm, calendarSettings } = useDirectDocuments()
@@ -54,7 +52,7 @@ const IntegrationDrawerDefault: React.FC<IntegrationDrawerDefaultProps> = ({
       <Button
         to={
           process.env.NEXT_PUBLIC_SERVER_URL +
-          `/api/users/${provider}/oauth/authorize?integrationId=${integrationId}&userId=${user?.id}`
+          `/api/users/oauth/authorize?integrationId=${integrationId}&userId=${user?.id}`
         }
         Link={Link}
         el={'link'}
@@ -65,7 +63,7 @@ const IntegrationDrawerDefault: React.FC<IntegrationDrawerDefaultProps> = ({
   } else if (drawer?.connectedRouteTo === 'calendar_settings') {
     connectButton = (
       <Button
-        to={`/admin/collections/availability-settings/${calendarSettings}`}
+        to={`/admin/collections/calendar-settings/${calendarSettings}`}
         Link={Link}
         el={'link'}
       >

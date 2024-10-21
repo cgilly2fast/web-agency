@@ -17,7 +17,7 @@ import { formatAdminURL, getCreateMappedComponent, RenderComponent } from '@payl
 import React, { Fragment } from 'react'
 
 // import './index.scss'
-import { User } from '@/payload-types'
+import { Firm, User } from '@/payload-types'
 import { transformTitle } from '@/utils/transformTitle'
 
 const baseClass = 'dashboard'
@@ -94,62 +94,35 @@ export async function parseGroups(collections: Group[], payload: BasePayload, us
     label: 'AI Live Chat',
   }
   let group: Group = collections[0]
+  const firm = user.firm as Firm
 
-  const firmID = typeof user.firm === 'string' ? user.firm : user.firm.id
+  const headerID = typeof firm.header === 'string' ? firm.header : firm.header!.id
+  const footerID = typeof firm.footer === 'string' ? firm.footer : firm.footer!.id
+  const aiConfigID = typeof firm.aiConfig === 'string' ? firm.aiConfig : firm.aiConfig!.id
+  const calendarID =
+    typeof user.calendarSettings === 'string' ? user.calendarSettings : user.calendarSettings!.id
 
-  const headerData = await payload.find({
-    collection: 'headers',
-    where: {
-      firm: {
-        equals: firmID,
-      },
-    },
-  })
   const header = {
     entity: payload.collections['headers'].config,
-    id: headerData.docs[0].id,
+    id: headerID,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
-  const footerData = await payload.find({
-    collection: 'footers',
-    where: {
-      firm: {
-        equals: firmID,
-      },
-    },
-  })
   const footer = {
     entity: payload.collections['footers'].config,
-    id: footerData.docs[0].id,
+    id: footerID,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
-  const availabilityData = await payload.find({
-    collection: 'availability-settings',
-    where: {
-      user: {
-        equals: user.id,
-      },
-    },
-  })
   const availability = {
-    entity: payload.collections['availability-settings'].config,
-    id: availabilityData.docs[0].id,
+    entity: payload.collections['calendar-settings'].config,
+    id: calendarID,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
-  const chatData = await payload.find({
-    collection: 'ai-configs',
-    where: {
-      firm: {
-        equals: firmID,
-      },
-    },
-  })
   const chat = {
     entity: payload.collections['ai-configs'].config,
-    id: chatData.docs[0].id,
+    id: aiConfigID,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
@@ -161,7 +134,7 @@ export async function parseGroups(collections: Group[], payload: BasePayload, us
 
   const firmSettings = {
     entity: payload.collections['firms'].config,
-    id: firmID,
+    id: firm.id,
     type: user.roles.includes('super-admin') ? EntityType.collection : EntityType.direct,
   }
 
@@ -217,11 +190,11 @@ export async function parseGroups(collections: Group[], payload: BasePayload, us
 
   return {
     ids: {
-      header: headerData.docs[0].id,
-      footer: footerData.docs[0].id,
-      aiConfig: chatData.docs[0].id,
-      calendarSettings: availabilityData.docs[0].id,
-      firm: firmID,
+      header: headerID,
+      footer: footerID,
+      aiConfig: aiConfigID,
+      calendarSettings: calendarID,
+      firm: firm.id,
     },
     groups,
   }
