@@ -71,7 +71,7 @@ export const callbackEndpoint: Endpoint = {
           user: { equals: user.id },
           accountEmail: { equals: userInfo.accountEmail },
           integration: {
-            equals: integration,
+            equals: integration.id,
           },
         },
         showHiddenFields: true,
@@ -83,7 +83,7 @@ export const callbackEndpoint: Endpoint = {
           collection: 'auth-tokens',
           data: {
             user: user.id,
-            integration,
+            integration: integration.id,
             firm: typeof user.firm === 'string' ? user.firm : user.firm.id,
             id: userInfo.accountId,
             accessToken: tokenData.access_token,

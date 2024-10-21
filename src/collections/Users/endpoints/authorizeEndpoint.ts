@@ -8,6 +8,7 @@ export const authorizeEndpoint: Endpoint = {
   method: 'get',
   path: '/oauth/authorize',
   handler: async ({ payload, headers, query }) => {
+    const start = performance.now()
     const userId = query.userId as string | undefined | null
     const integrationId = query.integrationId as string | undefined | null
 
@@ -70,6 +71,7 @@ export const authorizeEndpoint: Endpoint = {
 
     const authorizeUrl = makeAuthorizationUrl(integration, id, origin)
     console.log(authorizeUrl)
+    console.log('authorization time', performance.now() - start)
     return Response.redirect(authorizeUrl)
   },
 }
