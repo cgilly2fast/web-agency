@@ -12,7 +12,7 @@ export const authorizeEndpoint: Endpoint = {
     const integrationId = query.integrationId as string | undefined | null
 
     const origin = headers.get('origin') || 'https://firmleads.io/admin/login'
-
+    console.log(userId, integrationId, origin, headers)
     if (!integrationId) {
       return Response.redirect(origin)
     }
@@ -67,8 +67,9 @@ export const authorizeEndpoint: Endpoint = {
         integration: integrationId,
       },
     })
-    const authorizeUrl = makeAuthorizationUrl(integration, id, origin)
 
+    const authorizeUrl = makeAuthorizationUrl(integration, id, origin)
+    console.log(authorizeUrl)
     return Response.redirect(authorizeUrl)
   },
 }

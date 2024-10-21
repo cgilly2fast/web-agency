@@ -1,3 +1,4 @@
+'use client'
 import { Button, useAuth } from '@payloadcms/ui'
 import Link from 'next/link'
 
@@ -7,6 +8,7 @@ const MyCalendarDescription = () => {
     <div className="flex">
       <Button
         Link={Link}
+        el="link"
         to={`/api/users/oauth/authorize?integrationId=671430fa84ee29114c970306&userId=${user?.id}`}
         className="mr-5"
       >
@@ -14,6 +16,7 @@ const MyCalendarDescription = () => {
       </Button>
       <Button
         Link={Link}
+        el="link"
         to={`/api/users/oauth/authorize?integrationId=6714317784ee29114c9704fd&userId=${user?.id}`}
       >
         Add Outlook Calendar
