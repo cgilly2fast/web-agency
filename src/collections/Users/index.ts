@@ -11,6 +11,8 @@ import { validateFirm } from './validation/firmValidation'
 import { accountSetup } from './hooks/accountSetup'
 import { accountDelete } from './hooks/accountDelete'
 import { firmAdminFieldAccess } from '../../lib/access/firmAdminFieldAccess'
+import { authorizeEndpoint } from './endpoints/authorizeEndpoint'
+import { callbackEndpoint } from './endpoints/callbackEndpoint.'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -22,6 +24,8 @@ export const Users: CollectionConfig = {
 
       path: '/me-too',
     },
+    authorizeEndpoint,
+    callbackEndpoint,
   ],
   auth: {
     tokenExpiration: 82800,

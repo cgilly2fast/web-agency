@@ -22,7 +22,7 @@ import { firmUserCollectionAccess } from './lib/access/firmUserCollectionAccess'
 import { firmAdminCollectionAccess } from './lib/access/firmAdminCollectionAccess'
 import Headers from './collections/Headers'
 import Footers from './collections/Footers'
-import AvailabilitySettings from './collections/AvailabilitySettings'
+import AvailabilitySettings from './collections/CalendarSettings/AvailabilitySettings'
 import ChatSettings from './collections/ChatSettings'
 import appointmentFormOverride from './lib/overrides/appointmentFormOverride'
 import Interactions from './collections/Interactions'
@@ -184,87 +184,87 @@ export default buildConfig({
       rest: true,
     }),
     seoPlugin({ collections: ['pages', 'blogs'], uploadsCollection: 'media' }),
-    OAuth2Plugin({
-      enabled: true,
-      serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
-      authCollection: 'users',
-      authorizePath: '/g/oauth/authorize',
-      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
-      callbackPath: '/g/oauth/callback',
-      tokenEndpoint: 'https://oauth2.googleapis.com/token',
-      scopes: [
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/calendar',
-      ],
-      providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    // OAuth2Plugin({
+    //   enabled: true,
+    //   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+    //   authCollection: 'users',
+    //   authorizePath: '/g/oauth/authorize',
+    //   clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '',
+    //   clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
+    //   callbackPath: '/g/oauth/callback',
+    //   tokenEndpoint: 'https://oauth2.googleapis.com/token',
+    //   scopes: [
+    //     'https://www.googleapis.com/auth/userinfo.email',
+    //     'https://www.googleapis.com/auth/userinfo.profile',
+    //     'https://www.googleapis.com/auth/calendar',
+    //   ],
+    //   providerAuthorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
 
-      getUserInfo: async (accessToken: string) => {
-        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        const user = await response.json()
-        return { accountEmail: user.email, accountId: user.localId }
-      },
-      useEmailAsIdentity: true,
-      successRedirect: (req, state) => {
-        if (state === 'integrations') {
-          return '/admin/integrations'
-        }
-        return '/admin'
-      },
-      failureRedirect: (req, error, state) => {
-        if (state === 'integrations') {
-          return '/admin/integrations'
-        }
-        return '/admin/login'
-      },
-      strategyName: 'google',
-      subFieldName: 'google',
-    }),
-    OAuth2Plugin({
-      enabled: true,
-      serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
-      authCollection: 'users',
-      authorizePath: '/ms/oauth/authorize',
-      clientId: process.env.MS_OAUTH_CLIENT_ID || '',
-      clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
-      callbackPath: '/ms/oauth/callback',
-      tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-      scopes: [
-        'https://graph.microsoft.com/User.Read',
-        'openid',
-        'offline_access',
-        'email',
-        'profile',
-        'https://graph.microsoft.com/Calendars.ReadWrite',
-        'https://graph.microsoft.com/Calendars.ReadWrite.Shared',
-      ],
-      providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-      getUserInfo: async (accessToken: string) => {
-        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        const user = await response.json()
-        return { accountEmail: user.mail, accountId: user.id }
-      },
-      useEmailAsIdentity: true,
-      successRedirect: (req, state) => {
-        if (state === 'integrations') {
-          return '/admin/integrations'
-        }
-        return '/admin'
-      },
-      failureRedirect: (req, error, state) => {
-        if (state === 'integrations') {
-          return '/admin/integrations'
-        }
-        return '/admin/login'
-      },
-      strategyName: 'microsoft',
-      subFieldName: 'microsoft',
-    }),
+    //   getUserInfo: async (accessToken: string) => {
+    //     const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    //       headers: { Authorization: `Bearer ${accessToken}` },
+    //     })
+    //     const user = await response.json()
+    //     return { accountEmail: user.email, accountId: user.localId }
+    //   },
+    //   useEmailAsIdentity: true,
+    //   successRedirect: (req, state) => {
+    //     if (state === 'integrations') {
+    //       return '/admin/integrations'
+    //     }
+    //     return '/admin'
+    //   },
+    //   failureRedirect: (req, error, state) => {
+    //     if (state === 'integrations') {
+    //       return '/admin/integrations'
+    //     }
+    //     return '/admin/login'
+    //   },
+    //   strategyName: 'google',
+    //   subFieldName: 'google',
+    // }),
+    // OAuth2Plugin({
+    //   enabled: true,
+    //   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+    //   authCollection: 'users',
+    //   authorizePath: '/ms/oauth/authorize',
+    //   clientId: process.env.MS_OAUTH_CLIENT_ID || '',
+    //   clientSecret: process.env.MS_OAUTH_CLIENT_SECRET || '',
+    //   callbackPath: '/ms/oauth/callback',
+    //   tokenEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+    //   scopes: [
+    //     'https://graph.microsoft.com/User.Read',
+    //     'openid',
+    //     'offline_access',
+    //     'email',
+    //     'profile',
+    //     'https://graph.microsoft.com/Calendars.ReadWrite',
+    //     'https://graph.microsoft.com/Calendars.ReadWrite.Shared',
+    //   ],
+    //   providerAuthorizationUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+    //   getUserInfo: async (accessToken: string) => {
+    //     const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+    //       headers: { Authorization: `Bearer ${accessToken}` },
+    //     })
+    //     const user = await response.json()
+    //     return { accountEmail: user.mail, accountId: user.id }
+    //   },
+    //   useEmailAsIdentity: true,
+    //   successRedirect: (req, state) => {
+    //     if (state === 'integrations') {
+    //       return '/admin/integrations'
+    //     }
+    //     return '/admin'
+    //   },
+    //   failureRedirect: (req, error, state) => {
+    //     if (state === 'integrations') {
+    //       return '/admin/integrations'
+    //     }
+    //     return '/admin/login'
+    //   },
+    //   strategyName: 'microsoft',
+    //   subFieldName: 'microsoft',
+    // }),
   ],
   upload: {
     limits: {

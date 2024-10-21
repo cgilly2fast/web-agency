@@ -28,28 +28,29 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_26 } from '@payloadcms
 import { BoldFeatureClient as BoldFeatureClient_27 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_28 } from '@payloadcms/richtext-lexical/client'
 import { default as default_29 } from '@/components/GlobalTitle'
-import { default as default_30 } from '@/components/AvailabilityRowLabel'
-import { DynamicFieldSelector as DynamicFieldSelector_31 } from '@payloadcms/plugin-form-builder/client'
-import { DynamicPriceSelector as DynamicPriceSelector_32 } from '@payloadcms/plugin-form-builder/client'
-import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_33 } from '@payloadcms/richtext-lexical/client'
-import { default as default_34 } from '@/components/BufferTimeRowLabel'
-import { default as default_35 } from '@/components/MinNoticeRowLabel'
-import { default as default_36 } from '@/components/DailyLimitRowLabel'
-import { default as default_37 } from '@/components/TimezoneDisplayRowLabel'
-import { default as default_38 } from '@/components/IncrementsRowLabel'
-import { default as default_39 } from '@/components/BookingPageUrlPreview'
-import { default as default_40 } from '@/components/BlocksRowLabel'
-import { default as default_41 } from '@/components/TimingReminderRowLabel'
-import { default as default_42 } from '@/components/TimingFollowUpRowLabel'
-import { default as default_43 } from '@/components/ProfilePicture'
-import { default as default_44 } from '@/components/Nav/index'
-import { default as default_45 } from '@/graphics/Icon/index'
-import { default as default_46 } from '@/graphics/Logo/index'
-import { default as default_47 } from '@/components/GoogleOAuthButton'
-import { default as default_48 } from '@/providers/DirectDocumentProvider'
-import { default as default_49 } from '@/views/Chat/index'
-import { default as default_50 } from '@/views/Integrations/index'
-import { default as default_51 } from '@/views/Dashboard/index'
+import { default as default_30 } from '@/components/MyCalendarsDescription'
+import { default as default_31 } from '@/components/AvailabilityRowLabel'
+import { DynamicFieldSelector as DynamicFieldSelector_32 } from '@payloadcms/plugin-form-builder/client'
+import { DynamicPriceSelector as DynamicPriceSelector_33 } from '@payloadcms/plugin-form-builder/client'
+import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_34 } from '@payloadcms/richtext-lexical/client'
+import { default as default_35 } from '@/components/BufferTimeRowLabel'
+import { default as default_36 } from '@/components/MinNoticeRowLabel'
+import { default as default_37 } from '@/components/DailyLimitRowLabel'
+import { default as default_38 } from '@/components/TimezoneDisplayRowLabel'
+import { default as default_39 } from '@/components/IncrementsRowLabel'
+import { default as default_40 } from '@/components/BookingPageUrlPreview'
+import { default as default_41 } from '@/components/BlocksRowLabel'
+import { default as default_42 } from '@/components/TimingReminderRowLabel'
+import { default as default_43 } from '@/components/TimingFollowUpRowLabel'
+import { default as default_44 } from '@/components/ProfilePicture'
+import { default as default_45 } from '@/components/Nav/index'
+import { default as default_46 } from '@/graphics/Icon/index'
+import { default as default_47 } from '@/graphics/Logo/index'
+import { default as default_48 } from '@/components/GoogleOAuthButton'
+import { default as default_49 } from '@/providers/DirectDocumentProvider'
+import { default as default_50 } from '@/views/Chat/index'
+import { default as default_51 } from '@/views/Integrations/index'
+import { default as default_52 } from '@/views/Dashboard/index'
 
 export const importMap = {
   "@/collections/fields/FirmField/components/index#default": default_0,
@@ -82,26 +83,27 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_27,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_28,
   "@/components/GlobalTitle#default": default_29,
-  "@/components/AvailabilityRowLabel#default": default_30,
-  "@payloadcms/plugin-form-builder/client#DynamicFieldSelector": DynamicFieldSelector_31,
-  "@payloadcms/plugin-form-builder/client#DynamicPriceSelector": DynamicPriceSelector_32,
-  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_33,
-  "@/components/BufferTimeRowLabel#default": default_34,
-  "@/components/MinNoticeRowLabel#default": default_35,
-  "@/components/DailyLimitRowLabel#default": default_36,
-  "@/components/TimezoneDisplayRowLabel#default": default_37,
-  "@/components/IncrementsRowLabel#default": default_38,
-  "@/components/BookingPageUrlPreview#default": default_39,
-  "@/components/BlocksRowLabel#default": default_40,
-  "@/components/TimingReminderRowLabel#default": default_41,
-  "@/components/TimingFollowUpRowLabel#default": default_42,
-  "@/components/ProfilePicture#default": default_43,
-  "@/components/Nav/index#default": default_44,
-  "@/graphics/Icon/index#default": default_45,
-  "@/graphics/Logo/index#default": default_46,
-  "@/components/GoogleOAuthButton#default": default_47,
-  "@/providers/DirectDocumentProvider#default": default_48,
-  "@/views/Chat/index#default": default_49,
-  "@/views/Integrations/index#default": default_50,
-  "@/views/Dashboard/index#default": default_51
+  "@/components/MyCalendarsDescription#default": default_30,
+  "@/components/AvailabilityRowLabel#default": default_31,
+  "@payloadcms/plugin-form-builder/client#DynamicFieldSelector": DynamicFieldSelector_32,
+  "@payloadcms/plugin-form-builder/client#DynamicPriceSelector": DynamicPriceSelector_33,
+  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_34,
+  "@/components/BufferTimeRowLabel#default": default_35,
+  "@/components/MinNoticeRowLabel#default": default_36,
+  "@/components/DailyLimitRowLabel#default": default_37,
+  "@/components/TimezoneDisplayRowLabel#default": default_38,
+  "@/components/IncrementsRowLabel#default": default_39,
+  "@/components/BookingPageUrlPreview#default": default_40,
+  "@/components/BlocksRowLabel#default": default_41,
+  "@/components/TimingReminderRowLabel#default": default_42,
+  "@/components/TimingFollowUpRowLabel#default": default_43,
+  "@/components/ProfilePicture#default": default_44,
+  "@/components/Nav/index#default": default_45,
+  "@/graphics/Icon/index#default": default_46,
+  "@/graphics/Logo/index#default": default_47,
+  "@/components/GoogleOAuthButton#default": default_48,
+  "@/providers/DirectDocumentProvider#default": default_49,
+  "@/views/Chat/index#default": default_50,
+  "@/views/Integrations/index#default": default_51,
+  "@/views/Dashboard/index#default": default_52
 }

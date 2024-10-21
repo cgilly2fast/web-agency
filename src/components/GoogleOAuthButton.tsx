@@ -3,9 +3,11 @@ import { Button } from '@payloadcms/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { LoadingOverlay } from '@payloadcms/ui'
 
 const OAuthButtons: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false)
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState<boolean>(false)
 
   useEffect(() => {
     const htmlElement = document.documentElement
@@ -17,6 +19,7 @@ const OAuthButtons: React.FC = () => {
 
   return (
     <div>
+      {showLoadingOverlay && <LoadingOverlay />}
       <span className="items-center justify-center flex">
         <span
           className={
@@ -32,7 +35,13 @@ const OAuthButtons: React.FC = () => {
           }
         ></span>
       </span>
-      <Link className="no-underline" href="/api/users/g/oauth/authorize">
+      <Link
+        className="no-underline"
+        href="/api/users/oauth/authorize?integrationId=671430fa84ee29114c970306"
+        onClick={() => {
+          setShowLoadingOverlay(true)
+        }}
+      >
         <Button
           className="w-full"
           round={true}
@@ -54,7 +63,13 @@ const OAuthButtons: React.FC = () => {
           Continue with Google
         </Button>
       </Link>
-      <Link className="no-underline" href="/api/users/ms/oauth/authorize">
+      <Link
+        className="no-underline"
+        href="/api/users/oauth/authorize?integrationId=6714317784ee29114c9704fd"
+        onClick={() => {
+          setShowLoadingOverlay(true)
+        }}
+      >
         <Button
           className="w-full m-0"
           round={true}

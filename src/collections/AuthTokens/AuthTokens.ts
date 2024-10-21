@@ -9,6 +9,7 @@ const AuthTokens: CollectionConfig = {
     pagination: {
       defaultLimit: 20,
     },
+    useAsTitle: 'accountEmail',
   },
   fields: [
     {

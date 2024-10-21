@@ -8,7 +8,6 @@ const OAuthStates: CollectionConfig = {
       name: 'user',
       type: 'relationship',
       relationTo: 'users',
-      required: true,
       index: true,
     },
     {

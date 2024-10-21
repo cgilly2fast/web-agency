@@ -11,6 +11,7 @@ export interface Config {
     users: UserAuthOperations;
   };
   collections: {
+    users: User;
     media: Media;
     pages: Page;
     blogs: Blog;
@@ -20,7 +21,6 @@ export interface Config {
     'availability-settings': AvailabilitySetting;
     'auth-tokens': AuthToken;
     integrations: Integration;
-    'integration-connections': IntegrationConnection;
     'oauth-states': OauthState;
     'ai-configs': AiConfig;
     interactions: Interaction;
@@ -29,7 +29,6 @@ export interface Config {
     'form-submissions': FormSubmission;
     'meeting-templates': MeetingTemplate;
     meetings: Meeting;
-    users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -60,6 +59,33 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  avatar?: (string | null) | Media;
+  firstName?: string | null;
+  lastName?: string | null;
+  roles: ('super-admin' | 'user' | 'domains-api')[];
+  firm: string | Firm;
+  firmRole: 'admin' | 'user';
+  lastLoggedInFirm?: (string | null) | Firm;
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -192,35 +218,6 @@ export interface Blog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  avatar?: (string | null) | Media;
-  firstName?: string | null;
-  lastName?: string | null;
-  roles: ('super-admin' | 'user' | 'domains-api')[];
-  firm: string | Firm;
-  firmRole: 'admin' | 'user';
-  lastLoggedInFirm?: (string | null) | Firm;
-  google?: string | null;
-  microsoft?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "headers".
  */
 export interface Header {
@@ -293,8 +290,32 @@ export interface Footer {
  */
 export interface AvailabilitySetting {
   id: string;
-  name?: string | null;
+  timezone?:
+    | (
+        | 'Pacific/Honolulu'
+        | 'America/Anchorage'
+        | 'America/Los_Angeles'
+        | 'America/Denver'
+        | 'America/Chicago'
+        | 'America/New_York'
+        | 'America/Halifax'
+        | 'America/St_Johns'
+        | 'Etc/GMT'
+        | 'Europe/London'
+        | 'Europe/Berlin'
+        | 'Europe/Kiev'
+        | 'Europe/Moscow'
+        | 'Asia/Kolkata'
+        | 'Asia/Shanghai'
+        | 'Asia/Tokyo'
+        | 'Australia/Sydney'
+        | 'Pacific/Auckland'
+      )
+    | null;
   user: string | User;
+  calendars?: (string | null) | AuthToken;
+  checkConflicts?: (string | AuthToken)[] | null;
+  addToCalendars?: (string | AuthToken)[] | null;
   weeklyHours?: {
     monday?:
       | {
@@ -1934,28 +1955,6 @@ export interface AvailabilitySetting {
         )
       | null;
   };
-  timezone?:
-    | (
-        | 'Pacific/Honolulu'
-        | 'America/Anchorage'
-        | 'America/Los_Angeles'
-        | 'America/Denver'
-        | 'America/Chicago'
-        | 'America/New_York'
-        | 'America/Halifax'
-        | 'America/St_Johns'
-        | 'Etc/GMT'
-        | 'Europe/London'
-        | 'Europe/Berlin'
-        | 'Europe/Kiev'
-        | 'Europe/Moscow'
-        | 'Asia/Kolkata'
-        | 'Asia/Shanghai'
-        | 'Asia/Tokyo'
-        | 'Australia/Sydney'
-        | 'Pacific/Auckland'
-      )
-    | null;
   firm?: (string | null) | Firm;
   updatedAt: string;
   createdAt: string;
@@ -1987,7 +1986,7 @@ export interface AuthToken {
 export interface Integration {
   id: string;
   name?: string | null;
-  provider?: ('g' | 'ms' | 'str' | 'clio' | 'lead_docket' | 'z') | null;
+  provider?: ('google' | 'microsoft' | 'stripe' | 'clio' | 'lead_docket' | 'zoom') | null;
   description?: string | null;
   icon?: (string | null) | Media;
   group?: string | null;
@@ -2018,6 +2017,9 @@ export interface Integration {
   };
   apiVersion?: string | null;
   authType?: ('oauth' | 'api_key' | 'none') | null;
+  authorizationUrl?: string | null;
+  tokenUrl?: string | null;
+  userInfoUrl?: string | null;
   requiredScopes?:
     | {
         scope?: string | null;
@@ -2029,25 +2031,11 @@ export interface Integration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "integration-connections".
- */
-export interface IntegrationConnection {
-  id: string;
-  user: string | User;
-  firm: string | Firm;
-  integration: string | Integration;
-  authToken: string | AuthToken;
-  status?: ('active' | 'disconnected' | 'error') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "oauth-states".
  */
 export interface OauthState {
   id: string;
-  user: string | User;
+  user?: (string | null) | User;
   integration: string | Integration;
   updatedAt: string;
   createdAt: string;
@@ -2784,6 +2772,10 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -2820,10 +2812,6 @@ export interface PayloadLockedDocument {
         value: string | Integration;
       } | null)
     | ({
-        relationTo: 'integration-connections';
-        value: string | IntegrationConnection;
-      } | null)
-    | ({
         relationTo: 'oauth-states';
         value: string | OauthState;
       } | null)
@@ -2854,10 +2842,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'meetings';
         value: string | Meeting;
-      } | null)
-    | ({
-        relationTo: 'users';
-        value: string | User;
       } | null);
   globalSlug?: string | null;
   user: {

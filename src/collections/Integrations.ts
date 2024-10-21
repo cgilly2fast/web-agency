@@ -20,15 +20,15 @@ const Integrations: CollectionConfig = {
       options: [
         {
           label: 'Google',
-          value: 'g',
+          value: 'google',
         },
         {
           label: 'Microsoft',
-          value: 'ms',
+          value: 'microsoft',
         },
         {
           label: 'Stripe',
-          value: 'str',
+          value: 'stripe',
         },
         {
           label: 'Clio',
@@ -40,7 +40,7 @@ const Integrations: CollectionConfig = {
         },
         {
           label: 'Zoom',
-          value: 'z',
+          value: 'zoom',
         },
       ],
     },
@@ -133,6 +133,18 @@ const Integrations: CollectionConfig = {
           value: 'none',
         },
       ],
+    },
+    {
+      name: 'authorizationUrl',
+      type: 'text',
+    },
+    {
+      name: 'tokenUrl',
+      type: 'text',
+    },
+    {
+      name: 'userInfoUrl',
+      type: 'text',
     },
     {
       name: 'requiredScopes',

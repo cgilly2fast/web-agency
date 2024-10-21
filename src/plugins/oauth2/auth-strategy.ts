@@ -14,6 +14,7 @@ export const createAuthStrategy = (
       const token = cookie.get(`${payload.config.cookiePrefix}-token`)
       if (!token) return { user: null }
       let jwtUser: jwt.JwtPayload | string
+
       try {
         jwtUser = jwt.verify(
           token,
