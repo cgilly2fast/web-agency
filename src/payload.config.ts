@@ -9,7 +9,6 @@ import { stripePlugin } from '@payloadcms/plugin-stripe'
 import { gcsStorage } from '@payloadcms/storage-gcs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 
-import { OAuth2Plugin } from './plugins/oauth2'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
