@@ -13,6 +13,7 @@ import { accountDelete } from './hooks/accountDelete'
 import { firmAdminFieldAccess } from '../../lib/access/firmAdminFieldAccess'
 import { authorizeEndpoint } from './endpoints/authorizeEndpoint'
 import { callbackEndpoint } from './endpoints/callbackEndpoint.'
+import { revokeEndpoint } from './endpoints/revokeEndpoint'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -26,6 +27,7 @@ export const Users: CollectionConfig = {
     },
     authorizeEndpoint,
     callbackEndpoint,
+    revokeEndpoint,
   ],
   auth: {
     tokenExpiration: 82800,

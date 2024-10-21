@@ -33,7 +33,7 @@ export interface IntegrationDrawerConnectedProps {
   name?: string | null
   firmLogo: Media
   icon?: string | Media | null
-  connectedTo?: string[] | null
+  connectedTo?: { id: string; email: string }[] | null
   integrationId: string
 }
 
@@ -100,7 +100,7 @@ const IntegrationDrawerConnected: React.FC<IntegrationDrawerConnectedProps> = ({
         <div>
           <h5 className="mb-3">Connected By</h5>
           <ul className="mb-5 list-none ml-[-20px]">
-            {connectedTo?.map((acct, i) => <li key={i}>{acct}</li>)}
+            {connectedTo?.map((acct, i) => <li key={i}>{acct.email}</li>)}
           </ul>
         </div>
 

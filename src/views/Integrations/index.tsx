@@ -7,7 +7,7 @@ import { AuthToken, Firm, Integration, Media } from '@/payload-types'
 
 export type ConnectedIntegration = Integration & {
   connected?: boolean
-  connectedTo?: string[] | null
+  connectedTo?: { id: string; email: string }[] | null
 }
 
 const Integrations: React.FC<AdminViewProps> = async ({ initPageResult, params, searchParams }) => {
@@ -68,9 +68,9 @@ const Integrations: React.FC<AdminViewProps> = async ({ initPageResult, params, 
     if (authMap[doc.id]) {
       doc['connected'] = true
       if (doc.connectedTo) {
-        doc.connectedTo.push(authMap[doc.id].accountEmail!)
+        doc.connectedTo.push({ id: authMap[doc.id].id, email: authMap[doc.id].accountEmail! })
       } else {
-        doc.connectedTo = [authMap[doc.id].accountEmail!]
+        doc.connectedTo = [{ id: authMap[doc.id].id, email: authMap[doc.id].accountEmail! }]
       }
     } else {
       doc['connected'] = false
@@ -84,8 +84,8 @@ const Integrations: React.FC<AdminViewProps> = async ({ initPageResult, params, 
     }
   }
 
-  gMeet!.connected = true //gCalendar!.connected
-  gMeet!.connectedTo = ['colby@firmleads.io'] //gCalendar!.connectedTo
+  gMeet!.connected = gCalendar!.connected
+  gMeet!.connectedTo = gCalendar!.connectedTo
 
   const sections = [
     { name: 'Calendars', integrations: map['Calendars'] },

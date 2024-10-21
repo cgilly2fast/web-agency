@@ -481,7 +481,7 @@ export interface CalendarSetting {
       )
     | null;
   user: string | User;
-  calendars?: (string | null) | AuthToken;
+  calendars?: (string | AuthToken)[] | null;
   checkConflicts?: (string | AuthToken)[] | null;
   addToCalendars?: (string | AuthToken)[] | null;
   weeklyHours?: {

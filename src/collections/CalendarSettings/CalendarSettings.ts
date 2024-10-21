@@ -190,6 +190,7 @@ const CalendarSettings: CollectionConfig = {
               label: 'My Calendars',
               type: 'relationship',
               relationTo: 'auth-tokens',
+              hasMany: true,
               filterOptions: filterUserCalendars,
               admin: {
                 readOnly: true,

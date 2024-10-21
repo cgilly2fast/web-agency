@@ -1,6 +1,7 @@
 import { integrations } from 'googleapis/build/src/apis/integrations'
 import { CollectionConfig, Validate } from 'payload'
 import { validateAccountEmail } from './validate/validateAccountEmail'
+import { removeOnDelete } from './hooks/removeOnDelete'
 
 const AuthTokens: CollectionConfig = {
   slug: 'auth-tokens',
@@ -10,6 +11,9 @@ const AuthTokens: CollectionConfig = {
       defaultLimit: 20,
     },
     useAsTitle: 'accountEmail',
+  },
+  hooks: {
+    afterDelete: [removeOnDelete],
   },
   fields: [
     {
