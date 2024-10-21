@@ -6,7 +6,7 @@ import { Endpoint } from 'payload'
 export const revalidateTokensEndpoint: Endpoint = {
   method: 'get',
   path: '/revalidate',
-  handler: async ({ payload, headers, query }) => {
+  handler: async ({ payload }) => {
     const snapshot = await payload.find({
       collection: 'auth-tokens',
       where: {

@@ -40,16 +40,9 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
         break
       }
 
-      payload.update({
+      payload.delete({
         collection: 'auth-tokens',
         id: authToken.id,
-        data: {
-          accessToken: undefined,
-          expiresAt: undefined,
-          refreshToken: undefined,
-          scope: undefined,
-          status: 'disconnected',
-        },
       })
 
     case OAuthProvider.MICROSOFT:
@@ -75,16 +68,9 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
         break
       }
 
-      payload.update({
+      payload.delete({
         collection: 'auth-tokens',
         id: authToken.id,
-        data: {
-          accessToken: undefined,
-          expiresAt: undefined,
-          scope: undefined,
-          refreshToken: undefined,
-          status: 'disconnected',
-        },
       })
   }
 

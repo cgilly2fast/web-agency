@@ -93,6 +93,7 @@ export const callbackEndpoint: Endpoint = {
             integration: integration.id,
             firm: typeof user.firm === 'string' ? user.firm : user.firm.id,
             id: userInfo.accountId,
+            provider: integration.provider,
             accountId: userInfo.accountId,
             accountEmail: userInfo.accountEmail,
             accessToken: tokenData.access_token,
