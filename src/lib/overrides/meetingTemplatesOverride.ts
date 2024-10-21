@@ -34,9 +34,7 @@ function arrayToObject(arr: any[]) {
   return obj
 }
 
-const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
-  let fields: Field[] = []
-
+const meetingTemplatesOverride: FieldsOverride = ({ defaultFields }) => {
   const map = arrayToObject(defaultFields)
 
   let eventDetails: UnnamedTab = {
@@ -1327,4 +1325,4 @@ const appointmentFormOverride: FieldsOverride = ({ defaultFields }) => {
   return [tabs, FirmField]
 }
 
-export default appointmentFormOverride
+export default meetingTemplatesOverride

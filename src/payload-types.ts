@@ -2288,7 +2288,19 @@ export interface Interaction {
  */
 export interface Meeting {
   id: string;
-  form: string | MeetingTemplate;
+  startTime?: string | null;
+  endTime?: string | null;
+  location?: string | null;
+  hosts?: (string | User)[] | null;
+  invitees?:
+    | {
+        name?: string | null;
+        email?: string | null;
+        phone?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  meetingType: string | MeetingTemplate;
   submissionData?:
     | {
         field: string;
