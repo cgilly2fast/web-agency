@@ -15,17 +15,19 @@ export const callbackEndpoint: Endpoint = {
       const { payload } = req
       if (typeof code !== 'string')
         throw new Error(`Code not in query string: ${JSON.stringify(req.query)}`)
-
+      console.log('passed', code)
       if (typeof state !== 'string' || state === '') {
         throw new Error('Invalid state, possible csrf attack.')
       }
 
+      console.log('passed', state)
       const oAuthState = await payload.findByID({
         collection: 'oauth-states',
         id: state,
         depth: 1,
       })
 
+      console.log('passed', oAuthState)
       let user = oAuthState.user as User | null | undefined
       const integration = oAuthState.integration as Integration
 
@@ -36,8 +38,10 @@ export const callbackEndpoint: Endpoint = {
       ) {
         throw new Error('Invalid request, must have userId for this integration: ' + integration.id)
       }
+      console.log('passed', user, integration.id)
 
       const tokenData = await getTokenData(integration, code)
+      console.log(tokenData)
       const accessToken = tokenData?.access_token
       if (typeof accessToken !== 'string')
         throw new Error(`No access token: ${JSON.stringify(tokenData)}`)
@@ -73,7 +77,7 @@ export const callbackEndpoint: Endpoint = {
         showHiddenFields: true,
         limit: 1,
       })
-
+      console.log('snapshot', snapshot)
       if (snapshot.docs.length === 0) {
         await req.payload.create({
           collection: 'auth-tokens',
@@ -106,14 +110,14 @@ export const callbackEndpoint: Endpoint = {
           },
         })
       }
-
+      console.log(user.email, userInfo.accountEmail)
       if (
         user.email === userInfo.accountEmail &&
         (integration.provider === 'google' || integration.provider === 'microsoft')
       ) {
         return await loginFromOAuth(req, user)
       }
-
+      console.log('end')
       return new Response(null, {
         headers: {
           Location: '/admin/integrations',

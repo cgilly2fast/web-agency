@@ -16,7 +16,13 @@ export const getTokenData = async (integration: Integration, code: string) => {
   if (clientId === '' || clientSecret === '' || !integration.tokenUrl) {
     throw new Error('Cannot make call, null params')
   }
-
+  console.log(integration.tokenUrl, {
+    code,
+    client_id: clientId,
+    client_secret: clientSecret,
+    redirect_uri: redirectUri,
+    grant_type: 'authorization_code',
+  })
   const tokenResponse = await fetch(integration.tokenUrl, {
     method: 'POST',
     headers: {
