@@ -29,6 +29,7 @@ import Interactions from './collections/Interactions'
 import AuthTokens from './collections/AuthTokens/AuthTokens'
 import Integrations from './collections/Integrations'
 import OAuthStates from './collections/OAuthState'
+import { anyone } from './lib/access/anyone'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -148,7 +149,7 @@ export default buildConfig({
       formSubmissionOverrides: {
         access: {
           read: readByDomain,
-          create: firmUserCollectionAccess,
+          create: anyone, //firmUserCollectionAccess,
           update: firmUserCollectionAccess,
           delete: firmAdminCollectionAccess,
         },
@@ -173,7 +174,7 @@ export default buildConfig({
         slug: 'meetings',
         access: {
           read: readByDomain,
-          create: firmUserCollectionAccess,
+          create: anyone, //firmUserCollectionAccess,
           update: firmUserCollectionAccess,
           delete: firmAdminCollectionAccess,
         },
