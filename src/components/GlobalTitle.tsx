@@ -2,7 +2,7 @@
 
 import type { MappedComponent } from 'payload'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   useAuth,
   useStepNav,
@@ -14,7 +14,6 @@ import {
   useOperation,
   useHotkey,
   FormSubmit,
-  RenderComponent,
 } from '@payloadcms/ui'
 
 export const DefaultSaveButton: React.FC<{ label?: string }> = ({ label: labelProp }) => {
@@ -32,9 +31,12 @@ export const DefaultSaveButton: React.FC<{ label?: string }> = ({ label: labelPr
   const forceDisable = operation === 'update' && !modified
   const newTitle = (stepNav[0]?.label as string) ?? ''
 
-  if (user && user.roles.includes('super-admin') && newTitle !== title) {
-    setDocumentTitle(newTitle)
-  }
+  useEffect(() => {
+    if (user && user.roles.includes('super-admin') && newTitle !== title) {
+      setDocumentTitle(newTitle)
+    }
+  }, [user, newTitle, title, setDocumentTitle])
+
   useHotkey({ cmdCtrlKey: true, editDepth, keyCodes: ['s'] }, (e) => {
     if (forceDisable) {
       // absorb the event
