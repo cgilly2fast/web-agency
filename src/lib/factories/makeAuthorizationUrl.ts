@@ -15,7 +15,7 @@ export const makeAuthorizationUrl = (
   if (clientId === '') return onFailRedirect
 
   const redirectUri = encodeURIComponent(
-    `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/users/callback`,
+    `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/users/oauth/callback`,
   )
 
   const requiredScopes = integration.requiredScopes || []
