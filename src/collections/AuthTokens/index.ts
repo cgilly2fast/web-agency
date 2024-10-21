@@ -2,6 +2,7 @@ import { integrations } from 'googleapis/build/src/apis/integrations'
 import { CollectionConfig, Validate } from 'payload'
 import { validateAccountEmail } from './validate/validateAccountEmail'
 import { removeOnDelete } from './hooks/removeOnDelete'
+import { revalidateTokensEndpoint } from './endpoints/revalidateTokensEndpoint'
 
 const AuthTokens: CollectionConfig = {
   slug: 'auth-tokens',
@@ -12,6 +13,7 @@ const AuthTokens: CollectionConfig = {
     },
     useAsTitle: 'accountEmail',
   },
+  endpoints: [revalidateTokensEndpoint],
   hooks: {
     afterDelete: [removeOnDelete],
   },

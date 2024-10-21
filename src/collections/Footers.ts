@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-import Link from './fields/LinkField'
-import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
+import Link from '../lib/fields/LinkField'
+import FirmFieldUnique from '../lib/fields/FirmField/FirmFieldUnique'
 import { superAdminsCollectionAccess } from '../lib/access/superAdmins'
 import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'
 import { readByDomain } from './Pages/access/readByDomain'

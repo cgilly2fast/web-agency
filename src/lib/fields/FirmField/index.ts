@@ -4,16 +4,16 @@ import { superAdminFieldAccess } from '../../../lib/access/superAdmins'
 import { isSuperAdmin } from '../../../utils/collections/isSuperAdmin'
 import { firmAdminFieldAccess } from '../../../lib/access/firmAdminFieldAccess'
 
-const FirmFieldUnique: Field = {
+const FirmField: Field = {
   name: 'firm',
   type: 'relationship',
   relationTo: 'firms',
-  unique: true,
+  // required: true,
   index: true,
   admin: {
     position: 'sidebar',
     components: {
-      Field: '@/collections/fields/FirmField/components/index',
+      Field: '@/lib/fields/FirmField/components/index',
     },
     style: {
       maxWidth: '580px',
@@ -48,4 +48,4 @@ const FirmFieldUnique: Field = {
   },
 }
 
-export default FirmFieldUnique
+export default FirmField

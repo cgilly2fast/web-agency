@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import FirmField from '../fields/FirmField'
+import FirmField from '../../lib/fields/FirmField'
 import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
 import formatSlug from './hooks/formatSlug'
 import ensureUniqueSlug from './hooks/enureUniqueSlug'

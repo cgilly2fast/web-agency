@@ -22,7 +22,7 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
       resp = await refreshGoogleAccessToken(authToken.refreshToken)
       if (resp.success) {
         const { data } = resp
-        await payload.update({
+        payload.update({
           collection: 'auth-tokens',
           id: authToken.id,
           data: {
@@ -40,7 +40,7 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
         break
       }
 
-      await payload.update({
+      payload.update({
         collection: 'auth-tokens',
         id: authToken.id,
         data: {
@@ -57,7 +57,7 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
       resp = await refreshMicrosoftAccessToken(authToken.refreshToken)
       if (resp.success) {
         const { data } = resp
-        await payload.update({
+        payload.update({
           collection: 'auth-tokens',
           id: authToken.id,
           data: {
@@ -75,7 +75,7 @@ export const revalidateOAuthToken = async (authToken: AuthToken, payload?: BaseP
         break
       }
 
-      await payload.update({
+      payload.update({
         collection: 'auth-tokens',
         id: authToken.id,
         data: {

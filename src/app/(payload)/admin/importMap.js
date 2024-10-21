@@ -1,4 +1,4 @@
-import { default as default_0 } from '@/collections/fields/FirmField/components/index'
+import { default as default_0 } from '@/lib/fields/FirmField/components/index'
 import { OverviewComponent as OverviewComponent_1 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_2 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_3 } from '@payloadcms/plugin-seo/client'
@@ -53,7 +53,7 @@ import { default as default_51 } from '@/views/Integrations/index'
 import { default as default_52 } from '@/views/Dashboard/index'
 
 export const importMap = {
-  "@/collections/fields/FirmField/components/index#default": default_0,
+  "@/lib/fields/FirmField/components/index#default": default_0,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_1,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_2,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_3,

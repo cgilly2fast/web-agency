@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import FirmFieldUnique from './fields/FirmField/FirmFieldUnique'
+import FirmFieldUnique from '../lib/fields/FirmField/FirmFieldUnique'
 import { superAdminsCollectionAccess } from '../lib/access/superAdmins'
 import { readByDomain } from './Pages/access/readByDomain'
 import { firmUserCollectionAccess } from '../lib/access/firmUserCollectionAccess'

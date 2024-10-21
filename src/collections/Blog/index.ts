@@ -8,7 +8,7 @@ import { firmUserCollectionAccess } from '../../lib/access/firmUserCollectionAcc
 import { Firm } from '@/payload-types'
 import formatSlug from '../Pages/hooks/formatSlug'
 import ensureUniqueSlug from '../Pages/hooks/enureUniqueSlug'
-import FirmField from '../fields/FirmField'
+import FirmField from '../../lib/fields/FirmField'
 
 const Blogs: CollectionConfig = {
   slug: 'blogs',

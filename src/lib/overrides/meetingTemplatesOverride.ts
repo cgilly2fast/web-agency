@@ -11,7 +11,7 @@ import {
   FixedToolbarFeature,
   BlockFields,
 } from '@payloadcms/richtext-lexical'
-import FirmField from '../../collections/fields/FirmField'
+import FirmField from '../../lib/fields/FirmField'
 import { User } from '@/payload-types'
 import {
   Checkbox,

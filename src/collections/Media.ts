@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { firmAdminCollectionAccess } from '../lib/access/firmAdminCollectionAccess'
 import { anyone } from '../lib/access/anyone'
-import FirmField from './fields/FirmField'
+import FirmField from '../lib/fields/FirmField'
 
 export const Media: CollectionConfig = {
   slug: 'media',

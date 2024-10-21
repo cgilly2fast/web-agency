@@ -21,11 +21,16 @@ export const callbackEndpoint: Endpoint = {
       }
 
       console.log('passed', state)
-      const oAuthState = await payload.findByID({
-        collection: 'oauth-states',
-        id: state,
-        depth: 1,
-      })
+      let oAuthState
+      try {
+        oAuthState = await payload.findByID({
+          collection: 'oauth-states',
+          id: state,
+          depth: 1,
+        })
+      } catch (error) {
+        throw new Error('No state object found for: ' + state)
+      }
 
       console.log('passed', oAuthState)
       let user = oAuthState.user as User | null | undefined
@@ -47,6 +52,7 @@ export const callbackEndpoint: Endpoint = {
         throw new Error(`No access token: ${JSON.stringify(tokenData)}`)
 
       const userInfo = await getUserInfo(integration, accessToken)
+      let successRedirect = '/admin/integrations'
 
       if (!user) {
         const userSnapshot = await req.payload.find({
@@ -62,6 +68,7 @@ export const callbackEndpoint: Endpoint = {
         if (userSnapshot.docs.length === 0) {
           throw new Error('Only pre-existing users can use this service.')
         }
+        successRedirect = '/admin'
         user = userSnapshot.docs[0] as User
       }
 
@@ -86,6 +93,8 @@ export const callbackEndpoint: Endpoint = {
             integration: integration.id,
             firm: typeof user.firm === 'string' ? user.firm : user.firm.id,
             id: userInfo.accountId,
+            accountId: userInfo.accountId,
+            accountEmail: userInfo.accountEmail,
             accessToken: tokenData.access_token,
             expiresAt: moment().add(tokenData.expires_in, 'seconds').format(DB_TIME_FORMAT),
             scope: tokenData.scope,
@@ -115,12 +124,12 @@ export const callbackEndpoint: Endpoint = {
         user.email === userInfo.accountEmail &&
         (integration.provider === 'google' || integration.provider === 'microsoft')
       ) {
-        return await loginFromOAuth(req, user)
+        return await loginFromOAuth(req, user, successRedirect)
       }
       console.log('end')
       return new Response(null, {
         headers: {
-          Location: '/admin/integrations',
+          Location: successRedirect,
         },
         status: 302,
       })

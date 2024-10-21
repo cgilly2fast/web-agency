@@ -59,7 +59,7 @@ export const authorizeEndpoint: Endpoint = {
 
     const id = new ObjectId().toHexString()
 
-    await payload.create({
+    payload.create({
       collection: 'oauth-states',
       data: {
         //@ts-ignore

@@ -4,7 +4,7 @@ import { CollectionConfig } from 'payload'
 import { readByDomain } from '../Pages/access/readByDomain'
 import { superAdminFieldAccess, superAdminsCollectionAccess } from '../../lib/access/superAdmins'
 import { firmUserCollectionAccess } from '../../lib/access/firmUserCollectionAccess'
-import FirmFieldUnique from '../fields/FirmField/FirmFieldUnique'
+import FirmFieldUnique from '../../lib/fields/FirmField/FirmFieldUnique'
 import { filterUserCalendars } from './filter/filterUserCalendars'
 
 const availabilityOptions = [

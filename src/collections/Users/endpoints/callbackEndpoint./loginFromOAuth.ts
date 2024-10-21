@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { User } from '@/payload-types'
 import { generatePayloadCookie, getFieldsToSign, PayloadRequest } from 'payload'
 
-export const loginFromOAuth = async (req: PayloadRequest, user: User) => {
+export const loginFromOAuth = async (req: PayloadRequest, user: User, successRedirect: string) => {
   const collectionConfig = req.payload.collections['users'].config
   // /////////////////////////////////////
   // beforeLogin - Collection
@@ -83,7 +83,7 @@ export const loginFromOAuth = async (req: PayloadRequest, user: User) => {
   return new Response(null, {
     headers: {
       'Set-Cookie': cookie,
-      Location: '/admin/integrations',
+      Location: successRedirect,
     },
     status: 302,
   })

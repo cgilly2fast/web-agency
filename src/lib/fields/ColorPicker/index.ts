@@ -33,7 +33,7 @@ export const ColorPickerField: ColorPicker = (overrides, config = { type: 'hex' 
       type: 'text',
       admin: {
         components: {
-          Field: '@/collections/fields/ColorPicker/component/index',
+          Field: '@/lib/fields/ColorPicker/component/index',
         },
       },
       custom: configWithDefaults,
