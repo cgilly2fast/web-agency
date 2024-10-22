@@ -152,7 +152,7 @@ const meetingTemplatesOverride: FieldsOverride = ({ defaultFields }) => {
         },
       },
       {
-        name: 'hosts',
+        name: 'host',
         label: 'Host',
         type: 'relationship',
         relationTo: 'users',

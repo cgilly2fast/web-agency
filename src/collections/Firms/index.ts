@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { superAdminFieldAccess, superAdminsCollectionAccess } from '../../lib/access/superAdmins'
 import { firmAdminCollectionAccess } from '../../lib/access/firmAdminCollectionAccess'
 import { anyone } from '../../lib/access/anyone'
+import ObjectId from 'bson-objectid'
 import { validateDomain } from './validation/validateDomain'
 
 export const Firms: CollectionConfig = {
@@ -19,61 +20,72 @@ export const Firms: CollectionConfig = {
     // components: { edit: { SaveButton: '@/components/GlobalTitle' } },
   },
   hooks: {
-    afterOperation: [
-      async ({ operation, req, result }) => {
+    beforeChange: [
+      async ({ operation, req, data }) => {
         if (operation === 'create') {
           const { payload } = req
+          console.log('data', data)
 
-          await payload.create({
-            collection: 'headers',
-            data: {
-              firm: result.id,
-            },
-          })
+          const id = new ObjectId().toHexString()
+          const [header, footer, aiConfig] = await Promise.all([
+            payload.create({
+              collection: 'headers',
+              data: {
+                firm: id,
+              },
+            }),
+            payload.create({
+              collection: 'footers',
+              data: {
+                firm: id,
+              },
+            }),
+            payload.create({
+              collection: 'ai-configs',
+              data: {
+                firm: id,
+              },
+            }),
+          ])
 
-          await payload.create({
-            collection: 'footers',
-            data: {
-              firm: result.id,
-            },
-          })
-
-          await payload.create({
-            collection: 'ai-configs',
-            data: {
-              firm: result.id,
-            },
-          })
+          data['_id'] = id
+          data.header = header.id
+          data.footer = footer.id
+          data.aiConfig = aiConfig.id
         }
-        return result
+        return data
       },
+    ],
+    afterOperation: [
       async ({ operation, req, result }) => {
         if (operation === 'delete') {
           const { payload } = req
           for (let i = 0; i < result.docs.length; i++) {
             const doc = result.docs[i]
-            await payload.delete({
-              collection: 'headers',
-              where: {
-                firm: {
-                  equals: doc.id,
+            await Promise.all([
+              payload.delete({
+                collection: 'headers',
+                where: {
+                  firm: {
+                    equals: doc.id,
+                  },
                 },
-              },
-            })
+              }),
 
-            await payload.delete({
-              collection: 'footers',
-              where: {
-                firm: { equals: doc.id },
-              },
-            })
+              payload.delete({
+                collection: 'footers',
+                where: {
+                  firm: { equals: doc.id },
+                },
+              }),
 
-            await payload.delete({
-              collection: 'ai-configs',
-              where: {
-                firm: { equals: doc.id },
-              },
-            })
+              payload.delete({
+                collection: 'ai-configs',
+                where: {
+                  firm: { equals: doc.id },
+                },
+              }),
+            ])
           }
         }
         return result
@@ -116,10 +128,13 @@ export const Firms: CollectionConfig = {
               name: 'header',
               type: 'relationship',
               relationTo: 'headers',
+              admin: {
+                readOnly: true,
+              },
               access: {
                 create: () => false,
                 read: superAdminFieldAccess,
-                update: superAdminFieldAccess,
+                update: () => false,
               },
             },
             {
@@ -129,7 +144,7 @@ export const Firms: CollectionConfig = {
               access: {
                 create: () => false,
                 read: superAdminFieldAccess,
-                update: superAdminFieldAccess,
+                update: () => false,
               },
             },
             {
@@ -139,7 +154,7 @@ export const Firms: CollectionConfig = {
               access: {
                 create: () => false,
                 read: superAdminFieldAccess,
-                update: superAdminFieldAccess,
+                update: () => false,
               },
             },
           ],

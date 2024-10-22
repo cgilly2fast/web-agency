@@ -96,7 +96,7 @@ const ChatSettings: CollectionConfig = {
                   maxWidth: '580px',
                 },
               },
-              defaultValue: 'message',
+              defaultValue: 'video',
               options: [
                 {
                   label: 'Image',
@@ -149,7 +149,7 @@ const ChatSettings: CollectionConfig = {
                   marginTop: '48px',
                 },
               },
-              defaultValue: 'message',
+              defaultValue: 'video',
               options: [
                 {
                   label: 'Intro Video (Recommended)',

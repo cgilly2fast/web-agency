@@ -16,7 +16,7 @@ const BookingPageUrlPreview = () => {
         .filter(Boolean)
         .join(' ')}
     >
-      {window.location.hostname + '/appointments/' + (value ?? '')}
+      {window.location.hostname + '/book/' + (value ?? '')}
     </div>
   )
 

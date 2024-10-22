@@ -44,9 +44,10 @@ export const Users: CollectionConfig = {
     admin: isSuperOrFirmAdmin,
   },
   hooks: {
+    beforeChange: [accountSetup],
     afterChange: [loginAfterCreate],
     afterLogin: [recordLastLoggedInFirm],
-    afterOperation: [accountSetup, accountDelete],
+    afterOperation: [accountDelete],
   },
   fields: [
     {

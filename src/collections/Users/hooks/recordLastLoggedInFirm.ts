@@ -5,8 +5,8 @@ export const recordLastLoggedInFirm: CollectionAfterLoginHook = async ({ req, us
     const relatedOrg = await req.payload.find({
       collection: 'firms',
       where: {
-        'domains.domain': {
-          in: [req.headers.get('host')],
+        domain: {
+          equals: req.headers.get('host'),
         },
       },
       depth: 0,

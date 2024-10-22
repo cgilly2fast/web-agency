@@ -2323,7 +2323,7 @@ export interface MeetingTemplate {
   durationTime?: number | null;
   durationUnit?: ('min' | 'hrs') | null;
   location: 'in_person' | 'zoom' | 'google_meet' | 'phone_call';
-  hosts?: (string | null) | User;
+  host?: (string | null) | User;
   hostsMulti?: (string | User)[] | null;
   invites?: boolean | null;
   description?: {
