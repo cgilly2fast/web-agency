@@ -4,7 +4,6 @@ import type { Firm, Page as PageType } from '../../../payload-types'
 import config from '../../../payload.config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { Gutter } from '../_components/Gutter'
-import { RefreshRouteOnSave } from './RefreshRouteOnSave'
 import classes from './index.module.scss'
 
 type PageParams = {
@@ -39,7 +38,6 @@ export default async function Page({ params }: PageParams) {
         ],
       },
     })
-
     const page = pageRes?.docs?.[0] as PageType | null
 
     if (!page) {
@@ -48,7 +46,6 @@ export default async function Page({ params }: PageParams) {
 
     return (
       <Fragment>
-        <RefreshRouteOnSave />
         <main className={classes.page}>
           <Gutter>
             <p>{page.richText}</p>
@@ -67,16 +64,22 @@ export async function generateStaticParams() {
     const payload = await getPayloadHMR({ config })
     const pagesRes = await payload.find({
       collection: 'pages',
+      where: {
+        slug: {
+          not_equals: 'home',
+        },
+      },
       depth: 1,
       draft: true,
       limit: 1000,
     })
-    const pages = pagesRes?.docs || []
 
-    return pages.map(({ slug, firm }) => ({
+    const pages = pagesRes?.docs || []
+    const map = pages.map(({ slug, firm }) => ({
       domain: (firm as Firm).domain,
-      slug: slug === 'home' ? undefined : slug!.split('/'),
+      slug: slug!.split('/'),
     }))
+    return map
   } catch (error) {
     console.error('Error generating static params:', error)
     return []

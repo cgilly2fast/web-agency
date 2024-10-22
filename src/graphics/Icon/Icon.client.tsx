@@ -14,9 +14,11 @@ const IconClient: React.FC<IconProps> = ({ iconMap, darkModeIconMap }) => {
 
   useEffect(() => {
     if (theme === 'light') {
-      setCurrentIcon(iconMap[window.location.hostname] || iconMap['firmleads.io'])
+      setCurrentIcon(iconMap[window.location.hostname] || iconMap['web.firmleads.io'])
     } else {
-      setCurrentIcon(darkModeIconMap[window.location.hostname] || darkModeIconMap['firmleads.io'])
+      setCurrentIcon(
+        darkModeIconMap[window.location.hostname] || darkModeIconMap['web.firmleads.io'],
+      )
     }
   }, [iconMap, darkModeIconMap, theme])
 

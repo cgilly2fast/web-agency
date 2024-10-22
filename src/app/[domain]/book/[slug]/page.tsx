@@ -4,8 +4,6 @@ import type { Firm, Page as PageType } from '../../../../payload-types'
 import config from '../../../../payload.config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { Gutter } from '../../_components/Gutter'
-import { RefreshRouteOnSave } from './RefreshRouteOnSave'
-import classes from './index.module.scss'
 
 type PageParams = {
   params: Promise<{
@@ -47,7 +45,6 @@ export default async function Page({ params }: PageParams) {
 
     return (
       <Fragment>
-        <RefreshRouteOnSave />
         <main className="mt-5">
           <Gutter>
             <p>{page.richText}</p>

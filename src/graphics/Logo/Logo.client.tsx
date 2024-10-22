@@ -14,9 +14,11 @@ const LogoClient: React.FC<LogoProps> = ({ logoMap, darkModeLogoMap }) => {
 
   useEffect(() => {
     if (theme === 'light') {
-      setCurrentLogo(logoMap[window.location.hostname] || logoMap['firmleads.io'])
+      setCurrentLogo(logoMap[window.location.hostname] || logoMap['web.firmleads.io'])
     } else {
-      setCurrentLogo(darkModeLogoMap[window.location.hostname] || darkModeLogoMap['firmleads.io'])
+      setCurrentLogo(
+        darkModeLogoMap[window.location.hostname] || darkModeLogoMap['web.firmleads.io'],
+      )
     }
   }, [logoMap, darkModeLogoMap, theme])
 
