@@ -4,6 +4,7 @@ import type { Firm, Page as PageType } from '../../../../payload-types'
 import config from '../../../../payload.config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { Gutter } from '../../_components/Gutter'
+import BookingPage from './components/BookingPage'
 
 type PageParams = {
   params: Promise<{
@@ -37,23 +38,15 @@ export default async function Page({ params }: PageParams) {
       },
     })
 
-    const page = snapshot?.docs?.[0] as PageType | null
+    const template = snapshot?.docs?.[0] as PageType | null
 
-    if (!page) {
+    if (!template) {
       return notFound()
     }
 
-    return (
-      <Fragment>
-        <main className="mt-5">
-          <Gutter>
-            <p>{page.richText}</p>
-          </Gutter>
-        </main>
-      </Fragment>
-    )
+    return <BookingPage />
   } catch (error) {
-    console.error('Error fetching page:', error)
+    console.error('Error fetching template:', error)
     return notFound()
   }
 }
@@ -61,15 +54,15 @@ export default async function Page({ params }: PageParams) {
 export async function generateStaticParams() {
   try {
     const payload = await getPayloadHMR({ config })
-    const pagesRes = await payload.find({
+    const templatesRes = await payload.find({
       collection: 'meeting-templates',
       depth: 1,
       draft: true,
       limit: 1000,
     })
-    const pages = pagesRes?.docs || []
+    const templates = templatesRes?.docs || []
 
-    return pages.map(({ link, firm }) => ({
+    return templates.map(({ link, firm }) => ({
       domain: (firm as Firm).domain,
       slug: link,
     }))

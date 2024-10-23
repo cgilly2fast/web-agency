@@ -23,13 +23,16 @@ export default async function middleware(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams.toString()
   const path = `${req.nextUrl.pathname}${searchParams.length > 0 ? `?${searchParams}` : ''}`
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   if (hostname === 'localhost:3000') {
-  //     hostname = process.env.NEXT_PUBLIC_ROOT_DOMAIN!
-  //   }
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    console.log('in process if', process.env.NODE_ENV)
+    if (hostname === 'localhost:3000') {
+      console.log('in host', hostname)
+      hostname = process.env.NEXT_PUBLIC_ROOT_DOMAIN!
+    }
+  }
 
   const rewriteUrl = new URL(req.url)
+  console.log(`/${hostname}${path}`)
   rewriteUrl.pathname = `/${hostname}${path}`
 
   return NextResponse.rewrite(rewriteUrl)

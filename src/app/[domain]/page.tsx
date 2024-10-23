@@ -30,13 +30,11 @@ export default async function PageRoot({ params }: { params: Promise<{ domain: s
         ],
       },
     })
-    console.log('pageRes Inside', pageRes)
     const page = pageRes?.docs?.[0] as PageType | null
 
     if (!page) {
       return notFound()
     }
-    console.log(page)
     return (
       <Fragment>
         <main className="mt-5">
@@ -66,14 +64,11 @@ export async function generateStaticParams() {
       draft: true,
       limit: 1000,
     })
-    console.log('pageRes', pagesRes)
     const pages = pagesRes?.docs || []
-    console.log('pages', pages)
     const map = pages.map(({ slug, firm }) => ({
       domain: (firm as Firm).domain,
       slug: slug!.split('/'),
     }))
-    console.log('map', map)
     return map
   } catch (error) {
     console.error('Error generating static params:', error)

@@ -17,7 +17,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en">
       <body>
         <RefreshRouteOnSave />
-        <Header />
         {children}
       </body>
     </html>
