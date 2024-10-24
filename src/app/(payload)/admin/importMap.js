@@ -39,7 +39,7 @@ import { default as default_37 } from '@/components/DailyLimitRowLabel'
 import { default as default_38 } from '@/components/TimezoneDisplayRowLabel'
 import { default as default_39 } from '@/components/IncrementsRowLabel'
 import { default as default_40 } from '@/components/BookingPageUrlPreview'
-import { default as default_41 } from '@/components/BlocksRowLabel'
+import { default as default_41 } from '@/components/CustomMeetingFormBlockLabel'
 import { default as default_42 } from '@/components/TimingReminderRowLabel'
 import { default as default_43 } from '@/components/TimingFollowUpRowLabel'
 import { default as default_44 } from '@/components/ProfilePicture'
@@ -94,7 +94,7 @@ export const importMap = {
   "@/components/TimezoneDisplayRowLabel#default": default_38,
   "@/components/IncrementsRowLabel#default": default_39,
   "@/components/BookingPageUrlPreview#default": default_40,
-  "@/components/BlocksRowLabel#default": default_41,
+  "@/components/CustomMeetingFormBlockLabel#default": default_41,
   "@/components/TimingReminderRowLabel#default": default_42,
   "@/components/TimingFollowUpRowLabel#default": default_43,
   "@/components/ProfilePicture#default": default_44,

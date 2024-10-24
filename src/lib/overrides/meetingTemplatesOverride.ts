@@ -14,17 +14,15 @@ import {
 import FirmField from '../../lib/fields/FirmField'
 import { User } from '@/payload-types'
 import {
-  Checkbox,
-  Country,
+  Name,
   Email,
-  Message,
-  Number,
-  Text,
-  Payment,
-  Select,
-  State,
-  TextArea,
-} from '@/lib/formBuilderBlocks'
+  OneLine,
+  RadioButtons,
+  Checkboxes,
+  Dropdown,
+  PhoneNumber,
+  MultipleLines,
+} from '@/plugins/formBuilder/fields'
 
 function arrayToObject(arr: any[]) {
   let obj: Record<string, Field> = {}
@@ -630,19 +628,43 @@ const meetingTemplatesOverride: FieldsOverride = ({ defaultFields }) => {
               description: 'Questions given to the invitee before booking is completed.',
               initCollapsed: true,
             },
+            defaultValue: [
+              {
+                blockType: 'email',
+              },
+              {
+                blockType: 'name',
+                nameType: 'split',
+              },
+            ],
             name: 'fields',
             type: 'blocks',
+            validate: (val: { blockType: string }[]) => {
+              let emailFlag = false
+              let nameFlag = true
+              for (let i = 0; i < val.length; i++) {
+                if (val[i].blockType === 'email') {
+                  emailFlag = true
+                }
+
+                if (val[i].blockType === 'name') {
+                  nameFlag = true
+                }
+              }
+
+              if (emailFlag && nameFlag) return true
+
+              return 'Must have a Name and Email question added.'
+            },
             blocks: [
-              Select,
-              Text,
-              TextArea,
-              Number,
+              OneLine,
+              MultipleLines,
+              RadioButtons,
+              Checkboxes,
+              Dropdown,
+              PhoneNumber,
+              Name,
               Email,
-              State,
-              Country,
-              Checkbox,
-              // Payment,
-              Message,
             ],
           } as BlocksField,
           {

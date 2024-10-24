@@ -273,27 +273,39 @@ const CalendarSettings: CollectionConfig = {
                       RowLabel: '@/components/AvailabilityRowLabel',
                     },
                   },
-                  defaultValue: [{ startTime: '9:00am', endTime: '5:00pm' }],
-                  fields: [
+                  defaultValue: [
                     {
-                      type: 'row',
-                      fields: [
-                        {
-                          name: 'startTime',
-                          type: 'select',
-                          label: false,
-                          defaultValue: '9:00am',
-                          options: availabilityOptions,
-                        },
-                        {
-                          name: 'endTime',
-                          type: 'select',
-                          label: false,
-                          defaultValue: '5:00pm',
-                          options: availabilityOptions,
-                        },
-                      ],
+                      startTime: '9:00am',
+                      // endTime: '5:00pm',
                     },
+                  ],
+                  fields: [
+                    // {
+                    //   type: 'row',
+                    //   fields: [
+                    {
+                      name: 'startTime',
+                      type: 'text',
+                      label: false,
+                      // defaultValue: '9:00am',
+                    },
+                    // {
+                    // {
+                    //   name: 'startTime',
+                    //   type: 'select',
+                    //   label: false,
+                    //   // defaultValue: '9:00am',
+                    //   options: availabilityOptions,
+                    // },
+                    // {
+                    //   name: 'endTime',
+                    //   type: 'select',
+                    //   label: false,
+                    //   // defaultValue: '5:00pm',
+                    //   options: availabilityOptions,
+                    // },
+                    //   ],
+                    // },
                   ],
                 },
 

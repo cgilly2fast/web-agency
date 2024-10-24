@@ -171,7 +171,7 @@ export default buildConfig({
       formSubmissionOverrides: {
         access: {
           read: readByDomain,
-          create: anyone, //firmUserCollectionAccess,
+          create: anyone,
           update: firmUserCollectionAccess,
           delete: firmAdminCollectionAccess,
         },
@@ -196,7 +196,7 @@ export default buildConfig({
         slug: 'meetings',
         access: {
           read: readByDomain,
-          create: anyone, //firmUserCollectionAccess,
+          create: anyone,
           update: firmUserCollectionAccess,
           delete: firmAdminCollectionAccess,
         },
